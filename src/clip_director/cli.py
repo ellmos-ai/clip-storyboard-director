@@ -69,12 +69,13 @@ def cmd_doctor(args=None):
     else:
         print("⚠️ Microsoft Edge: Standardpfad nicht gefunden")
 
-    # 7. ai-media-editor (Post-Production Partner)
-    editor_path = Path("C:/_Local_DEV/repos/ai-media-editor/editor.py")
+    # 7. ai-media-editor (Post-Production Partner, optional)
+    editor_dir = Path(os.environ.get("AI_MEDIA_EDITOR_DIR", "C:/_Local_DEV/repos/ai-media-editor")).resolve()
+    editor_path = editor_dir / "editor.py"
     if editor_path.exists():
-        print(f"✅ ai-media-editor: GEFUNDEN ({editor_path.parent}) — Post-Production & Cutting")
+        print(f"✅ ai-media-editor: GEFUNDEN ({editor_dir}) — Post-Production & Cutting (optional)")
     else:
-        print("⚠️ ai-media-editor: Optional (C:/_Local_DEV/repos/ai-media-editor)")
+        print(f"ℹ️ ai-media-editor: Nicht gefunden (optional, {editor_dir})")
 
     print("=" * 65)
     return 0
@@ -150,7 +151,7 @@ def cmd_handoff(args):
         print(f"[FEHLER] Master-Video {master_file} nicht gefunden. Bitte erst 'clip-director assemble' ausführen.", file=sys.stderr)
         sys.exit(1)
 
-    editor_dir = Path("C:/_Local_DEV/repos/ai-media-editor").resolve()
+    editor_dir = Path(os.environ.get("AI_MEDIA_EDITOR_DIR", "C:/_Local_DEV/repos/ai-media-editor")).resolve()
     editor_script = editor_dir / "editor.py"
 
     if not editor_script.exists():

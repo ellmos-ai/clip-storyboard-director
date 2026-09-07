@@ -43,3 +43,11 @@ def test_doctor():
     ret = cmd_doctor()
     assert ret in (0, 1)
 
+
+def test_standalone_without_media_editor(monkeypatch):
+    from clip_director.cli import cmd_doctor
+    # Set to a non-existent path to verify standalone operation without ai-media-editor
+    monkeypatch.setenv("AI_MEDIA_EDITOR_DIR", "C:/nonexistent/path/for/tests")
+    ret = cmd_doctor()
+    assert ret == 0, "Director doctor must pass even if ai-media-editor is not installed"
+

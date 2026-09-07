@@ -511,7 +511,7 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
                 self.send_json_response({"status": "error", "message": "Master-Video existiert noch nicht. Bitte zuerst assemblieren."}, status_code=400)
                 return
 
-            editor_dir = Path("C:/_Local_DEV/repos/ai-media-editor").resolve()
+            editor_dir = Path(os.environ.get("AI_MEDIA_EDITOR_DIR", "C:/_Local_DEV/repos/ai-media-editor")).resolve()
             editor_script = editor_dir / "editor.py"
             if not editor_script.exists():
                 self.send_json_response({"status": "error", "message": f"ai-media-editor nicht gefunden unter {editor_dir}"}, status_code=404)
