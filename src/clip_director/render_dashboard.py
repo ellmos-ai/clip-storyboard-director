@@ -282,6 +282,7 @@ def render_project(project_dir):
       <div class="master-actions">
         <button class="btn-master-action btn-explorer" onclick="openProjectFolder()" title="Öffnet den Projektordner im Windows Explorer und markiert das Master-Video">📁 Ordner im Explorer öffnen</button>
         <a href="{html.escape(master_rel)}" download="{html.escape(master_rel)}" class="btn-master-action btn-download" title="Master-Video lokal speichern">📥 Video herunterladen ({size_mb:.2f} MB)</a>
+        <button class="btn-master-action btn-handoff" onclick="handoffToMediaEditor()" title="Übergibt das Master-Video an ai-media-editor zur Whisper-Transkription & Nachbearbeitung">✂️ An ai-media-editor übergeben</button>
         <button class="btn-master-action btn-assemble" onclick="triggerReassemble()" title="Führt FFmpeg-Assembly erneut aus">🔄 Neu schneiden</button>
       </div>
     </div>

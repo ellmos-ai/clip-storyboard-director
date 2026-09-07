@@ -20,7 +20,7 @@ if hasattr(sys.stderr, "reconfigure"):
 from clip_director import __version__
 
 
-def cmd_doctor(args):
+def cmd_doctor(args=None):
     """Prüft die System- und Tool-Voraussetzungen."""
     print("=" * 65)
     print(f"🩺 [clip-director doctor] Systemprüfung (v{__version__})")
@@ -69,7 +69,15 @@ def cmd_doctor(args):
     else:
         print("⚠️ Microsoft Edge: Standardpfad nicht gefunden")
 
+    # 7. ai-media-editor (Post-Production Partner)
+    editor_path = Path("C:/_Local_DEV/repos/ai-media-editor/editor.py")
+    if editor_path.exists():
+        print(f"✅ ai-media-editor: GEFUNDEN ({editor_path.parent}) — Post-Production & Cutting")
+    else:
+        print("⚠️ ai-media-editor: Optional (C:/_Local_DEV/repos/ai-media-editor)")
+
     print("=" * 65)
+    return 0
 
 
 def cmd_init(args):
@@ -123,6 +131,49 @@ def cmd_render(args):
     render_cockpit(args.project)
 
 
+def cmd_handoff(args):
+    """Übergibt das Master-Video an ai-media-editor zur Post-Production."""
+    import yaml
+    project_path = Path(args.project).resolve()
+    yaml_file = project_path / "project.yaml"
+    if not yaml_file.exists():
+        print(f"[FEHLER] {yaml_file} nicht gefunden.", file=sys.stderr)
+        sys.exit(1)
+
+    with open(yaml_file, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+
+    proj_name = data.get("project", {}).get("name", "master")
+    master_file = project_path / f"{proj_name}_master.mp4"
+
+    if not master_file.exists():
+        print(f"[FEHLER] Master-Video {master_file} nicht gefunden. Bitte erst 'clip-director assemble' ausführen.", file=sys.stderr)
+        sys.exit(1)
+
+    editor_dir = Path("C:/_Local_DEV/repos/ai-media-editor").resolve()
+    editor_script = editor_dir / "editor.py"
+
+    if not editor_script.exists():
+        print(f"[FEHLER] ai-media-editor nicht gefunden unter {editor_dir}.", file=sys.stderr)
+        sys.exit(1)
+
+    mode = args.mode or 8
+    print("=" * 65)
+    print(f"🎬 ➡️ ✂️ [HANDOFF] Übergebe Master-Video an ai-media-editor (Modus {mode})")
+    print(f"   Quelle:  {master_file}")
+    print(f"   Projekt: {proj_name}")
+    print("=" * 65)
+
+    cmd = [
+        sys.executable, str(editor_script), "prepare",
+        str(master_file),
+        "--mode", str(mode),
+        "--project", proj_name
+    ]
+    res = subprocess.run(cmd, cwd=str(editor_dir))
+    sys.exit(res.returncode)
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="clip-director",
@@ -166,6 +217,12 @@ def main():
     p_assemble = subparsers.add_parser("assemble", help="Master-Video schneiden und mastern")
     p_assemble.add_argument("--project", default="projects/sternenseufzer", help="Pfad zum Projektverzeichnis")
     p_assemble.set_defaults(func=cmd_assemble)
+
+    # handoff (to ai-media-editor)
+    p_handoff = subparsers.add_parser("handoff", help="Master-Video an ai-media-editor übergeben")
+    p_handoff.add_argument("--project", default="projects/sternenseufzer", help="Pfad zum Projektverzeichnis")
+    p_handoff.add_argument("--mode", type=int, default=8, help="ai-media-editor Usecase-Modus (Standard: 8)")
+    p_handoff.set_defaults(func=cmd_handoff)
 
     # ingest
     p_ingest = subparsers.add_parser("ingest", help="Eingegangene Clips aus _inbox verarbeiten")

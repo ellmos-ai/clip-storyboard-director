@@ -673,6 +673,16 @@
       background: rgba(139, 92, 246, 0.35);
       transform: translateY(-1px);
     }
+    .btn-handoff {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #a7f3d0;
+    }
+    .btn-handoff:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #fff;
+      transform: translateY(-1px);
+    }
     .master-video-wrapper {
       position: relative;
       width: 100%;
@@ -757,6 +767,7 @@
       <div class="master-actions">
         <button class="btn-master-action btn-explorer" onclick="openProjectFolder()" title="Öffnet den Projektordner im Windows Explorer und markiert das Master-Video">📁 Ordner im Explorer öffnen</button>
         <a href="sternenseufzer_master.mp4" download="sternenseufzer_master.mp4" class="btn-master-action btn-download" title="Master-Video lokal speichern">📥 Video herunterladen (16.81 MB)</a>
+        <button class="btn-master-action btn-handoff" onclick="handoffToMediaEditor()" title="Übergibt das Master-Video an ai-media-editor zur Whisper-Transkription & Nachbearbeitung">✂️ An ai-media-editor übergeben</button>
         <button class="btn-master-action btn-assemble" onclick="triggerReassemble()" title="Führt FFmpeg-Assembly erneut aus">🔄 Neu schneiden</button>
       </div>
     </div>
@@ -1229,6 +1240,21 @@
         }
       } catch (err) {
         showToast('Fehler bei Assembly: ' + err.message, 'error');
+      }
+    }
+
+    async function handoffToMediaEditor() {
+      showToast('✂️ Übergebe Master-Video an ai-media-editor...', 'info');
+      try {
+        const res = await fetch('/api/handoff-editor', { method: 'POST' });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          showToast('✅ ' + data.message, 'success');
+        } else {
+          showToast('Fehler bei Übergabe: ' + data.message, 'error');
+        }
+      } catch (err) {
+        showToast('Verbindungsfehler: ' + err.message, 'error');
       }
     }
 

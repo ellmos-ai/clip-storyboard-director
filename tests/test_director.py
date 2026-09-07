@@ -35,3 +35,11 @@ def test_project_lifecycle(tmp_path):
     assert html_cockpit.exists(), "cockpit.html should be created"
     cockpit_content = html_cockpit.read_text(encoding="utf-8")
     assert "test_clip" in cockpit_content
+
+
+def test_doctor():
+    from clip_director.cli import cmd_doctor
+    # Doctor should run without unhandled exceptions
+    ret = cmd_doctor()
+    assert ret in (0, 1)
+

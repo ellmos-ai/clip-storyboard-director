@@ -113,6 +113,8 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
             self.handle_open_folder()
         elif parsed.path == "/api/assemble":
             self.handle_assemble()
+        elif parsed.path == "/api/handoff-editor":
+            self.handle_handoff_editor()
         else:
             self.send_error(404, "Endpoint nicht gefunden")
 
@@ -492,6 +494,36 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
                 "status": "ok",
                 "message": "Master-Video erfolgreich assembliert",
                 "file": out_file.name if out_file else None
+            })
+        except Exception as e:
+            self.send_json_response({"status": "error", "message": str(e)}, status_code=500)
+
+    def handle_handoff_editor(self):
+        try:
+            yaml_file = self.project_dir / "project.yaml"
+            data = {}
+            if yaml_file.exists():
+                with open(yaml_file, "r", encoding="utf-8") as f:
+                    data = yaml.safe_load(f) or {}
+            proj_name = data.get("project", {}).get("name", "master")
+            master_file = self.project_dir / f"{proj_name}_master.mp4"
+            if not master_file.exists():
+                self.send_json_response({"status": "error", "message": "Master-Video existiert noch nicht. Bitte zuerst assemblieren."}, status_code=400)
+                return
+
+            editor_dir = Path("C:/_Local_DEV/repos/ai-media-editor").resolve()
+            editor_script = editor_dir / "editor.py"
+            if not editor_script.exists():
+                self.send_json_response({"status": "error", "message": f"ai-media-editor nicht gefunden unter {editor_dir}"}, status_code=404)
+                return
+
+            cmd = [sys.executable, str(editor_script), "prepare", str(master_file), "--mode", "8", "--project", proj_name]
+            proc = subprocess.Popen(cmd, cwd=str(editor_dir))
+            self.send_json_response({
+                "status": "ok",
+                "message": f"Master-Video erfolgreich an ai-media-editor (UC8) übergeben (PID {proc.pid}).",
+                "project": proj_name,
+                "editor_dir": str(editor_dir)
             })
         except Exception as e:
             self.send_json_response({"status": "error", "message": str(e)}, status_code=500)
