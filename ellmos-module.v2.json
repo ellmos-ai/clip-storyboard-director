@@ -28,7 +28,7 @@
   "conflicts": [],
   "surfaces": [
     "cli",
-    "web-ui",
+    "ui",
     "workflow"
   ],
   "state": {
