@@ -18,12 +18,12 @@
     "workflow.video.storyboard",
     "workflow.media.pipeline"
   ],
-  "requires": [
-    "tool.ffmpeg"
-  ],
+  "requires": [],
   "optional": [
+    "tool.ffmpeg",
     "tool.edge_tts",
-    "tool.browser.cdp"
+    "tool.browser.cdp",
+    "ai-media-editor"
   ],
   "conflicts": [],
   "surfaces": [
