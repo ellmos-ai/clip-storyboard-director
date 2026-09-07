@@ -1,0 +1,53 @@
+{
+  "schema": "ellmos.module.v2",
+  "id": "clip-storyboard-director",
+  "display_name": "clip-storyboard-director",
+  "version": "0.1.0",
+  "description": "Local-first AI storyboard director, scene continuity orchestrator and video pipeline controller with Edge CDP automation and interactive dual-pane cockpit.",
+  "package": "clip_director",
+  "entrypoints": {
+    "cli": "clip-director",
+    "workflow": "CLAUDE.md"
+  },
+  "category": "domains",
+  "kind": "stack-candidate",
+  "status": "active",
+  "visibility": "public",
+  "provides": [
+    "domain.media.direction",
+    "workflow.video.storyboard",
+    "workflow.media.pipeline"
+  ],
+  "requires": [
+    "tool.ffmpeg"
+  ],
+  "optional": [
+    "tool.edge_tts",
+    "tool.browser.cdp"
+  ],
+  "conflicts": [],
+  "surfaces": [
+    "cli",
+    "web-ui",
+    "workflow"
+  ],
+  "state": {
+    "ownership": "external",
+    "location": "project"
+  },
+  "boundaries": {
+    "network": "optional",
+    "data": "sensitive",
+    "platforms": [
+      "windows",
+      "macos",
+      "linux"
+    ]
+  },
+  "source_of_truth": {
+    "type": "git-repository",
+    "path": ".",
+    "repository": "https://github.com/ellmos-ai/clip-storyboard-director.git"
+  },
+  "adapters": []
+}

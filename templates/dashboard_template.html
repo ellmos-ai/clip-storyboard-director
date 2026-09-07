@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{project_title} — Storyboard Director</title>
+  <style>
+    :root {{
+      --bg-dark: #0f1117;
+      --card-bg: #1a1d27;
+      --card-border: #2a2f3f;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+    }}
+    * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      padding: 24px;
+      line-height: 1.5;
+    }}
+    header {{
+      background: linear-gradient(135deg, #1e2433 0%, #111520 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }}
+    .header-title h1 {{
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }}
+    .header-title p {{ color: var(--text-muted); font-size: 13.5px; margin-top: 4px; }}
+    .meta-badges {{ display: flex; gap: 8px; flex-wrap: wrap; }}
+    .badge {{
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }}
+    .badge-blue {{ background: rgba(59, 130, 246, 0.15); border-color: var(--accent-blue); color: #93c5fd; }}
+    .badge-green {{ background: rgba(16, 185, 129, 0.15); border-color: var(--accent-green); color: #6ee7b7; }}
+    .badge-amber {{ background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber); color: #fcd34d; }}
+    .badge-purple {{ background: rgba(139, 92, 246, 0.15); border-color: var(--accent-purple); color: #c4b5fd; }}
+
+    /* Watcher Banner */
+    .watcher-bar {{
+      background: #141824;
+      border: 1px solid #2d354b;
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13px;
+    }}
+    .watcher-status-text {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #d1d5db;
+    }}
+    .watcher-dot {{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+    }}
+    .watcher-dot.paused {{
+      background: var(--accent-amber);
+      box-shadow: 0 0 8px var(--accent-amber);
+    }}
+    .btn-watcher-toggle {{
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid var(--accent-blue);
+      color: #93c5fd;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }}
+    .btn-watcher-toggle:hover {{ background: rgba(59, 130, 246, 0.4); }}
+
+    /* Persistenzpuffer Banner */
+    .persistence-box {{
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }}
+    .persistence-box h3 {{
+      font-size: 13.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-cyan);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    .persistence-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      font-size: 12.5px;
+    }}
+    .p-group strong {{ color: #e5e7eb; display: block; margin-bottom: 3px; }}
+    .p-group span {{ color: var(--text-muted); }}
+
+    /* Consistency Bible */
+    .bible-box {{
+      background: #141824;
+      border: 1px solid #2d354b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }}
+    .bible-box h2 {{
+      font-size: 17px;
+      color: #f3f4f6;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }}
+    .bible-box p.bible-subtitle {{
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }}
+    .bible-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }}
+    .bible-card {{
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }}
+    .bible-card:hover {{
+      border-color: rgba(59, 130, 246, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }}
+    .bible-thumb {{
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+      background: #10131d;
+      border: 1px dashed #374151;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }}
+    .bible-thumb img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }}
+    .drag-badge {{
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #93c5fd;
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+      pointer-events: none;
+    }}
+    .draggable-asset {{
+      cursor: grab !important;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }}
+    .draggable-asset:active {{ cursor: grabbing !important; }}
+    .draggable-asset:hover {{ filter: brightness(1.1); }}
+
+    .bible-info {{ flex: 1; font-size: 12px; }}
+    .bible-title {{
+      font-weight: 700;
+      color: #fff;
+      font-size: 13.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .bible-cat {{
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }}
+    .bible-desc {{ color: var(--text-muted); margin: 5px 0; font-size: 11.5px; line-height: 1.4; }}
+    .bible-shots {{ color: var(--accent-cyan); font-weight: 600; font-size: 11px; }}
+
+    .btn-copy-card {{
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid var(--accent-blue);
+      color: #bfdbfe;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }}
+    .btn-copy-card:hover {{ background: rgba(59, 130, 246, 0.4); color: #fff; }}
+
+    /* Timeline Navigation */
+    .timeline-bar {{
+      display: flex;
+      margin-bottom: 24px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #181c28;
+      border: 1px solid var(--card-border);
+      height: 38px;
+    }}
+    .timeline-segment {{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      border-right: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }}
+    .timeline-segment:last-child {{ border-right: none; }}
+    .timeline-segment:hover {{ background: rgba(59, 130, 246, 0.2); color: #fff; }}
+    .timeline-segment.done {{ background: rgba(16, 185, 129, 0.15); color: #10b981; border-bottom: 3px solid #10b981; }}
+    .timeline-segment.active {{ background: rgba(59, 130, 246, 0.25); color: #60a5fa; border-bottom: 3px solid #3b82f6; }}
+
+    /* Shot Cards */
+    .shot-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 20px;
+    }}
+    .shot-card {{
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s;
+    }}
+    .shot-card:hover {{
+      border-color: rgba(59, 130, 246, 0.5);
+      transform: translateY(-2px);
+    }}
+    .shot-header {{
+      background: rgba(255, 255, 255, 0.03);
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .shot-header .step-tag {{
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    .shot-header .time-tag {{
+      font-size: 12px;
+      color: var(--accent-cyan);
+      font-family: monospace;
+      font-weight: 600;
+    }}
+
+    .shot-preview {{
+      height: 200px;
+      background: #11141e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      position: relative;
+      border-bottom: 1px solid var(--card-border);
+      overflow: hidden;
+    }}
+    .shot-preview img, .shot-preview video {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }}
+    .preview-badge {{
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #e5e7eb;
+      pointer-events: none;
+    }}
+
+    .shot-body {{ padding: 18px; flex: 1; display: flex; flex-direction: column; gap: 14px; }}
+
+    /* Link Import Bar */
+    .link-import-bar {{
+      display: flex;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }}
+    .link-import-bar input {{
+      flex: 1;
+      background: #131722;
+      border: 1px solid #2d354b;
+      border-radius: 4px;
+      color: #f3f4f6;
+      font-size: 12px;
+      padding: 6px 10px;
+      outline: none;
+    }}
+    .link-import-bar input:focus {{ border-color: var(--accent-blue); }}
+    .btn-fetch-link {{
+      background: rgba(59, 130, 246, 0.25);
+      border: 1px solid var(--accent-blue);
+      color: #bfdbfe;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }}
+    .btn-fetch-link:hover {{ background: rgba(59, 130, 246, 0.45); color: #fff; }}
+
+    .grammar-row {{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      border-radius: 6px;
+    }}
+    .grammar-row div strong {{ color: #d1d5db; display: block; }}
+    .grammar-row div span {{ color: var(--text-muted); }}
+
+    .prompt-box {{
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }}
+    .prompt-box:hover {{
+      border-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.05);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
+      transform: scale(1.005);
+    }}
+    .prompt-box .p-title {{
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-amber);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .prompt-box p {{ font-size: 12.5px; color: #e5e7eb; font-style: italic; }}
+
+    .copy-hint-pill {{
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fde68a;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }}
+
+    .audio-matrix {{
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }}
+    .audio-pill {{
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #232736;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }}
+    .audio-pill.active {{
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }}
+    .audio-toggle-btn {{
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid var(--accent-purple);
+      color: #d8b4fe;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }}
+    .audio-toggle-btn:hover {{ background: rgba(139, 92, 246, 0.4); }}
+
+    .voice-box {{
+      font-size: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #d8b4fe;
+    }}
+    .shot-card.drag-over {{
+      border-color: var(--accent-green) !important;
+      box-shadow: 0 0 24px rgba(16, 185, 129, 0.45);
+      transform: scale(1.02);
+    }}
+    .rec-btn {{
+      background: rgba(139, 92, 246, 0.25);
+      border: 1px solid var(--accent-purple);
+      color: #e9d5ff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }}
+    .rec-btn:hover {{ background: rgba(139, 92, 246, 0.45); }}
+    .rec-btn.recording {{
+      background: rgba(239, 68, 68, 0.3);
+      border-color: #ef4444;
+      color: #fca5a5;
+      animation: pulse-rec 1s infinite alternate;
+    }}
+    @keyframes pulse-rec {{
+      0% {{ opacity: 0.7; transform: scale(0.98); }}
+      100% {{ opacity: 1; transform: scale(1.02); }}
+    }}
+    .save-voice-btn {{
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--accent-green);
+      color: #a7f3d0;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+    }}
+    .save-voice-btn:hover {{ background: rgba(16, 185, 129, 0.4); }}
+
+    .btn-copy-shot {{
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid var(--accent-amber);
+      color: #fde68a;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }}
+    .btn-copy-shot:hover {{ background: rgba(245, 158, 11, 0.35); color: #fff; }}
+
+    .shot-footer {{
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }}
+    .takes-count {{ font-weight: 600; color: #9ca3af; }}
+
+    /* Toast Notification */
+    #toast {{
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      border: 1px solid var(--accent-blue);
+      color: #f8fafc;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      font-weight: 500;
+      z-index: 99999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }}
+    #toast.show {{
+      opacity: 1;
+      transform: translateY(0);
+    }}
+    #toast.toast-success {{ border-color: var(--accent-green); background: #06281e; color: #a7f3d0; }}
+    #toast.toast-info {{ border-color: var(--accent-blue); background: #111c38; color: #bfdbfe; }}
+    #toast.toast-error {{ border-color: #ef4444; background: #2f0d0d; color: #fecaca; }}
+
+    /* Master Film Premiere Player */
+    .master-player-card {{
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98));
+      border: 2px solid rgba(59, 130, 246, 0.6);
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(59, 130, 246, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }}
+    .master-header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }}
+    .master-title-group {{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }}
+    .premiere-badge {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #67e8f9;
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      padding: 3px 10px;
+      border-radius: 999px;
+      width: fit-content;
+    }}
+    .master-header h2 {{
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+    }}
+    .master-specs-tag {{
+      font-size: 12.5px;
+      color: #94a3b8;
+    }}
+    .master-actions {{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }}
+    .btn-master-action {{
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }}
+    .btn-explorer {{
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+    }}
+    .btn-explorer:hover {{
+      background: #334155;
+      border-color: #94a3b8;
+      color: #fff;
+      transform: translateY(-1px);
+    }}
+    .btn-download {{
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      border: none;
+      color: white;
+      box-shadow: 0 2px 10px rgba(6, 182, 212, 0.25);
+    }}
+    .btn-download:hover {{
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }}
+    .btn-assemble {{
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid #8b5cf6;
+      color: #ddd6fe;
+    }}
+    .btn-assemble:hover {{
+      background: rgba(139, 92, 246, 0.35);
+      transform: translateY(-1px);
+    }}
+    .master-video-wrapper {{
+      position: relative;
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }}
+    .master-video-wrapper video {{
+      width: 100%;
+      max-height: 540px;
+      display: block;
+      background: #000;
+    }}
+    .master-timeline-jumpers {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 16px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }}
+    .jumper-label {{
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+    }}
+    .btn-jumper {{
+      background: #1e2538;
+      border: 1px solid #374151;
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }}
+    .btn-jumper:hover {{
+      background: rgba(59, 130, 246, 0.25);
+      border-color: #3b82f6;
+      color: #93c5fd;
+      transform: translateY(-1px);
+    }}
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">
+      <h1>🎬 {project_title}</h1>
+      <p>Projekt: <code>{project_name}</code> | Erstellt: {project_created} | Gesamtdauer: {total_duration}s</p>
+    </div>
+    <div class="meta-badges">
+      <div class="badge badge-blue">📐 {aspect_ratio} ({resolution})</div>
+      <div class="badge badge-purple">⏱️ {step_count} Shots à ~{step_duration}s</div>
+      <div class="badge badge-amber">🎞️ {fps} FPS</div>
+      <div class="badge badge-green">🎨 {genre}</div>
+    </div>
+  </header>
+
+  <div class="watcher-bar" id="watcher-bar">
+    <div class="watcher-status-text">
+      <div class="watcher-dot" id="watcher-dot"></div>
+      <span><strong>Download-Ordner Überwachung:</strong> <span id="watcher-label">Aktiv</span> (<code>C:\\Users\\lukas\\Downloads</code>)</span>
+    </div>
+    <button class="btn-watcher-toggle" id="watcher-toggle-btn" onclick="toggleWatcher()">⏸️ Überwachung pausieren</button>
+  </div>
+
+  {master_section}
+
+  <div class="persistence-box">
+    <h3>📌 Persistenzpuffer (Übersicht)</h3>
+    <div class="persistence-grid">
+      <div class="p-group">
+        <strong>🎭 Charaktere</strong>
+        <span>{characters_str}</span>
+      </div>
+      <div class="p-group">
+        <strong>🗡️ Requisiten</strong>
+        <span>{props_str}</span>
+      </div>
+      <div class="p-group">
+        <strong>🏙️ Orte / Kulisse</strong>
+        <span>{locations_str}</span>
+      </div>
+      <div class="p-group">
+        <strong>📦 Gegenstände</strong>
+        <span>{objects_str}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bible-box">
+    <h2>🗂️ Konsistenz-Kartei (Asset- & Vorlagen-Karteikarten)</h2>
+    <p class="bible-subtitle">
+      Automatisch aggregiert aus allen Shots: Für jedes wiederkehrende Element (Charaktere, Requisiten, Schauplätze) wird hier eine Karteikarte geführt.
+      <strong>Klicken:</strong> Prompt + Bild + Spezifikationen in Zwischenablage kopieren. 
+      <strong>Ziehen (Drag & Drop):</strong> Bild greifen und direkt in externe KI-Chats (Gemini, Discord etc.) ziehen.
+    </p>
+    <div class="bible-grid">
+      {bible_cards}
+    </div>
+  </div>
+
+  <div class="timeline-bar">
+    {timeline_segments}
+  </div>
+
+  <div class="shot-grid">
+    {shot_cards}
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const PROJECT_DATA = {project_data_json};
+
+    let activeRecorders = {{}};
+    let activeStreams = {{}};
+    let recordTimers = {{}};
+
+    function showToast(text, type = 'success') {{
+      const t = document.getElementById('toast');
+      if (!t) return;
+      t.className = 'toast-' + type;
+      t.innerHTML = text;
+      t.classList.add('show');
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(() => {{
+        t.classList.remove('show');
+      }}, 3500);
+    }}
+
+    function jumpMasterVideo(seconds) {{
+      const vid = document.getElementById('main-master-video');
+      if (vid) {{
+        vid.currentTime = seconds;
+        vid.play();
+        vid.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+        showToast('🎬 Sprung zu Sekunde ' + seconds + 's', 'info');
+      }}
+    }}
+
+    async function openProjectFolder() {{
+      try {{
+        showToast('📁 Öffne Ordner in Windows Explorer...', 'info');
+        const res = await fetch('/api/open-folder', {{ method: 'POST' }});
+        const data = await res.json();
+        if (data.status === 'ok') {{
+          showToast('📁 Explorer geöffnet: ' + data.message, 'success');
+        }} else {{
+          showToast('Fehler beim Öffnen: ' + data.message, 'error');
+        }}
+      }} catch (err) {{
+        showToast('Ordner konnte nicht geöffnet werden: ' + err.message, 'error');
+      }}
+    }}
+
+    async function triggerReassemble() {{
+      showToast('🔄 Starte Neuschnitt via FFmpeg...', 'info');
+      try {{
+        const res = await fetch('/api/assemble', {{ method: 'POST' }});
+        const data = await res.json();
+        if (data.status === 'ok') {{
+          showToast('✅ Master-Video erfolgreich neu assembliert!', 'success');
+          setTimeout(() => location.reload(), 1500);
+        }} else {{
+          showToast('Schnittfehler: ' + data.message, 'error');
+        }}
+      }} catch (err) {{
+        showToast('Fehler bei Assembly: ' + err.message, 'error');
+      }}
+    }}
+
+    function onAssetDragStart(e, imgElem, title) {{
+      e.stopPropagation();
+      const fullUrl = imgElem.src;
+      const safeTitle = (title || 'asset').replace(/[^a-zA-Z0-9_-]/g, '_');
+      e.dataTransfer.effectAllowed = 'copy';
+      e.dataTransfer.setData('text/uri-list', fullUrl);
+      e.dataTransfer.setData('text/plain', fullUrl);
+      e.dataTransfer.setData('text/html', `<img src="${{fullUrl}}" alt="${{safeTitle}}">`);
+      try {{
+        e.dataTransfer.setData('DownloadURL', `image/png:${{safeTitle}}.png:${{fullUrl}}`);
+      }} catch (err) {{}}
+    }}
+
+    async function getPngBlobFromUrl(url) {{
+      if (!url) return null;
+      try {{
+        return await new Promise((resolve, reject) => {{
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {{
+            try {{
+              const canvas = document.createElement('canvas');
+              canvas.width = img.naturalWidth || img.width;
+              canvas.height = img.naturalHeight || img.height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+              canvas.toBlob(b => {{
+                if (b) resolve(b);
+                else reject(new Error('toBlob empty'));
+              }}, 'image/png');
+            }} catch (err) {{ reject(err); }}
+          }};
+          img.onerror = () => reject(new Error('img load err'));
+          img.src = url;
+        }});
+      }} catch (e) {{
+        console.warn('getPngBlobFromUrl failed:', e);
+        return null;
+      }}
+    }}
+
+    async function writeToClipboard(textPayload, pngBlob, successMsg) {{
+      if (pngBlob) {{
+        try {{
+          const clipItem = new ClipboardItem({{
+            'image/png': pngBlob,
+            'text/plain': new Blob([textPayload], {{ type: 'text/plain' }})
+          }});
+          await navigator.clipboard.write([clipItem]);
+          showToast(successMsg, 'success');
+          return;
+        }} catch (errCombined) {{
+          console.warn('Combined clipboard write failed, fallback to text:', errCombined);
+        }}
+      }}
+
+      try {{
+        await navigator.clipboard.writeText(textPayload);
+        const firstLine = textPayload.split('\\n')[0];
+        showToast('📋 ' + firstLine + ' kopiert!', 'info');
+      }} catch (errText) {{
+        console.error('Clipboard writeText failed:', errText);
+        showToast('❌ Kopieren fehlgeschlagen: ' + errText.message, 'error');
+      }}
+    }}
+
+    async function copyBibleItem(itemId) {{
+      const item = PROJECT_DATA.bible[itemId];
+      if (!item) return;
+
+      const proj = PROJECT_DATA.project || {{}};
+      let appearingShots = [];
+      for (const s of Object.values(PROJECT_DATA.shots || {{}})) {{
+        const p = s.persistence || {{}};
+        const pText = (s.prompts || []).map(pr => pr.text).join(' ');
+        if (item.name && (
+            pText.toLowerCase().includes(item.name.toLowerCase()) ||
+            (p.characters || []).includes(item.name) ||
+            (p.props || []).includes(item.name) ||
+            (p.locations || []).includes(item.name) ||
+            (p.objects || []).includes(item.name)
+        )) {{
+          appearingShots.push('#' + String(s.step_nr).padStart(2, '0'));
+        }}
+      }}
+      const shotsStr = appearingShots.length > 0 ? appearingShots.join(', ') : 'Projektweit';
+
+      const textPayload = 
+`🗂️ [KONSISTENZ-VORLAGE: ${{item.name}}]
+Kategorie: ${{item.category || 'Asset'}}
+Beschreibung: ${{item.description || ''}}
+Einsatz in Shots: ${{shotsStr}}
+Projekt: ${{proj.title || proj.name || 'Video'}} (${{proj.aspect_ratio || '16:9'}} | ${{proj.resolution || '1080p'}})
+
+============================================================
+PROMPT FÜR BILDGENERIERUNG (REFERENCE SHEET / BIBLE):
+============================================================
+${{item.name}}, ${{item.description || ''}}, photorealistic, ultra-detailed consistency reference sheet, cinematic lighting, 8k resolution, aspect ratio ${{proj.aspect_ratio || '16:9'}}
+============================================================`;
+
+      let pngBlob = null;
+      if (item.reference_image) {{
+        const imgElem = document.querySelector(`img[src*="${{item.reference_image}}"]`);
+        const srcUrl = imgElem ? imgElem.src : item.reference_image;
+        pngBlob = await getPngBlobFromUrl(srcUrl);
+      }}
+
+      await writeToClipboard(textPayload, pngBlob, `⚡ Bild & Konsistenz-Prompt für "${{item.name}}" kopiert!`);
+    }}
+
+    async function copyShotPromptOnly(stepNr, mode = 'plain') {{
+      const shot = PROJECT_DATA.shots[stepNr];
+      if (!shot) return;
+
+      const activeV = shot.active_prompt_version || 'v1';
+      const promptObj = (shot.prompts || []).find(p => p.version === activeV) || (shot.prompts || [])[0] || {{}};
+      let textPayload = promptObj.text || '';
+
+      const voice = shot.voice || {{}};
+      const directives = voice.directives || {{}};
+
+      let label = 'Reiner Prompt';
+      if (mode === 'de') {{
+        const dir = directives.german || (voice.source_text ? `Spoken dialogue in German (clear voice): "${{voice.source_text}}"` : '');
+        if (dir) textPayload += `\n\n${{dir}}`;
+        label = 'Prompt + 🇩🇪 DE';
+      }} else if (mode === 'en') {{
+        const dir = directives.english || (voice.translated_text_en ? `Spoken dialogue in English (clear voice): "${{voice.translated_text_en}}"` : '');
+        if (dir) textPayload += `\n\n${{dir}}`;
+        label = 'Prompt + 🇬🇧 EN';
+      }} else if (mode === 'silent') {{
+        const dir = directives.silent || 'Silent video with ambient environmental sound only, strictly no human voice';
+        textPayload += `\n\n${{dir}}`;
+        label = 'Prompt + 🔇 Stumm';
+      }}
+
+      let pngBlob = null;
+      if (shot.clue_frame) {{
+        const imgElem = document.querySelector(`#shot-${{stepNr}} .shot-preview img`);
+        const srcUrl = imgElem ? imgElem.src : shot.clue_frame;
+        pngBlob = await getPngBlobFromUrl(srcUrl);
+      }}
+
+      await writeToClipboard(textPayload, pngBlob, `📋 ${{label}} für Shot #${{stepNr}} kopiert!`);
+    }}
+
+    async function copyShotDetails(stepNr) {{
+      const shot = PROJECT_DATA.shots[stepNr];
+      if (!shot) return;
+
+      const proj = PROJECT_DATA.project || {{}};
+      const activeV = shot.active_prompt_version || 'v1';
+      const promptObj = (shot.prompts || []).find(p => p.version === activeV) || (shot.prompts || [])[0] || {{}};
+      const promptText = promptObj.text || '';
+
+      const p = shot.persistence || {{}};
+      const chars = (p.characters || []).join(', ') || 'Keine';
+      const props = (p.props || []).join(', ') || 'Keine';
+      const locs = (p.locations || []).join(', ') || 'Keine';
+      const objs = (p.objects || []).join(', ') || 'Keine';
+
+      const audio = shot.audio || {{}};
+      const voice = shot.voice || {{}};
+      const voiceLine = (voice.enabled && voice.text) ? `"${{voice.text}}" (${{voice.speaker || 'Voiceover'}})` : 'Kein Voiceover';
+
+      const textPayload =
+`🎬 [SHOT SPEZIFIKATION: STEP ${{String(stepNr).padStart(2, '0')}}]
+Titel: ${{shot.slug || 'Shot'}} (${{shot.start_sec}}s - ${{shot.end_sec}}s / ${{shot.duration_sec}}s)
+Projekt: ${{proj.title || proj.name || 'Video'}} | Genre: ${{shot.genre_style || proj.default_genre || 'Cinematic'}}
+Format: ${{proj.aspect_ratio || '16:9'}} (${{proj.resolution || '1080p'}}) | ${{proj.fps || 24}} FPS
+
+============================================================
+PROMPT (Version ${{activeV}}):
+============================================================
+${{promptText}}
+
+============================================================
+AUDIO & SPRACH-OPTIONEN (FÜR MULTIMODALE MODELLE WIE GEMINI/VEO/SORA):
+============================================================
+• Option A [Deutsch]: ${{(voice.directives && voice.directives.german) || ('Spoken dialogue in German (clear voice): "' + (voice.source_text || voice.text || '') + '"')}}
+• Option B [English Translation]: ${{(voice.directives && voice.directives.english) || (voice.translated_text_en ? ('Spoken dialogue in English (clear voice): "' + voice.translated_text_en + '"') : 'None')}}
+• Option C [Stumm/Ambient]: ${{(voice.directives && voice.directives.silent) || 'Silent video with ambient environmental sound only, strictly no human voice'}}
+• Schnitt-Status Spur 1 (In-Video): ${{audio.track1_invideo === 'keep' ? 'Keep (Audio im Schnitt beibehalten)' : 'Mute (Im Schnitt stummschalten)'}}
+
+============================================================
+KAMERAFÜHRUNG & BILDSPRACHE:
+============================================================
+• Perspektive: ${{shot.perspective || 'Standard'}}
+• Kameraführung: ${{shot.camera_movement || 'Statisch'}}
+• Licht & Farbe: ${{shot.lighting_color || 'Natürlich'}}
+• Dynamik / Motion: Stärke ${{shot.motion_intensity || 3}}/10
+
+============================================================
+PERSISTENZ-PUFFER (Elemente im Bild):
+============================================================
+• Charaktere: ${{chars}}
+• Requisiten: ${{props}}
+• Schauplatz/Kulisse: ${{locs}}
+• Gegenstände: ${{objs}}`;
+
+      let pngBlob = null;
+      if (shot.clue_frame) {{
+        const imgElem = document.querySelector(`#shot-${{stepNr}} .shot-preview img`);
+        const srcUrl = imgElem ? imgElem.src : shot.clue_frame;
+        pngBlob = await getPngBlobFromUrl(srcUrl);
+      }}
+
+      await writeToClipboard(textPayload, pngBlob, `⚡ Prompt & Spezifikationen für Shot #${{stepNr}} kopiert!`);
+    }}
+
+    // Text direkt kopieren
+    async function copyCustomText(text, msg) {{
+      try {{
+        await navigator.clipboard.writeText(text);
+        showToast('📋 ' + (msg || 'In Zwischenablage kopiert!'), 'success');
+      }} catch(e) {{
+        console.error('Clipboard error:', e);
+      }}
+    }}
+
+    // Video aus Sharelink / URL abholen
+    async function fetchVideoLink(stepNr) {{
+      const inp = document.getElementById('link-input-' + stepNr);
+      const url = inp ? inp.value.trim() : '';
+      if (!url) {{
+        alert('Bitte gib einen Gemini Sharelink oder eine Video-URL ein.');
+        return;
+      }}
+
+      showToast('⏳ Hole Video von Link ab (CDP / Download)...', 'info');
+      try {{
+        const res = await fetch('/api/fetch-link?step=' + stepNr + '&url=' + encodeURIComponent(url), {{
+          method: 'POST'
+        }});
+        const data = await res.json();
+        if (res.ok && data.status === 'ok') {{
+          showToast('🎬 ' + data.message, 'success');
+          setTimeout(() => location.reload(), 1200);
+        }} else {{
+          showToast('❌ Fehler: ' + (data.message || 'Abruf fehlgeschlagen'), 'error');
+        }}
+      }} catch (err) {{
+        showToast('❌ Server-Fehler beim Abruf: ' + err.message, 'error');
+      }}
+    }}
+
+    // In-Video Audio Umschalter (keep / mute)
+    async function toggleAudioTrack(stepNr) {{
+      try {{
+        const res = await fetch('/api/shot/audio-toggle?step=' + stepNr, {{ method: 'POST' }});
+        const data = await res.json();
+        if (res.ok) {{
+          showToast(`🔊 In-Video Audio für Step ${{stepNr}}: ${{data.track1_invideo === 'keep' ? 'AKTIV' : 'STUMM'}}`, 'success');
+          setTimeout(() => location.reload(), 600);
+        }}
+      }} catch (e) {{
+        alert('Fehler beim Umschalten: ' + e.message);
+      }}
+    }}
+
+    // Download Watcher Toggle
+    async function toggleWatcher() {{
+      try {{
+        const res = await fetch('/api/watcher/toggle', {{ method: 'POST' }});
+        const data = await res.json();
+        if (res.ok) {{
+          const isRunning = data.running;
+          document.getElementById('watcher-label').innerText = data.state;
+          const dot = document.getElementById('watcher-dot');
+          const btn = document.getElementById('watcher-toggle-btn');
+          if (isRunning) {{
+            dot.classList.remove('paused');
+            btn.innerText = '⏸️ Überwachung pausieren';
+            showToast('🟢 Download-Ordner Überwachung aktiviert!', 'success');
+          }} else {{
+            dot.classList.add('paused');
+            btn.innerText = '▶️ Überwachung fortsetzen';
+            showToast('⏸️ Download-Ordner Überwachung pausiert.', 'info');
+          }}
+        }}
+      }} catch (e) {{
+        console.warn('Watcher toggle call failed:', e);
+      }}
+    }}
+
+    // Audio-Aufnahme
+    async function toggleRecord(stepNr) {{
+      const btn = document.getElementById('rec-btn-' + stepNr);
+      const timerSpan = document.getElementById('rec-timer-' + stepNr);
+      const playerDiv = document.getElementById('voice-player-' + stepNr);
+
+      if (activeRecorders[stepNr] && activeRecorders[stepNr].state === 'recording') {{
+        activeRecorders[stepNr].stop();
+        clearInterval(recordTimers[stepNr]);
+        btn.innerHTML = '🎙️ Neu aufnehmen';
+        btn.classList.remove('recording');
+        timerSpan.style.display = 'none';
+        return;
+      }}
+
+      try {{
+        const stream = await navigator.mediaDevices.getUserMedia({{ audio: true }});
+        activeStreams[stepNr] = stream;
+        const mediaRecorder = new MediaRecorder(stream);
+        activeRecorders[stepNr] = mediaRecorder;
+        let chunks = [];
+
+        mediaRecorder.ondataavailable = e => {{
+          if (e.data.size > 0) chunks.push(e.data);
+        }};
+
+        mediaRecorder.onstop = () => {{
+          const blob = new Blob(chunks, {{ type: 'audio/webm' }});
+          const audioUrl = URL.createObjectURL(blob);
+          playerDiv.innerHTML = `
+            <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <audio controls src="${{audioUrl}}" style="height: 30px; max-width: 220px;"></audio>
+              <button class="save-voice-btn" onclick="saveVoice(${{stepNr}})">💾 Stimme speichern</button>
+            </div>
+          `;
+          window['recordedBlob_' + stepNr] = blob;
+          stream.getTracks().forEach(track => track.stop());
+        }};
+
+        mediaRecorder.start();
+        btn.innerHTML = '⏹️ Stopp';
+        btn.classList.add('recording');
+        timerSpan.style.display = 'inline';
+
+        let sec = 0;
+        timerSpan.innerText = '● 00:00';
+        recordTimers[stepNr] = setInterval(() => {{
+          sec++;
+          const m = String(Math.floor(sec / 60)).padStart(2, '0');
+          const s = String(sec % 60).padStart(2, '0');
+          timerSpan.innerText = `● ${{m}}:${{s}}`;
+        }}, 1000);
+
+      }} catch (err) {{
+        alert('Mikrofon-Zugriff nicht möglich: ' + err.message);
+      }}
+    }}
+
+    async function saveVoice(stepNr) {{
+      const blob = window['recordedBlob_' + stepNr];
+      if (!blob) return;
+
+      try {{
+        const res = await fetch('/api/upload-voice?step=' + stepNr, {{
+          method: 'POST',
+          body: blob
+        }});
+        if (res.ok) {{
+          showToast('🎙️ Sprecheraufnahme für Step ' + stepNr + ' erfolgreich gespeichert!', 'success');
+          setTimeout(() => location.reload(), 800);
+        }} else {{
+          downloadBlob(blob, `shot${{String(stepNr).padStart(2, '0')}}_voice.webm`);
+        }}
+      }} catch (e) {{
+        downloadBlob(blob, `shot${{String(stepNr).padStart(2, '0')}}_voice.webm`);
+        alert('Als Datei heruntergeladen. Lege sie in den Ordner voice/ des Projekts.');
+      }}
+    }}
+
+    function downloadBlob(blob, filename) {{
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+    }}
+
+    // Drag & Drop für Video-Clips direkt auf die Shot-Karten
+    document.querySelectorAll('.shot-card').forEach(card => {{
+      const stepNr = card.id.replace('shot-', '');
+
+      card.addEventListener('dragover', e => {{
+        e.preventDefault();
+        card.classList.add('drag-over');
+      }});
+
+      card.addEventListener('dragleave', e => {{
+        card.classList.remove('drag-over');
+      }});
+
+      card.addEventListener('drop', async e => {{
+        e.preventDefault();
+        card.classList.remove('drag-over');
+
+        const files = e.dataTransfer.files;
+        if (!files.length) return;
+        const file = files[0];
+
+        if (file.type.startsWith('video/')) {{
+          const previewDiv = card.querySelector('.shot-preview');
+          const videoUrl = URL.createObjectURL(file);
+          previewDiv.innerHTML = `<video controls autoplay loop muted src="${{videoUrl}}" style="width:100%; height:100%; object-fit:cover;"></video><div class="preview-badge">Vorschau (Lokal)</div>`;
+        }}
+
+        try {{
+          const res = await fetch('/api/upload-clip?step=' + stepNr + '&filename=' + encodeURIComponent(file.name), {{
+            method: 'POST',
+            body: file
+          }});
+          if (res.ok) {{
+            showToast('🎬 Clip für Step ' + stepNr + ' empfangen & Clue-Frame extrahiert!', 'success');
+            setTimeout(() => location.reload(), 1000);
+          }}
+        }} catch(err) {{
+          console.log('Server nicht erreichbar oder Standalone-Modus. Vorschau lokal aktiv.');
+        }}
+      }});
+    }});
+
+    // ============================================================
+    // COWORK PROTOCOL (PROTOCOL-ONLY WebMCP CONNECTOR)
+    // ============================================================
+    window.CoworkProtocol = {{
+      version: '1.0.0',
+
+      // 1. Focus Packet (Bounded Context, token-capped)
+      getFocusPacket() {{
+        let activeStepNr = 1;
+        const shots = window.PROJECT_DATA?.shots || {{}};
+        for (const nr of Object.keys(shots).sort((a,b) => a-b)) {{
+          if (!shots[nr]?.selected_take) {{
+            activeStepNr = parseInt(nr);
+            break;
+          }}
+        }}
+        const shot = shots[activeStepNr] || {{}};
+        const activeV = shot.active_prompt_version || 'v1';
+        const pObj = (shot.prompts || []).find(p => p.version === activeV);
+        const promptText = pObj ? pObj.text : '';
+
+        return {{
+          protocolVersion: 'cowork.v1',
+          targetId: 'shot_' + activeStepNr,
+          step_nr: activeStepNr,
+          slug: shot.slug || '',
+          timeframe: (shot.start_sec || 0) + 's-' + (shot.end_sec || 10) + 's',
+          active_prompt: promptText,
+          clue_frame: shot.clue_frame || null,
+          voice: shot.voice || {{}},
+          capabilities: ['suggest_prompt', 'import_video', 'set_audio_mode'],
+          timestamp: new Date().toISOString()
+        }};
+      }},
+
+      // 2. Offer Action (Non-authorizing proposal)
+      receiveOffer(offer) {{
+        console.log('[COWORK-PROTOCOL] Empfangenes Offer:', offer);
+        const stepNr = offer.step || this.getFocusPacket().step_nr;
+        const card = document.getElementById('shot-' + stepNr);
+        if (!card) return {{ status: 'error', message: 'Shot nicht gefunden' }};
+
+        let banner = card.querySelector('.cowork-offer-banner');
+        if (!banner) {{
+          banner = document.createElement('div');
+          banner.className = 'cowork-offer-banner';
+          banner.style.cssText = 'background: rgba(139, 92, 246, 0.15); border: 1px solid #8b5cf6; border-radius: 8px; padding: 10px 12px; margin: 10px 0; font-size: 12px; color: #ede9fe;';
+          const body = card.querySelector('.shot-body');
+          body.insertBefore(banner, body.firstChild);
+        }}
+
+        const summaryText = offer.summary || offer.prompt || offer.url || JSON.stringify(offer);
+        const encoded = encodeURIComponent(JSON.stringify(offer));
+        banner.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+            <div>
+              <strong style="color: #c4b5fd;">💡 Cowork Offer (${{offer.action || 'Vorschlag'}}):</strong>
+              <div style="margin-top: 4px; font-style: italic; color: #f5f3ff;">"${{summaryText}}"</div>
+            </div>
+            <div style="display: flex; gap: 6px; flex-shrink: 0;">
+              <button class="btn-action" style="background: #10b981; color: white; padding: 4px 10px; font-size: 11px; border-radius: 4px; border:none; cursor:pointer;" onclick="CoworkProtocol.applyOffer(${{stepNr}}, '${{encoded}}')">✅ Annehmen</button>
+              <button class="btn-action" style="background: rgba(107, 114, 128, 0.3); color: #d1d5db; padding: 4px 8px; font-size: 11px; border-radius: 4px; border:none; cursor:pointer;" onclick="this.closest('.cowork-offer-banner').remove()">✕</button>
+            </div>
+          </div>
+        `;
+        showToast('💡 Neues Cowork-Angebot für Step ' + stepNr + ' erhalten!', true);
+        return {{ status: 'ok', message: 'Offer im Dashboard platziert', offerId: 'off_' + Date.now() }};
+      }},
+
+      // 3. Apply Offer (Causal Receipt)
+      async applyOffer(stepNr, encodedOffer) {{
+        const offer = typeof encodedOffer === 'string' ? JSON.parse(decodeURIComponent(encodedOffer)) : encodedOffer;
+        showToast('⏳ Wende Cowork Offer für Step ' + stepNr + ' an...');
+        try {{
+          const res = await fetch('/api/cowork/apply-offer', {{
+            method: 'POST',
+            headers: {{ 'Content-Type': 'application/json' }},
+            body: JSON.stringify({{ step: stepNr, offer: offer }})
+          }});
+          const data = await res.json();
+          if (data.status === 'ok') {{
+            showToast('✅ Offer angewendet! Receipt: ' + (data.receiptId || 'ok'), true);
+            setTimeout(() => location.reload(), 800);
+          }} else {{
+            showToast('❌ Fehler beim Anwenden: ' + data.message, false);
+          }}
+        }} catch(e) {{
+          showToast('❌ Netzwerkfehler: ' + e.message, false);
+        }}
+      }}
+    }};
+
+    // WebMCP Registration (document.modelContext)
+    if (typeof document !== 'undefined' && document.modelContext && typeof document.modelContext.registerTool === 'function') {{
+      try {{
+        document.modelContext.registerTool({{
+          name: 'cowork_read_focus',
+          description: 'Read the currently active video shot from the Storyboard director as a bounded Cowork packet.',
+          inputSchema: {{ type: 'object', properties: {{}} }},
+          async execute() {{
+            return {{ content: [{{ type: 'text', text: JSON.stringify(CoworkProtocol.getFocusPacket()) }}] }};
+          }}
+        }});
+
+        document.modelContext.registerTool({{
+          name: 'cowork_offer_action',
+          description: 'Propose a non-authorizing video prompt, sharelink or audio directive to the Storyboard director.',
+          inputSchema: {{
+            type: 'object',
+            properties: {{
+              action: {{ type: 'string', enum: ['suggest_prompt', 'import_video', 'set_audio_mode'] }},
+              step: {{ type: 'number' }},
+              prompt: {{ type: 'string' }},
+              url: {{ type: 'string' }},
+              summary: {{ type: 'string' }}
+            }},
+            required: ['action']
+          }},
+          async execute(args) {{
+            const res = CoworkProtocol.receiveOffer(args);
+            return {{ content: [{{ type: 'text', text: JSON.stringify(res) }}] }};
+          }}
+        }});
+        console.log('[COWORK-PROTOCOL] Native WebMCP tools registered on document.modelContext');
+      }} catch(err) {{
+        console.warn('[COWORK-PROTOCOL] WebMCP registration warning:', err);
+      }}
+    }}
+  </script>
+</body>
+</html>

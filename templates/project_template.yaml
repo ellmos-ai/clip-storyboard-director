@@ -1,0 +1,139 @@
+project:
+  name: "demo-clip"
+  title: "Die verlorene Taschenuhr"
+  created: "2026-09-07"
+  total_duration_sec: 30
+  step_duration_sec: 10
+  calculated_steps: 3
+  aspect_ratio: "16:9"
+  fps: 24
+  resolution: "1080p"
+  default_genre: "Cinematic Neo-Noir Sci-Fi"
+  lighting_mood: "Dunkle Gasse, nasser Asphalt, kaltes Neon-Blau mit warmem gelbem Gegenlicht"
+
+persistence_buffer:
+  props:
+    - "Messing-Taschenuhr mit zerbrochenem Glas"
+  characters:
+    - name: "Detective Vance"
+      appearance: "Mitte 40, müder Blick, dunkler Leder-Trenchcoat, nasses Haar, Dreitagebart"
+  locations:
+    - name: "Regennasse Cyberpunk-Gasse"
+      features: "Alte Backsteinwände, holografische Reklametafeln, Dampf aus Gittern"
+  objects:
+    - "Verrostetes Brecheisen an der Wand gelehnt"
+
+audio_defaults:
+  master_loudness_target_lufs: -16
+  voice_actor: "en-US-AndrewNeural"
+  background_bed_level_lufs: -36
+
+shots:
+  - step_nr: 1
+    slug: "opening-gasse"
+    type: "video"
+    start_sec: 0
+    end_sec: 10
+    duration_sec: 10
+    genre_style: "Cinematic Neo-Noir Sci-Fi"
+    lighting_color: "Kaltes Neon-Blau, tiefe Schatten, feuchter Bodenglanz"
+    perspective: "Wide Shot, leicht untersichtig"
+    camera_movement: "Langsame Kamerafahrt vorwärts (Slow Dolly In)"
+    motion_intensity: 3
+    prompts:
+      - version: "v1"
+        text: "Cinematic neo-noir street at night, heavy rain, glowing blue neon signs reflecting on wet asphalt, steam rising from sewer grate, atmospheric, 8k, photorealistic"
+        diff: "Initialer Entwurf"
+      - version: "v2"
+        text: "Cinematic neo-noir alleyway at night, heavy rain, detective Vance in dark trenchcoat walking away from camera down glowing blue neon street, steam rising, moody reflections, 8k"
+        diff: "Charakter Vance hinzugefügt, Gehwinkel definiert"
+    active_prompt_version: "v2"
+    takes:
+      - id: "v01"
+        file: "video/shot01_v01.mp4"
+        engine: "kling-ai"
+        seed: 4892110
+        notes: "Guter Regen, Bewegung sehr natürlich"
+    selected_take: "v01"
+    clue_frame: "frames/shot01_v01_lastframe.png"
+    audio:
+      track1_invideo: "mute"
+      track2_bed: "audio/track2_bed/synth_ambient_loop.mp3"
+      track3_midi: "audio/track3_midi/intro_chord.mid"
+      track4_sfx: "audio/track4_sfx/heavy_rain_thunder.mp3"
+      transition_video: "cut"
+      transition_audio: "crossfade_1s"
+    voice:
+      enabled: true
+      speaker: "en-US-AndrewNeural"
+      text: "Die Stadt vergisst nichts. Aber sie begräbt ihre Geheimnisse tief im Regen."
+      rendered_file: "voice/shot01_voice.mp3"
+      lip_sync: false
+
+  - step_nr: 2
+    slug: "close-up-uhr"
+    type: "video"
+    start_sec: 10
+    end_sec: 20
+    duration_sec: 10
+    genre_style: "Cinematic Neo-Noir Sci-Fi"
+    lighting_color: "Warmes gelbes Streiflicht von einer Straßenlaterne"
+    perspective: "Extreme Close-Up"
+    camera_movement: "Statisch mit sanftem Rack-Focus"
+    motion_intensity: 2
+    prompts:
+      - version: "v1"
+        text: "Extreme close up of a hand picking up an antique brass pocket watch with cracked glass from wet pavement, rain droplets splashing on glass, cinematic lighting"
+        diff: "Startbild ist Anschlussframe aus Shot 1"
+    active_prompt_version: "v1"
+    takes: []
+    selected_take: null
+    clue_frame: null
+    audio:
+      track1_invideo: "mute"
+      track2_bed: "audio/track2_bed/synth_ambient_loop.mp3"
+      track3_midi: null
+      track4_sfx: "audio/track4_sfx/clock_tick_reverb.mp3"
+      transition_video: "dissolve_0.5s"
+      transition_audio: "sound_bridge"
+    voice:
+      enabled: true
+      speaker: "en-US-AndrewNeural"
+      text: "Bis jemand kommt, der die Zeiger wieder in Bewegung setzt."
+      rendered_file: null
+      lip_sync: false
+
+  - step_nr: 3
+    slug: "reaktion-vance"
+    type: "video"
+    start_sec: 20
+    end_sec: 30
+    duration_sec: 10
+    genre_style: "Cinematic Neo-Noir Sci-Fi"
+    lighting_color: "Halbseitige Ausleuchtung, Rembrandtleuchte, feuchte Schatten"
+    perspective: "Medium Close-Up, Augenhöhe"
+    camera_movement: "Leichter Tilt nach oben auf sein Gesicht"
+    motion_intensity: 2
+    prompts:
+      - version: "v1"
+        text: "Medium close up of Detective Vance looking down at the pocket watch, wiping rainwater from his brow, looking up with grim determination, cinematic lighting, 8k"
+        diff: "Initialer Entwurf"
+    active_prompt_version: "v1"
+    takes: []
+    selected_take: null
+    clue_frame: null
+    audio:
+      track1_invideo: "mute"
+      track2_bed: "audio/track2_bed/synth_ambient_loop.mp3"
+      track3_midi: "audio/track3_midi/outro_bass.mid"
+      track4_sfx: null
+      transition_video: "fade_to_black"
+      transition_audio: "fade_out_2s"
+    voice:
+      enabled: false
+      speaker: null
+      text: null
+      rendered_file: null
+      lip_sync: false
+
+branches: []

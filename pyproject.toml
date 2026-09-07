@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clip-storyboard-director"
+version = "0.1.0"
+description = "Local-first AI storyboard director and video pipeline orchestrator with browser CDP automation and interactive timeline cockpit"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = [
+    "ai",
+    "video-director",
+    "storyboard",
+    "video-generation",
+    "veo",
+    "kling",
+    "runway",
+    "cdp-automation",
+    "clue-frame",
+    "continuity",
+    "agent-workflow",
+    "generative-ui",
+    "llm-ready"
+]
+authors = [
+    { name = "ellmos-ai" },
+    { name = "Lukas Geiger" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Multimedia :: Video :: Non-Linear Editor",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+dependencies = [
+    "pyyaml>=6.0",
+    "edge-tts>=6.1.0",
+    "websocket-client>=1.6.0",
+    "requests>=2.28.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1.0"
+]
+
+[project.scripts]
+clip-director = "clip_director.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ellmos-ai/clip-storyboard-director"
+Repository = "https://github.com/ellmos-ai/clip-storyboard-director.git"
+Issues = "https://github.com/ellmos-ai/clip-storyboard-director/issues"
+Documentation = "https://github.com/ellmos-ai/clip-storyboard-director#readme"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-v"

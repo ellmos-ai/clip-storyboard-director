@@ -1,0 +1,314 @@
+project:
+  name: sternenseufzer
+  title: Sternenseufzer
+  author: Lukas Geiger (Text) / clip-storyboard-director
+  source: Gedicht 'Sternenseufzer' von Lukas Geiger (aus dem Gedichtband 'Schmerz
+    lass nach', BoD 2018/2019)
+  created: '2026-09-07'
+  total_duration_sec: 40
+  step_duration_sec: 10
+  calculated_steps: 4
+  aspect_ratio: '16:9'
+  fps: 24
+  resolution: 1080p
+  default_genre: Poetisch-Philosophischer Sci-Fi / Kosmischer Realismus
+  lighting_mood: Dunkelblaue Nacht, samtiges Sternenlicht, glühendes Sonnen-Gold im
+    tiefen Kosmos
+settings:
+  desktop_handoff_enabled: false
+persistence_buffer:
+  characters:
+  - name: Der Träumer
+    appearance: Silhouette eines jungen Mannes im wehenden Mantel, windzerzaustes
+      Haar, im Profil gegen das Sternenlicht
+  locations:
+  - name: Der Sternenhügel
+    features: Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme
+      im Gegenlicht
+  - name: Der tiefe Kosmos
+    features: Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und samtigem
+      Tiefenlicht
+  objects:
+  - name: Die sprechenden Sonnen-Sterne
+    features: Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder
+      und Protuberanzen
+  props:
+  - name: Die Sternenstaub-Hand
+    features: Menschliche Handfläche, gegen die Sterne geöffnet, zarte Lichtfunken
+      an den Fingerspitzen
+consistency_bible:
+- id: char_traeumer
+  name: Der Träumer
+  category: Charakter
+  description: Silhouette eines nachdenklichen Mannes im Mantel, windzerzaustes Haar,
+    im Profil gegen das Sternenlicht.
+  reference_image: assets/refs/ref_traeumer.png
+- id: loc_huegel
+  name: Der Sternenhügel
+  category: Ort / Kulisse
+  description: Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme
+    im Gegenlicht.
+  reference_image: assets/refs/ref_sternenhuegel.png
+- id: obj_sonnenstern
+  name: Die sprechenden Sonnen-Sterne
+  category: Gegenstand
+  description: Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder
+    und Protuberanzen.
+  reference_image: assets/refs/ref_sonnensterne.png
+- id: loc_kosmos
+  name: Der tiefe Kosmos
+  category: Ort / Kulisse
+  description: Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und sanftem
+    Tiefenlicht.
+  reference_image: assets/refs/ref_kosmos.png
+- id: prop_hand
+  name: Die Sternenstaub-Hand
+  category: Requisite
+  description: Menschliche Handfläche, gegen die Sterne geöffnet, zarte Rauch-/Lichtfäden
+    an den Fingerspitzen.
+  reference_image: assets/refs/ref_hand.png
+audio_defaults:
+  master_loudness_target_lufs: -16
+  voice_actor: de-DE-ConradNeural
+  background_bed_level_lufs: -36
+shots:
+- step_nr: 1
+  slug: opening-sternenhuegel
+  type: video
+  start_sec: 0
+  end_sec: 10
+  duration_sec: 10
+  genre_style: Poetisch-Philosophischer Sci-Fi
+  lighting_color: Tiefblaues Mondlicht, samtige Schatten, funkelnder Himmelsglanz
+  perspective: Extreme Wide Shot, untersichtig vom Hügelfuß
+  camera_movement: Langsame Kranfahrt aufwärts in Richtung Nachthimmel
+  motion_intensity: 2
+  persistence:
+    characters:
+    - Der Träumer
+    locations:
+    - Der Sternenhügel
+    props: []
+    objects: []
+  prompts:
+  - version: v1
+    text: A solitary silhouette of a thoughtful man in a long coat standing on a grassy
+      hilltop next to an ancient gnarled oak tree at night, looking up at an immense
+      breathtaking starry sky filled with luminous constellations, slow upward crane
+      camera movement, cinematic 8k, Terence Malick style, tranquil, philosophical
+    diff: 'Eröffnungsbild: Mensch in Ehrfurcht vor der Unendlichkeit'
+  active_prompt_version: v1
+  takes:
+  - id: v01
+    file: video/shot01_v01.mp4
+    engine: google-veo-gemini
+    notes: Auto-Ingest aus gemini_shot01_take01.mp4
+  selected_take: v01
+  clue_frame: frames/shot01_v01_lastframe.png
+  audio:
+    track1_invideo: mute
+    track2_bed: audio/track2_bed/night_ambient_wind.mp3
+    track3_midi: audio/track3_midi/celesta_intro.mid
+    track4_sfx: audio/track4_sfx/night_crickets_gentle.mp3
+    transition_video: dissolve_1s
+    transition_audio: crossfade_1.5s
+  voice:
+    enabled: true
+    speaker: de-DE-ConradNeural
+    source_text: 'Ich träum von den Sternen, die dort oben weit entfernt leuchten
+      lernen und seufzen: Ach, warum sind wir nur so weit weg von den Menschen, die
+      uns lieben?'
+    translated_text_en: 'I dream of the stars, learning to shine far away up there
+      and sighing: Ah, why are we so far away from the people who love us?'
+    text: 'Ich träum von den Sternen, die dort oben weit entfernt leuchten lernen
+      und seufzen: Ach, warum sind wir nur so weit weg von den Menschen, die uns lieben?'
+    rendered_file: null
+    lip_sync: false
+    directives:
+      german: 'Spoken dialogue in German (clear, emotional voice): "Ich träum von
+        den Sternen, die dort oben weit entfernt leuchten lernen und seufzen: Ach,
+        warum sind wir nur so weit weg von den Menschen, die uns lieben?"'
+      english: 'Spoken dialogue in English (clear, emotional voice): "I dream of the
+        stars, learning to shine far away up there and sighing: Ah, why are we so
+        far away from the people who love us?"'
+      silent: Silent video with ambient night breeze and gentle cosmic shimmer only,
+        strictly no human speech
+- step_nr: 2
+  slug: kosmischer-dialog
+  type: video
+  start_sec: 10
+  end_sec: 20
+  duration_sec: 10
+  genre_style: Kosmischer Realismus
+  lighting_color: Intensives warmes Gold und Bernstein gegen samtenes Tiefschwarz
+  perspective: Medium Shot im Weltall, zwei Himmelskörper im Fokus
+  camera_movement: Schwebende Kreisbewegung um die glühenden Sonnen
+  motion_intensity: 3
+  persistence:
+    characters: []
+    locations:
+    - Der tiefe Kosmos
+    props: []
+    objects:
+    - Die sprechenden Sonnen-Sterne
+  prompts:
+  - version: v1
+    text: Deep space cinematic shot of two burning, radiant stars hovering close together,
+      intense golden plasma loops and solar flares gently pulsing, surrounding cosmic
+      dust in deep indigo and violet, awe-inspiring, photorealistic sci-fi
+    diff: 'Makro-Perspektive: Die Sterne als heisse, lebendige Sonnen'
+  active_prompt_version: v1
+  takes:
+  - id: v01
+    file: video/shot02_v01.mp4
+    engine: ki-generator
+    notes: Auto-Ingest aus fetched_shot02.mp4
+  selected_take: v01
+  clue_frame: frames/shot02_v01_lastframe.png
+  audio:
+    track1_invideo: mute
+    track2_bed: audio/track2_bed/space_drone_deep.mp3
+    track3_midi: audio/track3_midi/space_harmony.mid
+    track4_sfx: audio/track4_sfx/solar_flare_rumble.mp3
+    transition_video: morph
+    transition_audio: sound_bridge
+  voice:
+    enabled: true
+    speaker: de-DE-ConradNeural
+    source_text: 'Ein schlauer Stern flüstert leise zu: Weil wir sie sonst verbrennen
+      würden! Ganz nah sind wir doch heiße Sonnen.'
+    translated_text_en: 'A clever star whispers softly: Because otherwise we would
+      burn them! Up close, we are scorching suns.'
+    text: 'Ein schlauer Stern flüstert leise zu: Weil wir sie sonst verbrennen würden!
+      Ganz nah sind wir doch heiße Sonnen.'
+    rendered_file: null
+    lip_sync: false
+    directives:
+      german: 'Spoken dialogue in German (whispering, warm voice): "Ein schlauer Stern
+        flüstert leise zu: Weil wir sie sonst verbrennen würden! Ganz nah sind wir
+        doch heiße Sonnen."'
+      english: 'Spoken dialogue in English (whispering, warm voice): "A clever star
+        whispers softly: Because otherwise we would burn them! Up close, we are scorching
+        suns."'
+      silent: Silent video with deep cosmic hum and solar flare rumble only, strictly
+        no human speech
+- step_nr: 3
+  slug: ferne-juwelen
+  type: video
+  start_sec: 20
+  end_sec: 30
+  duration_sec: 10
+  genre_style: Kosmischer Realismus
+  lighting_color: Kristallines Sternenfunkeln, weiches diffuses Nebellicht
+  perspective: Extremer Zoom-Out / Weitwinkel-Kosmos
+  camera_movement: Schnelle Rückwärtsfahrt (Dolly Out), Sonnen schrumpfen zu funkelnden
+    Diamanten
+  motion_intensity: 4
+  persistence:
+    characters: []
+    locations:
+    - Der tiefe Kosmos
+    props: []
+    objects:
+    - Die sprechenden Sonnen-Sterne
+  prompts:
+  - version: v1
+    text: Cosmic pull back camera movement, the fiery suns shrink into delicate sparkling
+      diamond stars in a vast velvet nebula, shooting stars streaking across the galaxy,
+      beautiful melancholic cosmic wonder, cinematic 8k
+    diff: 'Distanz schafft Sehnsucht: Von der Hitze zum verträumten Leuchten'
+  active_prompt_version: v1
+  takes:
+  - id: v01
+    file: video/shot03_v01.mp4
+    engine: ki-generator
+    notes: Auto-Ingest aus Cosmic_pull_back_camera_moveme.mp4
+  selected_take: v01
+  clue_frame: frames/shot03_v01_lastframe.png
+  audio:
+    track1_invideo: keep
+    track2_bed: audio/track2_bed/space_drone_deep.mp3
+    track3_midi: audio/track3_midi/piano_stars.mid
+    track4_sfx: audio/track4_sfx/chimes_shimmer.mp3
+    transition_video: dissolve_1s
+    transition_audio: crossfade_1s
+  voice:
+    enabled: true
+    speaker: de-DE-ConradNeural
+    source_text: Erst in der Ferne werden wir geliebte Sterne, und alle würden uns
+      gern drücken. Nur mit ewiger Sehnsucht wissen wir sie zu verzücken.
+    translated_text_en: Only in the distance do we become beloved stars, and everyone
+      would love to embrace us. Only with eternal longing can we enchant them.
+    text: Erst in der Ferne werden wir geliebte Sterne, und alle würden uns gern drücken.
+      Nur mit ewiger Sehnsucht wissen wir sie zu verzücken.
+    rendered_file: null
+    lip_sync: false
+    directives:
+      german: 'Spoken dialogue in German (melancholic, poetic voice): "Erst in der
+        Ferne werden wir geliebte Sterne, und alle würden uns gern drücken. Nur mit
+        ewiger Sehnsucht wissen wir sie zu verzücken."'
+      english: 'Spoken dialogue in English (melancholic, poetic voice): "Only in the
+        distance do we become beloved stars, and everyone would love to embrace us.
+        Only with eternal longing can we enchant them."'
+      silent: Silent video with ethereal celestial chimes and quiet void reverb only,
+        strictly no human speech
+- step_nr: 4
+  slug: sehnsucht-gute-nacht
+  type: video
+  start_sec: 30
+  end_sec: 40
+  duration_sec: 10
+  genre_style: Poetischer Realismus
+  lighting_color: Silbriges Gegenlicht, sanft verglimmende Funken
+  perspective: Close-Up Hand gegen den offenen Nachthimmel
+  camera_movement: Sanfte Handkamera mit leichtem Focus-Pull auf die Handfläche
+  motion_intensity: 2
+  persistence:
+    characters:
+    - Der Träumer
+    locations:
+    - Der Sternenhügel
+    props:
+    - Die Sternenstaub-Hand
+    objects: []
+  prompts:
+  - version: v1
+    text: Close up of a human hand reaching upward into the clear night sky trying
+      to grasp distant sparkling stars, tiny glowing particles of stardust floating
+      around the fingers, soft focus pull to the silhouette of the head against the
+      cosmos, emotional, poetic cinema, fade to black
+    diff: 'Abschluss: Berührungsversuch, Wärme und Ausklang in die Nacht'
+  active_prompt_version: v1
+  takes:
+  - id: v01
+    file: video/shot04_v01.mp4
+    engine: ki-generator
+    notes: Auto-Ingest aus Close_up_of_a_human_hand_reach.mp4
+  selected_take: v01
+  clue_frame: frames/shot04_v01_lastframe.png
+  audio:
+    track1_invideo: mute
+    track2_bed: audio/track2_bed/night_ambient_wind.mp3
+    track3_midi: audio/track3_midi/celesta_outro.mid
+    track4_sfx: audio/track4_sfx/whisper_decay.mp3
+    transition_video: fade_to_black
+    transition_audio: fade_out_3s
+  voice:
+    enabled: true
+    speaker: de-DE-ConradNeural
+    source_text: Greif nach den Sternen, doch dabei wirst du dich auch verbrennen
+      lernen... Gute Nacht!
+    translated_text_en: Reach for the stars, but in doing so you will also learn how
+      to burn... Good night!
+    text: Greif nach den Sternen, doch dabei wirst du dich auch verbrennen lernen...
+      Gute Nacht!
+    rendered_file: null
+    lip_sync: false
+    directives:
+      german: 'Spoken dialogue in German (gentle, warm whisper): "Greif nach den Sternen,
+        doch dabei wirst du dich auch verbrennen lernen... Gute Nacht!"'
+      english: 'Spoken dialogue in English (gentle, warm whisper): "Reach for the
+        stars, but in doing so you will also learn how to burn... Good night!"'
+      silent: Silent video with gentle wind rustling through grass and distant bell
+        chiming only, strictly no human speech
+branches: []
