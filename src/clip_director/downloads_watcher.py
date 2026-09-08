@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 r"""
-downloads_watcher.py — Überwacht den Windows-Download-Ordner (C:\\Users\lukas\Downloads)
+downloads_watcher.py — Überwacht den lokalen Download-Ordner (~/Downloads)
 NUR während der aktiven Arbeit am Projekt.
 Neue Videodateien werden automatisch erkannt, stabilisiert, in _inbox/ verschoben
 und via ingest.py in das Storyboard übernommen.
@@ -28,7 +28,7 @@ except ImportError:
 class DownloadsWatcher:
     def __init__(self, project_dir, downloads_dir=None, poll_interval=2.0):
         self.project_dir = Path(project_dir).resolve()
-        user_profile = os.environ.get("USERPROFILE", r"C:\\Users\lukas")
+        user_profile = os.environ.get("USERPROFILE") or str(Path.home())
         self.downloads_dir = Path(downloads_dir or (Path(user_profile) / "Downloads")).resolve()
         self.poll_interval = poll_interval
         self.active = False

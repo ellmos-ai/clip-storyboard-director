@@ -270,7 +270,7 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
                         if not s.get("voice"):
                             s["voice"] = {}
                         s["voice"]["enabled"] = True
-                        s["voice"]["speaker"] = "Lukas (Live-Aufnahme)"
+                        s["voice"]["speaker"] = "Live-Aufnahme (Mikrofon)"
                         s["voice"]["rendered_file"] = saved_rel_path
 
                 with open(yaml_file, "w", encoding="utf-8") as f:

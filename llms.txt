@@ -1,0 +1,91 @@
+# clip-storyboard-director
+
+> Local-first AI storyboard director, scene continuity orchestrator, and video pipeline controller with browser CDP automation and interactive timeline cockpit.
+
+- Last-checked: 2026-09-08
+- Version: 0.1.1
+- Module status: `active`; visibility projection: `public`; release gate: `USER`.
+- Architecture: Local-First / Dual-Pane Timeline Cockpit / Edge CDP Automator / FFmpeg Assembly
+- Module Family: ellmos domain modules (`domain.media.direction`, `workflow.video.storyboard`, `workflow.media.pipeline`)
+- Repository: [ellmos-ai/clip-storyboard-director](https://github.com/ellmos-ai/clip-storyboard-director)
+
+## System Overview
+
+`clip-storyboard-director` acts as the bridge between creative storytelling concepts and precise generative video production. It dissects narrative scripts into discrete, time-quantized shots, maintains strict visual continuity across four dimensions (Characters, Locations, Objects, Props), drives external AI video generation engines (such as Google Veo, Runway, and Kling) via Edge Chrome DevTools Protocol (CDP) and Cowork Protocol, and stitches hero takes into a coherent master cut with multi-track audio staging.
+
+## Key Invariants & Architectural Pillars
+
+1. **4D Persistence Buffer (`project.yaml`)**:
+   - Explicit project-wide definitions for Characters, Locations, Objects, and Props.
+   - Grounding image references (`assets/refs/`) to preserve character identity, lighting, and art style across shots.
+
+2. **Clue-Frame Continuity Chain**:
+   - The final extracted frame of shot $N$ (`frames/shot0N_v01_lastframe.png`) automatically primes the visual input prompt for shot $N+1$.
+
+3. **Dual-Pane Cockpit (Edge Edition)**:
+   - **Left Pane:** Interactive visual storyboard timeline (`storyboard.html`) featuring an integrated media player, take manager, and audio staging controls.
+   - **Right Pane:** Generator bridge connecting to generative AI video platforms with automated prompt injection and downloads watching.
+
+4. **Multi-Track Audio Staging & Ducking**:
+   - 4 discrete audio layers: Track 1 (In-Video / Veo ambiance), Track 2 (Atmospheric bed / drone), Track 3 (Melodic / MIDI), Track 4 (Foley / SFX).
+   - High-fidelity synthetic speech synthesis powered by `edge-tts` (e.g. `de-DE-ConradNeural`).
+   - Automated side-chain audio ducking of background tracks beneath dialogue.
+
+5. **Bi-Directional Ecosystem Handoff**:
+   - Direct interoperability with `ai-media-editor` (`cut_view`, `frame_view`, HyperFrames) for speech trimming and post-production.
+   - Standalone resilience: executes completely independently without required upstream packages.
+
+## CLI Quick Reference
+
+```bash
+# Verify system prerequisites (FFmpeg, Microsoft Edge, Python packages)
+clip-director doctor
+
+# Initialize a new storyboard project with time-quantized steps
+clip-director init my_film --title "My Film" --duration 40 --step 10
+
+# Launch the interactive board server (default port 8765)
+clip-director serve --project projects/my_film
+
+# Open the dual-pane director cockpit in Microsoft Edge
+clip-director cockpit --project projects/my_film
+
+# Start the automated production loop (CDP prompt injector & download watcher)
+clip-director autopilot --project projects/my_film
+
+# Assemble master cut (FFmpeg stitching, voiceover mixing, audio ducking)
+clip-director assemble --project projects/my_film
+
+# Re-render HTML storyboard dashboards
+clip-director render --project projects/my_film
+```
+
+## Python API Usage
+
+```python
+from pathlib import Path
+from clip_director.project import StoryboardProject
+from clip_director.render_dashboard import render_project
+from clip_director.assemble import assemble_project
+
+# Load or inspect a project
+project_dir = Path("projects/my_film")
+proj = StoryboardProject(project_dir)
+
+# Validate continuity and assets
+shots = proj.get_shots()
+print(f"Loaded {len(shots)} shots across {proj.total_duration} seconds.")
+
+# Re-render dashboard
+render_project(project_dir)
+
+# Assemble master cut
+master_path = assemble_project(project_dir)
+print(f"Master output: {master_path}")
+```
+
+## Security & Path Neutrality
+
+- **Zero Telemetry**: No tracking, phone-home telemetry, or external API leaks.
+- **Path Neutrality**: All default directories resolve dynamically relative to user home (`~/Downloads`) or explicitly configured project roots.
+- **Safe Media Handling**: Strict file extension filtering, local socket isolation on loopback interfaces (`127.0.0.1`), and sanitization of user-provided filenames.

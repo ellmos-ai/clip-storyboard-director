@@ -11,7 +11,7 @@ from clip_director.render_cockpit import render_cockpit
 
 
 def test_version():
-    assert __version__ == "0.1.0"
+    assert __version__ == "0.1.1"
 
 
 def test_project_lifecycle(tmp_path):

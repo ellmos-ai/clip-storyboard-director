@@ -1,7 +1,17 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+__pycache__
+*.pyc
 *.py[cod]
 *$py.class
+
+# Environment & Databases
+.env
+.env.*
+*.db
+*.sqlite
+*.sqlite3
+data/
 
 # C extensions
 *.so
@@ -61,3 +71,7 @@ projects/**/_temp_*.mp4
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Canonical Locks & Sync Hygiene
+LOCK*.txt
+*.sync-conflict-*
