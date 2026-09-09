@@ -131,7 +131,7 @@ def process_inbox(project_dir, step_override=None, engine_name="ki-generator", a
                 clue_frame_rel = f"frames/{frame_filename}"
                 print(f"[OK] Clue-Frame erfolgreich extrahiert: {clue_frame_rel}")
             else:
-                print(f"[HINWEIS] Letzter Frame konnte nicht extrahiert werden.")
+                print("[HINWEIS] Letzter Frame konnte nicht extrahiert werden.")
         elif dest_ext in [".png", ".jpg"]:
             # Standbild ist selbst das Clue-Frame
             clue_frame_rel = f"video/{new_filename}"

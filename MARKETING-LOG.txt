@@ -1,0 +1,52 @@
+# MARKETING-LOG.txt — clip-storyboard-director
+# Lokales Audit-, Discoverability- und Marketing-Logbuch
+
+## 2026-09-09 — Pfad B: Discoverability, Branding, Dual Mermaid & Governance Invariants Hardening
+
+### 1. Ausgangslage & Kriterien
+- Repository: ellmos-ai/clip-storyboard-director (C:\_Local_DEV\repos\clip-storyboard-director)
+- Version: 0.1.2 (gehoben von 0.1.1)
+- Kategorie: Local-First AI Storyboard Director & Scene Continuity Orchestrator
+- Initialer Status: Clean working tree auf Branch `main`, 0 aktive Locks, >24h Cooldown.
+
+### 2. Umgesetzte Marketing- & Discoverability-Maßnahmen
+1. Zweisprachige README-Architektur (README.md & README_de.md):
+   - Vollständige Synchronisation von englischer und deutscher Fassung mit 100%iger Anker-Parität.
+   - 14-Punkte-Schnellnavigation mit direkten Sprungmarken zu allen Hauptkapiteln.
+   - Shields.io Badges: Version 0.1.2, CI Passing, Pytest Passing, Python 3.10-3.13, Linux/Windows/macOS, 100% Offline / Zero-Egress, RunAsInvoker Security, 48h Response / 5d Triage SLA, Ruff Code Style, MIT License, llms.txt Ready, ellmos-ai Ecosystem, open-bricks Umbrella, Last Checked 2026-09-09.
+2. Dual Mermaid-Diagramme:
+   - Systemarchitektur & Workflow (flowchart TD).
+   - End-to-End Medien- und Produktions-Lebenszyklus (sequenceDiagram mit autonumber).
+3. Tabelle der Governance- & Laufzeit-Invarianten (10 Kern-Garantien):
+   - 100% Local-First & Zero-Egress (INV-LOCAL-01), Unprivilegierte Non-Elevation (INV-UNPRIV-02), Loopback IPC Isolation (INV-LOOPBACK-03), Subprozess-Sandboxing (INV-SANDBOX-04), 4D-Persistenz-Kontinuität (INV-CONTINUITY-05), Clue-Frame-Verkettung (INV-CLUEFRAME-06), Standalone-Entkopplung (INV-STANDALONE-07), Multi-OS-Parität (INV-MULTIOS-08), Cloud-Sync- & Lock-Resilienz (INV-SYNC-09), 48h Sicherheits- & 5-Tage-Triage-SLA (INV-SLA-10).
+4. Geschwister-Ökosystem & Partner-Matrix:
+   - 17 vernetzte Repositories über ellmos-ai, dev-bricks, file-bricks, doc-bricks, research-line und open-bricks verlinkt (inklusive ai-media-editor als Cutter-Partner).
+5. Zweisprachige Sicherheitsrichtlinie (SECURITY.md):
+   - Offizieller Dachorganisations-Kontakt security@open-bricks.org neben security@ellmos.ai, support@lukasgeiger.com und lukas@open-bricks.org.
+   - Verbindliche 48h-Eingangsbestätigungs-SLA und 5-Werktage-Triage-Zusage.
+   - GitHub Security Advisories Reporting-Link.
+6. CI/CD Concurrency & Bytecode-Validierungsgate (.github/workflows/ci.yml):
+   - GitHub Actions Multi-OS Matrix (Ubuntu, Windows, macOS) für Python 3.10-3.13.
+   - Bytecode-Validierungsgate `python -m compileall -q src tests`.
+   - Concurrency cancel-in-progress: true aktiv.
+7. Repository- & Sync-Hygiene (.gitignore):
+   - Schutz vor Cloud-Sync-Konflikten (*.sync-conflict-*, *.conflict, *-CONFLIT-*, *-conflict-*, *.sync-temp-*).
+   - Multi-Agent Mutex-Lock-Muster (LOCK, LOCK.*, *.lock, LOCK*.txt).
+   - Build- und Test-Caches (.pytest_cache/, .ruff_cache/, .coverage, htmlcov/, .wheel-smoke/, wheelhouse/, *.tmp, *.bak).
+8. PEP 621 Standard-Metadaten (pyproject.toml):
+   - Version 0.1.2 synchronisiert.
+   - Standardisierte [project.urls] für Parent Organization, Umbrella Ecosystem, Changelog, Security.
+   - Standard-Pytest-Option addopts = "-v".
+9. Dritte-Partei-Lizenzinventar (THIRD_PARTY_LICENSES.md):
+   - Detaillierte Erfassung von PyYAML, edge-tts, websocket-client, requests, pytest, ruff, setuptools, FFmpeg und Edge.
+10. Maschinenlesbarer Kontext (llms.txt):
+    - Aktualisiert auf Stand 2026-09-09, Version 0.1.2.
+11. Release-Protokollierung (CHANGELOG.md):
+    - Release 0.1.2 Discoverability- und Pfad-B-Eintrag ergänzt.
+12. Automatisierte Vertragstestsuite (tests/test_metadata.py):
+    - Contract-Tests zur kontinuierlichen Absicherung aller Discoverability-, Paritäts-, Governance- und Sicherheitsstandards.
+
+### 3. Zukünftige Discoverability-Empfehlungen
+- Erstellung eines Video-Demos oder Screencasts der Dual-Pane Edge Cockpit Integration.
+- Veröffentlichung eines Blog-Artikels / Case-Study über 4D-Persistenz und Clue-Frame-Verkettung bei generativen Videomodellen (Veo/Kling/Runway).
+- Einreichung bei kuratierten Listen generativer KI- und Medienproduktions-Werkzeuge (awesome-generative-ai, awesome-video-ai).

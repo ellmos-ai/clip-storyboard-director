@@ -10,9 +10,7 @@ Ermöglicht:
 
 import argparse
 import json
-import os
 import subprocess
-import sys
 import time
 import urllib.parse
 import urllib.request
@@ -62,7 +60,7 @@ def list_edge_tabs(port=DEFAULT_EDGE_PORT):
         with urllib.request.urlopen(req, timeout=1.5) as resp:
             tabs = json.loads(resp.read().decode("utf-8"))
             return [t for t in tabs if t.get("type") == "page"]
-    except Exception as e:
+    except Exception:
         return []
 
 

@@ -72,6 +72,21 @@ projects/**/_temp_*.mp4
 Thumbs.db
 desktop.ini
 
-# Canonical Locks & Sync Hygiene
+# Canonical Locks & Multi-Agent Mutex
+LOCK
+LOCK.*
+*.lock
 LOCK*.txt
+
+# Multi-Host Sync Conflict Copies
+*-conflict-*
+*.sync-temp-*
 *.sync-conflict-*
+*.conflict
+*-CONFLIT-*
+
+# Ephemeral & Backup files
+*.tmp
+*.bak
+wheelhouse/
+.wheel-smoke/

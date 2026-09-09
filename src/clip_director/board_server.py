@@ -12,9 +12,7 @@ Unterstützt:
 import argparse
 import io
 import json
-import mimetypes
 import os
-import shutil
 import subprocess
 import sys
 import time
@@ -541,7 +539,8 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
 def run_server(project_dir, port=8765, enable_watcher=True):
     global GLOBAL_WATCHER
     project_path = Path(project_dir).resolve()
-    handler = lambda *args, **kwargs: StoryboardHandler(*args, project_dir=project_path, **kwargs)
+    def handler(*args, **kwargs):
+        return StoryboardHandler(*args, project_dir=project_path, **kwargs)
 
     if enable_watcher:
         GLOBAL_WATCHER = DownloadsWatcher(project_path)

@@ -5,7 +5,6 @@ storyboard_init.py — Initialisiert ein neues Clip-Projekt mit berechnetem Shot
 
 import argparse
 import math
-import os
 import sys
 from pathlib import Path
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clip-storyboard-director"
-version = "0.1.1"
+version = "0.1.2"
 description = "Local-first AI storyboard director and video pipeline orchestrator with browser CDP automation and interactive timeline cockpit"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -34,10 +34,15 @@ classifiers = [
     "Topic :: Multimedia :: Video :: Non-Linear Editor",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12"
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
     "pyyaml>=6.0",
@@ -60,6 +65,10 @@ Homepage = "https://github.com/ellmos-ai/clip-storyboard-director"
 Repository = "https://github.com/ellmos-ai/clip-storyboard-director.git"
 Issues = "https://github.com/ellmos-ai/clip-storyboard-director/issues"
 Documentation = "https://github.com/ellmos-ai/clip-storyboard-director#readme"
+Changelog = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/CHANGELOG.md"
+Security = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/SECURITY.md"
+"Parent Organization" = "https://github.com/ellmos-ai"
+"Umbrella Ecosystem" = "https://github.com/open-bricks"
 
 [tool.setuptools.packages.find]
 where = ["src"]

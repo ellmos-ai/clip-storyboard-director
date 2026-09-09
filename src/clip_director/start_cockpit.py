@@ -9,11 +9,9 @@ Ablauf:
 """
 
 import argparse
-import os
 import subprocess
 import sys
 import time
-import urllib.request
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -119,7 +117,7 @@ def launch_edge_cockpit(project_name="sternenseufzer", edge_port=DEFAULT_EDGE_PO
     ]
 
     print("=" * 65)
-    print(f"[COCKPIT] Starte Microsoft Edge Regie-Cockpit...")
+    print("[COCKPIT] Starte Microsoft Edge Regie-Cockpit...")
     print(f"[COCKPIT] App-URL: {cockpit_url}")
     print(f"[COCKPIT] CDP-Port: {edge_port}")
     print(f"[COCKPIT] Edge-Profil: {user_data}")

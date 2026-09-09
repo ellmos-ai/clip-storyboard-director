@@ -4,7 +4,6 @@ desktop_handoff.py — Platziert Clue-Frame und Prompt für den nächsten Schrit
 """
 
 import argparse
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -81,7 +80,7 @@ def clean_desktop(desktop_path=None):
 def handoff_step(project_dir, step_nr, desktop_path=None, force=False):
     project_path = Path(project_dir)
     if not force and not is_desktop_handoff_enabled(project_path):
-        print(f"[INFO] Desktop-Handoff ist in config.json deaktiviert (Dashboard-Modus aktiv). Keine Dateien auf Desktop erzeugt.")
+        print("[INFO] Desktop-Handoff ist in config.json deaktiviert (Dashboard-Modus aktiv). Keine Dateien auf Desktop erzeugt.")
         return
 
     yaml_file = project_path / "project.yaml"
@@ -93,40 +92,27 @@ def handoff_step(project_dir, step_nr, desktop_path=None, force=False):
         data = yaml.safe_load(f)
 
     shots = data.get("shots", [])
-    target_shot = None
-    prev_shot = None
-
-    for s in shots:
-        if s.get("step_nr") == step_nr:
-            target_shot = s
-        elif s.get("step_nr") == step_nr - 1:
-            prev_shot = s
-
+    target_shot = next((s for s in shots if s.get("step") == step_nr), None)
     if not target_shot:
-        print(f"[FEHLER] Step {step_nr} nicht im Projekt gefunden (Max Steps: {len(shots)}).", file=sys.stderr)
+        print(f"[FEHLER] Step {step_nr} nicht im Projekt gefunden.", file=sys.stderr)
         sys.exit(1)
 
     desktop = Path(desktop_path)
     desktop.mkdir(parents=True, exist_ok=True)
 
-    # 1. Clue-Frame aus vorherigem Step kopieren
-    clue_src = None
-    if prev_shot and prev_shot.get("clue_frame"):
-        clue_rel = prev_shot.get("clue_frame")
-        clue_cand = project_path / clue_rel
-        if clue_cand.exists():
-            clue_src = clue_cand
+    # 1. Clue-Frame des vorherigen Steps ermitteln
+    clue_frame_src = None
+    if step_nr > 1:
+        prev_shot = next((s for s in shots if s.get("step") == step_nr - 1), None)
+        if prev_shot and prev_shot.get("clue_frame"):
+            clue_frame_src = project_path / prev_shot.get("clue_frame")
 
-    dest_frame = desktop / "NEXT_SHOT_CLUEFRAME.png"
-    if clue_src:
-        shutil.copy2(clue_src, dest_frame)
-        print(f"[OK] Clue-Frame auf Desktop bereitgestellt: {dest_frame.name} (aus Step {step_nr - 1})")
+    if clue_frame_src and clue_frame_src.exists():
+        dest_clue = desktop / f"CLUE_FRAME_STEP_{step_nr:02d}_{clue_frame_src.name}"
+        shutil.copy2(clue_frame_src, dest_clue)
+        print(f"[OK] Clue-Frame auf Desktop bereitgestellt: {dest_clue.name}")
     else:
-        if dest_frame.exists():
-            dest_frame.unlink()
-        if step_nr == 1:
-            print("[INFO] Step 1 ist der Eröffnungsshot (kein vorheriges Clue-Frame).")
-        else:
+        if step_nr > 1:
             print(f"[HINWEIS] Kein Clue-Frame für Step {step_nr - 1} hinterlegt.")
 
     # 2. Prompt-Text & Audio-Direktiven formulieren
@@ -137,7 +123,7 @@ def handoff_step(project_dir, step_nr, desktop_path=None, force=False):
     p_buf = data.get("persistence_buffer", {})
     props_str = ", ".join([p.get("name") if isinstance(p, dict) else str(p) for p in p_buf.get("props", [])]) or "-"
     chars_str = ", ".join([c.get("name") if isinstance(c, dict) else str(c) for c in p_buf.get("characters", [])]) or "-"
-    locs_str = ", ".join([l.get("name") if isinstance(l, dict) else str(l) for l in p_buf.get("locations", [])]) or "-"
+    locs_str = ", ".join([loc.get("name") if isinstance(loc, dict) else str(loc) for loc in p_buf.get("locations", [])]) or "-"
 
     voice = target_shot.get("voice", {})
     directives = voice.get("directives", {})

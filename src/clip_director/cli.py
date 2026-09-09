@@ -5,6 +5,7 @@ Befehl: clip-director
 """
 
 import argparse
+import importlib.util
 import os
 import shutil
 import subprocess
@@ -38,24 +39,21 @@ def cmd_doctor(args=None):
     print(f"✅ Python: {sys.version.split()[0]} ({sys.executable})")
 
     # 3. edge-tts
-    try:
-        import edge_tts
+    if importlib.util.find_spec("edge_tts") is not None:
         print("✅ edge-tts: INSTALLIERT")
-    except ImportError:
+    else:
         print("⚠️ edge-tts: Nicht installiert (pip install edge-tts)")
 
     # 4. PyYAML
-    try:
-        import yaml
+    if importlib.util.find_spec("yaml") is not None:
         print("✅ PyYAML: INSTALLIERT")
-    except ImportError:
+    else:
         print("❌ PyYAML: FEHLT (pip install pyyaml)")
 
     # 5. Browser Automation (websocket-client)
-    try:
-        import websocket
+    if importlib.util.find_spec("websocket") is not None:
         print("✅ websocket-client: INSTALLIERT")
-    except ImportError:
+    else:
         print("⚠️ websocket-client: FEHLT (pip install websocket-client)")
 
     # 6. Microsoft Edge

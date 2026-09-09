@@ -5,7 +5,6 @@ auto_pilot.py — Vollautonomer Produktions-Orchestrator für Storyboard-Projekt
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 import time
@@ -34,7 +33,7 @@ def get_cowork_focus(server_port=DEFAULT_SERVER_PORT):
         url = f"http://localhost:{server_port}/api/cowork/focus"
         with urllib.request.urlopen(url, timeout=2.0) as resp:
             return json.loads(resp.read().decode("utf-8"))
-    except Exception as e:
+    except Exception:
         return None
 
 

@@ -46,7 +46,7 @@ def render_project(project_dir):
     props_list = [f"{p.get('name')}: {p.get('features', '')}" if isinstance(p, dict) else str(p) for p in p_buf.get("props", [])]
     props_str = "; ".join(props_list) or "Keine hinterlegt"
 
-    locs_list = [f"{l.get('name')}: {l.get('features', '')}" if isinstance(l, dict) else str(l) for l in p_buf.get("locations", [])]
+    locs_list = [f"{loc.get('name')}: {loc.get('features', '')}" if isinstance(loc, dict) else str(loc) for loc in p_buf.get("locations", [])]
     locations_str = "; ".join(locs_list) or "Keine hinterlegt"
 
     objects_list = [f"{o.get('name')}: {o.get('features', '')}" if isinstance(o, dict) else str(o) for o in p_buf.get("objects", [])]
@@ -106,16 +106,12 @@ def render_project(project_dir):
 
             src_text = voice.get("source_text") or voice.get("text") or ""
             trans_en = voice.get("translated_text_en") or ""
-            directives = voice.get("directives", {})
-            dir_de = directives.get("german") or f'Spoken dialogue in German (clear voice): "{src_text}"'
-            dir_en = directives.get("english") or (f'Spoken dialogue in English (clear voice): "{trans_en}"' if trans_en else "")
-            dir_silent = directives.get("silent") or "Silent video with ambient environmental sound only, strictly no human voice"
 
             en_block = ""
-            en_copy_btn = ""
+            en_prompt_btn = ""
             if trans_en:
                 en_block = f'<div style="margin-top: 4px; font-size: 12px; color: #a5b4fc;"><strong style="color: #93c5fd;">🇬🇧 EN Translation:</strong> <em>"{html.escape(trans_en)}"</em></div>'
-                en_copy_btn = f'<button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px;" onclick="copyCustomText({html.escape(json.dumps(dir_en))}, \'EN-Dialoganweisung kopiert!\')">📋 EN-Direktive</button>'
+                en_prompt_btn = f'''<button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;" onclick="copyShotPromptOnly({step_nr}, 'en')" title="Visueller Prompt + englische Dialoganweisung">📋 Prompt + 🇬🇧 EN</button>'''
 
             voice_html = f"""<div class="voice-box">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -130,9 +126,9 @@ def render_project(project_dir):
               </div>
               {en_block}
               <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="copyShotPromptOnly({step_nr}, \'de\')" title="Visueller Prompt + deutsche Dialoganweisung">📋 Prompt + 🇩🇪 DE</button>
-                {f'<button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;" onclick="copyShotPromptOnly({step_nr}, \'en\')" title="Visueller Prompt + englische Dialoganweisung">📋 Prompt + 🇬🇧 EN</button>' if trans_en else ''}
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(107, 114, 128, 0.2); border-color: #6b7280; color: #d1d5db;" onclick="copyShotPromptOnly({step_nr}, \'silent\')" title="Visueller Prompt + Stumm-Direktive">🔇 Prompt + Stumm</button>
+                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="copyShotPromptOnly({step_nr}, 'de')" title="Visueller Prompt + deutsche Dialoganweisung">📋 Prompt + 🇩🇪 DE</button>
+                {en_prompt_btn}
+                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(107, 114, 128, 0.2); border-color: #6b7280; color: #d1d5db;" onclick="copyShotPromptOnly({step_nr}, 'silent')" title="Visueller Prompt + Stumm-Direktive">🔇 Prompt + Stumm</button>
               </div>
               <div id="voice-player-{step_nr}">{audio_player_html}</div>
             </div>"""
@@ -325,7 +321,7 @@ def render_project(project_dir):
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(rendered)
 
-    print(f"[OK] Interaktives Storyboard-Dashboard erfolgreich generiert:")
+    print("[OK] Interaktives Storyboard-Dashboard erfolgreich generiert:")
     print(f"     -> {out_file}")
     return out_file
 

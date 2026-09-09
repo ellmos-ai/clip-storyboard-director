@@ -6,7 +6,6 @@ zu einem finalen Master-Video (sternenseufzer_master.mp4) zusammen.
 """
 
 import argparse
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -157,7 +156,7 @@ def assemble_project(project_path):
         try:
             res_mix = subprocess.run(cmd_mix, capture_output=True, text=True)
             if res_mix.returncode == 0:
-                print(f"[OK] Voiceover erfolgreich gemischt!")
+                print("[OK] Voiceover erfolgreich gemischt!")
                 if temp_stitched.exists():
                     temp_stitched.unlink()
             else:
@@ -177,7 +176,7 @@ def assemble_project(project_path):
         concat_txt.unlink()
 
     print("=" * 65)
-    print(f"🎉 [FERTIG] Master-Video erfolgreich exportiert:")
+    print("🎉 [FERTIG] Master-Video erfolgreich exportiert:")
     print(f"   -> {out_video}")
     print(f"   -> Größe: {out_video.stat().st_size / (1024*1024):.2f} MB")
     print("=" * 65)

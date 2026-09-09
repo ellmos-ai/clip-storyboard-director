@@ -1,17 +1,11 @@
-import os
-import shutil
-import tempfile
-import pytest
-from pathlib import Path
-
 from clip_director import __version__
-from clip_director.storyboard_init import create_project
-from clip_director.render_dashboard import render_project
 from clip_director.render_cockpit import render_cockpit
+from clip_director.render_dashboard import render_project
+from clip_director.storyboard_init import create_project
 
 
 def test_version():
-    assert __version__ == "0.1.1"
+    assert __version__ == "0.1.2"
 
 
 def test_project_lifecycle(tmp_path):

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-09-09
+
+### Added
+- **Bilingual Documentation Parity**: Deployed standardized English `README.md` and German `README_de.md` featuring 14-point quick navigation, dual Mermaid diagrams (architecture flowchart and production lifecycle sequence), 10 governance invariants, and a 17-project sibling ecosystem matrix.
+- **Continuous Integration**: Added multi-OS GitHub Actions CI workflow (`.github/workflows/ci.yml`) covering Ubuntu, Windows, and macOS across Python 3.10, 3.11, 3.12, and 3.13 with concurrency control, ruff linter, compileall bytecode validation, and pytest runner.
+- **Contract & Metadata Test Suite**: Added `tests/test_metadata.py` verifying document presence, version synchronization, badge parity, Mermaid syntax, and security SLAs.
+- **Third-Party Licensing Inventory**: Created `THIRD_PARTY_LICENSES.md` documenting runtime and dev dependencies, system binaries (FFmpeg, Edge), and license texts.
+- **Marketing & Discoverability Log**: Added `MARKETING-LOG.txt` recording Path B verification steps and release health.
+
+### Changed
+- **Version Bump**: Synchronized version `0.1.2` across `clip_director/__init__.py`, `pyproject.toml`, `ellmos-module.v2.json`, `llms.txt`, and test suites.
+- **Packaging & Classifiers**: Added Python 3.13 and OS-independent classifiers to `pyproject.toml`, along with project URLs for parent organization and open-bricks umbrella.
+- **Security Policy Hardening**: Upgraded `SECURITY.md` to full bilingual standard with 48h response SLA, 5-business-day triage commitment, and 10 core security invariants.
+- **Git Ignore Hardening**: Expanded `.gitignore` with multi-agent lock patterns (`LOCK`, `LOCK.*`, `*.lock`, `LOCK*.txt`) and multi-host sync conflict copies.
+- **Codebase Cleanliness**: Resolved all ruff lint errors and removed backslash escapes in f-strings across `src/clip_director/` for full Python 3.10 parity.
+
 ## [0.1.1] - 2026-09-08
 
 ### Changed
