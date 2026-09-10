@@ -46,6 +46,7 @@ env/
 .pytest_cache/
 .ruff_cache/
 .coverage
+coverage/
 htmlcov/
 
 # Media & Renderings (binary files)
@@ -77,6 +78,8 @@ LOCK
 LOCK.*
 *.lock
 LOCK*.txt
+LOCK.permissions.json
+uv.lock
 
 # Multi-Host Sync Conflict Copies
 *-conflict-*
@@ -84,6 +87,11 @@ LOCK*.txt
 *.sync-conflict-*
 *.conflict
 *-CONFLIT-*
+*-ASUS-GEI.*
+*-WORKSTATION-LG.*
+*-WORKSTATION.*
+* (kopie)*
+* (copy)*
 
 # Ephemeral & Backup files
 *.tmp

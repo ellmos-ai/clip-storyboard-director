@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clip-storyboard-director"
-version = "0.1.2"
+version = "0.1.3"
 description = "Local-first AI storyboard director and video pipeline orchestrator with browser CDP automation and interactive timeline cockpit"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -76,4 +76,4 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-addopts = "-v"
+addopts = "-ra -v"

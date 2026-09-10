@@ -34,8 +34,8 @@ def test_required_root_documents_exist():
 
 
 def test_version_parity():
-    """Verify version 0.1.2 parity across code, manifests, and documentation."""
-    expected_version = "0.1.2"
+    """Verify version 0.1.3 parity across code, manifests, and documentation."""
+    expected_version = "0.1.3"
 
     # 1. Python package __version__
     import clip_director
@@ -72,11 +72,11 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/python-3.10",
         "https://img.shields.io/badge/ecosystem-ellmos--ai-purple",
         "https://img.shields.io/badge/umbrella-open--bricks-blueviolet",
-        "https://img.shields.io/badge/version-0.1.2",
+        "https://img.shields.io/badge/version-0.1.3",
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--09--09-informational",
+        "https://img.shields.io/badge/last%20checked-2026--09--10-informational",
         "license-MIT",
     ]
 
@@ -185,3 +185,48 @@ def test_ci_workflow_contract():
     assert "ruff check" in content
     assert "compileall" in content
     assert "pytest" in content
+
+
+def test_gitignore_hygiene_patterns():
+    """Verify .gitignore contains canonical locks, multi-host conflict patterns, and caches."""
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    required_patterns = [
+        "LOCK",
+        "LOCK.*",
+        "*.lock",
+        "LOCK*.txt",
+        "LOCK.permissions.json",
+        "uv.lock",
+        "*-conflict-*",
+        "*.sync-temp-*",
+        "*.sync-conflict-*",
+        "*-ASUS-GEI.*",
+        "*-WORKSTATION-LG.*",
+        "*-WORKSTATION.*",
+        "* (kopie)*",
+        "* (copy)*",
+        "coverage/",
+        "wheelhouse/",
+        ".wheel-smoke/",
+    ]
+    for pattern in required_patterns:
+        assert pattern in gitignore, f"Pattern {pattern} missing in .gitignore"
+
+
+def test_pytest_configuration_and_flags():
+    """Verify pyproject.toml defines standardized pytest options."""
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert "[tool.pytest.ini_options]" in pyproject
+    assert 'addopts = "-ra -v"' in pyproject
+
+
+def test_ci_workflow_pytest_flags():
+    """Verify CI workflow executes pytest with standardized -ra -v flags."""
+    ci_file = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert "pytest -ra -v" in ci_file
+
+
+def test_changelog_recent_pfad_a_entry():
+    """Verify CHANGELOG.md contains the 0.1.3 Pfad A technical hygiene release entry."""
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [0.1.3] - 2026-09-10" in changelog

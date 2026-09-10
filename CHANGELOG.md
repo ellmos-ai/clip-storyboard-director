@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-09-10
+
+### Changed
+- **Version Bump**: Synchronized version `0.1.3` across `clip_director/__init__.py`, `pyproject.toml`, `ellmos-module.v2.json`, `llms.txt`, and automated test suites.
+- **Pytest Configuration Parity**: Hardened pytest options in `pyproject.toml` (`addopts = "-ra -v"`) and GitHub Actions CI workflow (`.github/workflows/ci.yml`) to standardized `-ra -v` flags.
+- **Repository Hygiene & Git Ignore**: Hardened `.gitignore` against multi-host synchronization conflicts (`*-ASUS-GEI.*`, `*-WORKSTATION-LG.*`, `*-WORKSTATION.*`, `* (kopie)*`, `* (copy)*`), canonical multi-agent locks (`LOCK.permissions.json`, `uv.lock`), and coverage/packaging cache directories (`coverage/`, `wheelhouse/`, `.wheel-smoke/`).
+
+### Added
+- **Contract Test Suite Expansion**: Expanded `tests/test_metadata.py` with 4 new contract tests (`test_gitignore_hygiene_patterns`, `test_pytest_configuration_and_flags`, `test_ci_workflow_pytest_flags`, `test_changelog_recent_pfad_a_entry`) asserting repository hygiene, CI flags, and changelog synchronization.
+
 ## [0.1.2] - 2026-09-09
 
 ### Added

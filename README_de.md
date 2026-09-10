@@ -22,9 +22,9 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="Lizenz: MIT"></a>
   <a href="https://github.com/ellmos-ai"><img src="https://img.shields.io/badge/ecosystem-ellmos--ai-purple.svg" alt="Ökosystem"></a>
   <a href="https://github.com/open-bricks"><img src="https://img.shields.io/badge/umbrella-open--bricks-blueviolet.svg" alt="Dachorganisation"></a>
-  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.2-blue.svg" alt="Version 0.1.2"></a>
+  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.3-blue.svg" alt="Version 0.1.3"></a>
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-Discovery%20Context-informational" alt="llms.txt"></a>
-  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--09-informational" alt="Zuletzt geprüft"></a>
+  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--10-informational" alt="Zuletzt geprüft"></a>
 </p>
 
 ---
