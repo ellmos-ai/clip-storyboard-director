@@ -22,9 +22,9 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="Lizenz: MIT"></a>
   <a href="https://github.com/ellmos-ai"><img src="https://img.shields.io/badge/ecosystem-ellmos--ai-purple.svg" alt="Ökosystem"></a>
   <a href="https://github.com/open-bricks"><img src="https://img.shields.io/badge/umbrella-open--bricks-blueviolet.svg" alt="Dachorganisation"></a>
-  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.3-blue.svg" alt="Version 0.1.3"></a>
+  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.4-blue.svg" alt="Version 0.1.4"></a>
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-Discovery%20Context-informational" alt="llms.txt"></a>
-  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--10-informational" alt="Zuletzt geprüft"></a>
+  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--12-informational" alt="Zuletzt geprüft"></a>
 </p>
 
 ---
@@ -40,11 +40,13 @@
 - [7. Mehrspur-Audio-Staging & Dynamisches Ducking](#mehrspur-audio-staging--dynamisches-ducking)
 - [8. Governance- & Laufzeit-Invarianten](#governance---laufzeit-invarianten)
 - [9. End-to-End Medien- & Produktions-Lebenszyklus](#end-to-end-medien---produktions-lebenszyklus)
-- [10. Geschwisterwerkzeuge & Partner-Matrix](#geschwisterwerkzeuge--partner-matrix)
-- [11. Installation & CLI-Befehlsreferenz](#installation--cli-befehlsreferenz)
-- [12. Referenzproduktion „Sternenseufzer“](#referenzproduktion-sternenseufzer)
-- [13. Sicherheit & Datenschutz](#sicherheit--datenschutz)
-- [14. Entwicklung & Verifikation](#entwicklung--verifikation)
+- [10. Zielgruppen & Auffindbarkeit](#zielgruppen--auffindbarkeit)
+- [11. Drittanbieter-Lizenzen & Transparenz](#drittanbieter-lizenzen--transparenz)
+- [12. Geschwisterwerkzeuge & Partner-Matrix](#geschwisterwerkzeuge--partner-matrix)
+- [13. Installation & CLI-Befehlsreferenz](#installation--cli-befehlsreferenz)
+- [14. Referenzproduktion „Sternenseufzer“](#referenzproduktion-sternenseufzer)
+- [15. Sicherheit & Datenschutz](#sicherheit--datenschutz)
+- [16. Entwicklung & Verifikation](#entwicklung--verifikation)
 
 ---
 
@@ -209,6 +211,44 @@ sequenceDiagram
     Engine->>FFmpeg: Takes schneiden + Voiceover & Musik mischen
     FFmpeg-->>Regisseur: film_master.mp4 fertig zur Wiedergabe
 ```
+
+---
+
+## Zielgruppen & Auffindbarkeit
+
+`clip-storyboard-director` wurde für vier zentrale Nutzergruppen im Ökosystem generativer Medien entwickelt:
+
+| Zielgruppe | Herausforderungen & Frustrationen | Lösung & Nutzenversprechen | Typischer Workflow |
+| :--- | :--- | :--- | :--- |
+| **KI-Filmschaffende & Narrative Regisseure** | Figuren- und Kostüm-Drift zwischen Einstellungen, unzusammenhängende Schnitte, manuelles Prompt-Kopieren. | Deklarativer 4D-Persistenzpuffer (`project.yaml`) und automatische optische Clue-Frame-Verkettung zwischen Shot-Ende und Folgeeinstellung. | `clip-director init` -> 4D-Puffer definieren -> Clue-Frames prüfen -> Schnitt assemblieren. |
+| **Generative Medien-Entwickler** | Webbasierte Videoportale bieten keine skriptfähige lokale Automation oder strukturierte Dateiübernahme. | Chrome DevTools Protocol (CDP) Bridge auf Port 9222 und Echtzeit-Download-Watcher mit automatischer Dateieinordnung. | Edge CDP Bridge starten -> Skriptbasierten Take-Loop ausführen -> Clips auto-ingesten. |
+| **Content Creator & YouTuber** | Manuelle Stimmaufnahme, Timing und Abmischung mit Hintergrundmusik in komplexen Schnittprogrammen kostet Stunden. | Integrierte Sprachsynthese über `edge-tts` und automatisches Side-Chain-Audio-Ducking über vier dedizierte Tonspuren. | Szenendialoge schreiben -> `clip-director voice` -> `clip-director assemble`. |
+| **Autonome Coding-Agenten** | Cloud-abhängige Tools erfordern Login-Tokens, Administrator-Rechte oder blockieren ohne Benutzeroberfläche. | 100% Local-First Zero-Egress Architektur (`INV-LOCAL-01`), unprivilegierte `RunAsInvoker`-CLI und maschinenlesbarer `llms.txt`-Kontext. | Headless-Ausführung per `clip-director auto` -> Systemprüfung per `clip-director doctor`. |
+
+### Suchbegriffe mit hoher Absicht (High-Intent Keywords)
+
+- **Deutsch**: `clip-storyboard-director lokale KI-Regie`, `KI Storyboard Regisseur Python`, `Szenen-Kontinuität generative Videomodelle`, `Clue-Frame optische Bildverkettung`, `Lokale Video-Orchestrierung ohne Cloud-Zwang`, `Edge CDP Browser-Automatisierung KI Video`, `4D-Persistenzpuffer Charakter-Kontinuität`, `Mehrspur-Audio-Staging und Ducking FFmpeg`.
+- **Englisch**: `ai storyboard director`, `scene continuity python`, `clue-frame video generator`, `local-first ai video orchestrator`, `veo kling runway automation`, `edge cdp video workflow`, `4d persistence buffer`, `automated audio staging and ducking python`.
+
+---
+
+## Drittanbieter-Lizenzen & Transparenz
+
+`clip-storyboard-director` folgt strengen Open-Source-Governance-Standards, permissiven Lizenzen und Zero-Egress-Laufzeitgarantien:
+
+- **Hauptmodul**: Lizenziert unter der permissiven [MIT-Lizenz](LICENSE).
+- **Laufzeit-Abhängigkeiten**:
+  - `PyYAML` (MIT-Lizenz): Deklarative Projektkonfiguration und Persistenzpuffer-Parsing.
+  - `edge-tts` (GNU GPL-3.0): Eigenständiger lokaler Sprachsynthese-Subprozess.
+  - `websocket-client` (Apache-2.0): Lokale Chrome DevTools Protocol Socket-Kommunikation.
+  - `requests` (Apache-2.0): Lokale HTTP-Zielerkennung auf `127.0.0.1:9222`.
+- **System-Binärdateien**:
+  - `FFmpeg / FFprobe` (LGPL-2.1+ / GPL-2.0+): Medieninspektion, Clue-Frame-Extraktion und Video-Assemblierung über System-`PATH`.
+  - `Microsoft Edge`: Optionaler Host-Browser für Dual-Pane Cockpit und CDP-Automatisierung.
+- **Compliance & Local-First Invarianten**:
+  - `INV-LOCAL-01`: 100% offline, null Cloud-Tracking, null externe Telemetrie.
+  - `INV-UNPRIV-02`: Ausführung streng im unprivilegierten Benutzermodus (`RunAsInvoker`).
+  - Ein vollständiges Softwareinventar und Lizenztexte sind in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) dokumentiert.
 
 ---
 

@@ -5,7 +5,7 @@ from clip_director.storyboard_init import create_project
 
 
 def test_version():
-    assert __version__ == "0.1.3"
+    assert __version__ == "0.1.4"
 
 
 def test_project_lifecycle(tmp_path):

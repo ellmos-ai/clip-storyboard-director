@@ -2,7 +2,7 @@
   "schema": "ellmos.module.v2",
   "id": "clip-storyboard-director",
   "display_name": "clip-storyboard-director",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Local-first AI storyboard director, scene continuity orchestrator and video pipeline controller with Edge CDP automation and interactive dual-pane cockpit.",
   "package": "clip_director",
   "entrypoints": {

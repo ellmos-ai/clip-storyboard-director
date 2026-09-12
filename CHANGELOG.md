@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-09-12
+
+### Added
+- **16-Point Quick Navigation Parity**: Restructured `README.md` and `README_de.md` to feature 16 standardized quick navigation anchors with 100% mutual link parity and bilingual cross-references.
+- **Target Personas & Discoverability**: Documented 4 distinct target audience profiles (AI Filmmakers & Narrative Directors, Generative Media Engineers, Content Creators & YouTubers, Autonomous Coding Agents) along with a bilingual high-intent keyword search matrix.
+- **Third-Party Licensing Audit & Invariants**: Documented full software inventory in `THIRD_PARTY_LICENSES.md` with explicit GPL-3.0 (`edge-tts`) and LGPL-2.1+ (`FFmpeg`) architectural boundaries and compliance invariants (`INV-LOCAL-01`, `INV-UNPRIV-02`, `INV-LOOPBACK-03`).
+- **5-Way Competitive Matrix**: Added exhaustive 10-dimension competitive differentiation matrix in `MARKETING-LOG.txt` comparing against commercial SaaS, manual browser workflows, heavy NLEs, and ad-hoc scripts.
+- **PEP 621 Extended Project URLs**: Added metadata links in `pyproject.toml` for `Third-Party Licenses`, `Marketing-Log`, and `LLM-Ready`.
+- **Contract Test Suite Expansion**: Added automated contract assertions in `tests/test_metadata.py` for target personas, third-party licensing sections, PEP 621 extended URLs, marketing log structure, and changelog synchronization.
+
+### Changed
+- **Version Bump**: Synchronized version `0.1.4` across `clip_director/__init__.py`, `pyproject.toml`, `ellmos-module.v2.json`, `llms.txt`, and automated test suites.
+- **Badge Parity**: Synchronized Shields.io badges for version 0.1.4, test suite passing, and last-checked date 2026-09-12 across documentation files.
+
 ## [0.1.3] - 2026-09-10
 
 ### Changed

@@ -1,7 +1,152 @@
 # MARKETING-LOG.txt — clip-storyboard-director
 # Lokales Audit-, Discoverability- und Marketing-Logbuch
 
-## 2026-09-09 — Pfad B: Discoverability, Branding, Dual Mermaid & Governance Invariants Hardening
+================================================================================
+1. TARGET PERSONAS & AUDIENCE PROFILES
+================================================================================
+
+Persona 1: AI Filmmakers & Narrative Directors (Independent & Studio Creators)
+- Role: Film directors, cinematographers, narrative writers, creative AI producers.
+- Pain Points: Incoherent characters across generated shots, face and costume drift between cuts, manual tedious frame extraction and re-uploading, lack of continuous narrative timeline.
+- Solution & Value Proposition: Declarative 4D Persistence Buffer (`project.yaml`) enforcing character, location, and prop continuity; automatic clue-frame chaining (shot N tail frame primes shot N+1); dual-pane Edge cockpit for seamless timeline and prompt steering.
+- Primary Workflow: `clip-director init`, define persistence buffer, launch dual-pane cockpit (`clip-director cockpit`), orchestrate Veo/Kling/Runway takes, assemble rough-cut master with ducked dialogue (`clip-director assemble`).
+
+Persona 2: Generative Media Engineers & Video Automation Developers
+- Role: Pipeline engineers, MLOps specialists, creative tool builders, technical directors.
+- Pain Points: Closed SaaS video portals requiring constant manual browser clicking; lack of local, scriptable CDP browser automation; desynchronized audio and video assets.
+- Solution & Value Proposition: Chrome DevTools Protocol (CDP) bridge on port 9222 for headless/guided prompt injection; automatic downloads watcher with file hashing; declarative JSON/YAML schemas; zero cloud vendor lock-in.
+- Primary Workflow: Scripted project generation via Python API (`StoryboardProject`), programmatic trigger of Edge CDP generation loops, automated ingest and multi-track audio stitch.
+
+Persona 3: Content Creators, YouTubers & Multimedia Storytellers
+- Role: Digital video producers, educators, documentary creators, social media storytellers.
+- Pain Points: Complex NLE video editing suites (Premiere, DaVinci) are overkill for rapid prototyping of AI video ideas; synthesizing and syncing voiceovers with background music takes hours.
+- Solution & Value Proposition: Integrated high-fidelity speech synthesis (`edge-tts`), automated side-chain audio ducking (dialogue over ambient beds), instant interactive HTML storyboard dashboard (`board_server.py`), one-command full render.
+- Primary Workflow: Draft scene scripts, synthesize voice directives (`clip-director voice`), preview storyboard in browser, assemble complete film in minutes (`clip-director assemble`).
+
+Persona 4: Autonomous Coding Agents & Agentic Media Frameworks
+- Role: AI agents (Gemini/Antigravity, Claude Desktop, OpenAI Codex), autonomous bot workers.
+- Pain Points: Cloud-locked generative platforms require OAuth/API keys and credit cards; CLI tools that leak credentials or require interactive root elevation break agentic execution.
+- Solution & Value Proposition: 100% Local-first & zero-egress (`INV-LOCAL-01`), unprivileged user execution (`INV-UNPRIV-02`), machine-readable `llms.txt` and `ellmos-module.v2.json`, deterministic CLI exit codes and error logs.
+- Primary Workflow: Headless CLI automation via `clip-director auto`, automated health audits via `clip-director doctor`, inspection via `llms.txt`.
+
+================================================================================
+2. HIGH-INTENT SEARCH QUERIES (BILINGUAL EN & DE)
+================================================================================
+
+English (EN):
+- `clip-storyboard-director`
+- `ai storyboard director python`
+- `scene continuity ai video generation`
+- `clue frame continuity chaining`
+- `local-first ai video orchestrator`
+- `edge cdp browser video automation`
+- `4d persistence buffer video prompt`
+- `automated audio staging and ducking python`
+- `veo runway kling local director`
+- `ai media editor director duo`
+
+German (DE):
+- `clip-storyboard-director lokale KI-Regie`
+- `KI Storyboard Regisseur Python`
+- `Szenen-Kontinuität generative Videomodelle`
+- `Clue-Frame optische Bildverkettung`
+- `Lokale Video-Orchestrierung ohne Cloud-Zwang`
+- `Edge CDP Browser-Automatisierung KI Video`
+- `4D-Persistenzpuffer Charakter-Kontinuität`
+- `Mehrspur-Audio-Staging und Ducking FFmpeg`
+- `Veo Kling Runway lokale Regieführung`
+- `ai-media-editor und clip-storyboard-director Schnitt-Duo`
+
+================================================================================
+3. 5-WAY COMPETITIVE DIFFERENTIATION MATRIX
+================================================================================
+
+| Dimension / Capability | clip-storyboard-director | Commercial Video SaaS (Runway/Pika/Luma) | Manual Web Browser Workflow | Heavy NLE Suites (Premiere/DaVinci) | Ad-Hoc Python Scripts |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Local-First & Zero-Egress** | 100% Local-First (`INV-LOCAL-01`) | ❌ Mandatory cloud SaaS | ❌ Web-bound manual clicks | Local desktop app (heavy) | Varies, typically ad-hoc |
+| **Scene Continuity & 4D Buffer** | Built-in 4D persistence buffer (`INV-CONTINUITY-05`) | ⚠️ Limited memory / session loss | ❌ Manual prompt copying | ❌ No AI continuity engine | ❌ Fragile custom scripts |
+| **Clue-Frame Optical Chaining** | Automated end-frame extraction (`INV-CLUEFRAME-06`) | ❌ Manual upload per shot | ❌ Download, crop, re-upload | ❌ None built-in | ⚠️ Fragile FFmpeg calls |
+| **Browser Generator Automation** | CDP bridge on port 9222 (`edge_bridge.py`) | ❌ Closed proprietary UI | ❌ 100% manual clicking | ❌ No web generator integration | ⚠️ Selenium/Playwright bloat |
+| **Audio Staging & Ducking** | Built-in 4-track mix + TTS ducking (`assemble.py`) | ❌ Minimal / single track | ❌ None | Manual track mixing | ❌ Complex filtergraph code |
+| **Dual-Pane Visual Cockpit** | Integrated split-screen dashboard (`start_cockpit.py`) | ❌ Single tab only | ❌ Multiple messy browser windows | Complex NLE interface | ❌ No GUI / headless only |
+| **Runtime Dependency Footprint** | Lightweight Python stdlib + PyYAML/edge-tts | Heavy web app / subscriptions | N/A (human effort) | 5GB+ proprietary installer | Varies |
+| **Agentic Discoverability (LLM-Ready)** | Native `llms.txt` + `ellmos-module.v2.json` | ❌ None / anti-bot scraping | ❌ None | ❌ None | ❌ None |
+| **Privilege Model** | Unprivileged `RunAsInvoker` (`INV-UNPRIV-02`) | Cloud SaaS account | User browser | Often root/admin installer | User mode |
+| **Security SLA & Disclosure** | 48h response SLA + 5-day triage (`INV-SLA-10`) | Standard corporate TOS | N/A | Vendor patch cycle | ❌ None |
+
+================================================================================
+4. GOVERNANCE & RUNTIME INVARIANTS
+================================================================================
+
+- INV-LOCAL-01: 100% Local-First & Zero-Egress (operates entirely offline on localhost; zero external cloud tracking or telemetry).
+- INV-UNPRIV-02: Non-Elevation / RunAsInvoker (operates strictly within standard user permissions without administrative elevation).
+- INV-LOOPBACK-03: Loopback IPC Isolation (local HTTP dashboard and CDP socket communicate exclusively on 127.0.0.1).
+- INV-SANDBOX-04: Subprocess Sandboxing (FFmpeg, FFprobe, and edge-tts execute in isolated subprocesses with strict argument validation).
+- INV-CONTINUITY-05: 4D Persistence Continuity (characters, locations, objects, and props are bound across space and time via project.yaml).
+- INV-CLUEFRAME-06: Clue-Frame Optical Chaining (the final rendered frame of shot N automatically seeds the reference prompt of shot N+1).
+- INV-STANDALONE-07: Standalone Production Guarantee (full end-to-end media production operates without requiring external suite packages).
+- INV-MULTIOS-08: Multi-OS Cross-Platform Parity (verified deterministic operation across Windows, Linux, and macOS).
+- INV-SYNC-09: Cloud-Sync & Mutex Resilience (hardened against OneDrive/Dropbox file collisions, lock contention, and transient copies).
+- INV-SLA-10: 48h Security Response & 5-Day Triage SLA (dedicated vulnerability response protocol and formal triage commitment).
+
+================================================================================
+5. SIBLING ECOSYSTEM & PARTNER MATRIX
+================================================================================
+
+Part of the ellmos-ai suite and open-bricks umbrella:
+1. `ai-media-editor` (ellmos-ai): Post-production non-linear editor, timeline trimming, color grading, and hyperframe cuts (Editor partner in Director-Editor Duo)
+2. `system-explorer` (ellmos-ai): Local system topology, storage, process, and hardware inspector
+3. `system-auditor` (ellmos-ai): Configuration drift audit and system verification engine
+4. `ellmos-voice-io` (ellmos-ai): High-speed local speech-to-text and voice command IO interface
+5. `ellmos-controlcenter-mcp` (ellmos-ai): Central MCP orchestration gateway, tool registry, and catalog
+6. `ellmos-filecommander-mcp` (ellmos-ai): High-safety file management and directory operations MCP server
+7. `ellmos-codecommander-mcp` (ellmos-ai): AST code inspection, refactoring, and linting MCP server
+8. `cowork-protocol` (ellmos-ai): Local inter-agent and inter-tool messaging and synchronization protocol
+9. `automation-master` (dev-bricks): Event-sourced automation governance, credit budgeting, and task scheduling
+10. `DevCenter` (dev-bricks): Developer tool launcher, environment manager, and health monitor
+11. `safe-start-for-codex` (dev-bricks): Isolated sandbox launcher for coding assistants
+12. `companion-for-agy` (dev-bricks): PTY stdout capture and telemetry bridge for Antigravity/Gemini
+13. `win-firewall-manager` (dev-bricks): Local-first declarative firewall manager for Windows
+14. `ExplorerPro` (file-bricks): Modern multi-tab file explorer with tag support
+15. `ProFiler` (file-bricks): High-speed file categorizer and metadata inspector
+16. `WinStorePackager` (file-bricks): Automated MSIX packaging for Windows desktop applications
+17. `open-bricks` (open-bricks): Umbrella ecosystem organization coordinating open-source local-first software
+
+================================================================================
+6. CHRONOLOGICAL AUDIT & RELEASE LOG
+================================================================================
+
+## 2026-09-12 — Pfad B: 16-Point Quick Navigation, Target Personas, PEP 621 URLs, Third-Party Audit & Contract Hardening (v0.1.4)
+
+### 1. Ausgangslage & Kriterien
+- Repository: ellmos-ai/clip-storyboard-director (C:\_Local_DEV\repos\clip-storyboard-director)
+- Version: 0.1.4 (gehoben von 0.1.3)
+- Kategorie: Local-First AI Storyboard Director & Scene Continuity Orchestrator
+- Status: Clean working tree auf Branch `main`, 0 aktive Locks, >39h Cooldown seit letztem Kontakt.
+
+### 2. Umgesetzte Marketing- & Discoverability-Maßnahmen
+1. 16-Punkte-Schnellnavigation in README.md und README_de.md:
+   - Vollständige Synchronisation mit 100%iger Anker-Parität und bidirektionalen Querverweisen.
+   - Neues Kapitel 10: "Target Personas & Discoverability" / "Zielgruppen & Auffindbarkeit" mit 4 Profilen und zweisprachiger Keyword-Matrix.
+   - Neues Kapitel 11: "Third-Party Licenses & Transparency" / "Drittanbieter-Lizenzen & Transparenz" mit Lizenzübersicht und Zero-Egress-Garantie.
+   - Vollständige Neunummerierung aller 16 Abschnitte.
+2. Shields.io Badges Parität:
+   - Version 0.1.4 Badge, Testanzahl Badge, Last Checked 2026-09-12 Badge, Ruff Code Style, Python 3.10-3.13, 100% Offline / Zero-Egress, MIT License.
+3. PEP 621 Standard-Metadaten (pyproject.toml):
+   - Version 0.1.4 synchronisiert.
+   - Zusätzliche [project.urls]: "Third-Party Licenses", "Marketing-Log", "LLM-Ready".
+4. Dritte-Partei-Lizenzinventar (THIRD_PARTY_LICENSES.md):
+   - Aktualisiert auf Audit-Datum 2026-09-12.
+   - Detaillierte GPL-3.0- und LGPL-2.1+-Grenzdefinitionen für edge-tts und FFmpeg.
+   - Verankerung von Compliance & Zero-Egress Invariants (INV-LOCAL-01, INV-UNPRIV-02, INV-LOOPBACK-03).
+5. Release-Dokumentation (CHANGELOG.md):
+   - Release 0.1.4 Pfad-B-Eintrag dokumentiert.
+6. Automatisierte Vertragstestsuite (tests/test_metadata.py):
+   - Erweiterung um Tests für Target Personas, Drittanbieter-Lizenzen, PEP 621 URLs, Marketing-Log-Struktur und Changelog-Release-Eintrag.
+
+---
+
+## 2026-09-09 — Pfad B: Discoverability, Branding, Dual Mermaid & Governance Invariants Hardening (v0.1.2)
 
 ### 1. Ausgangslage & Kriterien
 - Repository: ellmos-ai/clip-storyboard-director (C:\_Local_DEV\repos\clip-storyboard-director)
@@ -24,7 +169,6 @@
 5. Zweisprachige Sicherheitsrichtlinie (SECURITY.md):
    - Offizieller Dachorganisations-Kontakt security@open-bricks.org neben security@ellmos.ai, support@lukasgeiger.com und lukas@open-bricks.org.
    - Verbindliche 48h-Eingangsbestätigungs-SLA und 5-Werktage-Triage-Zusage.
-   - GitHub Security Advisories Reporting-Link.
 6. CI/CD Concurrency & Bytecode-Validierungsgate (.github/workflows/ci.yml):
    - GitHub Actions Multi-OS Matrix (Ubuntu, Windows, macOS) für Python 3.10-3.13.
    - Bytecode-Validierungsgate `python -m compileall -q src tests`.
@@ -45,8 +189,3 @@
     - Release 0.1.2 Discoverability- und Pfad-B-Eintrag ergänzt.
 12. Automatisierte Vertragstestsuite (tests/test_metadata.py):
     - Contract-Tests zur kontinuierlichen Absicherung aller Discoverability-, Paritäts-, Governance- und Sicherheitsstandards.
-
-### 3. Zukünftige Discoverability-Empfehlungen
-- Erstellung eines Video-Demos oder Screencasts der Dual-Pane Edge Cockpit Integration.
-- Veröffentlichung eines Blog-Artikels / Case-Study über 4D-Persistenz und Clue-Frame-Verkettung bei generativen Videomodellen (Veo/Kling/Runway).
-- Einreichung bei kuratierten Listen generativer KI- und Medienproduktions-Werkzeuge (awesome-generative-ai, awesome-video-ai).

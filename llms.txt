@@ -2,8 +2,8 @@
 
 > Local-first AI storyboard director, scene continuity orchestrator, and video pipeline controller with browser CDP automation and interactive timeline cockpit.
 
-- Last-checked: 2026-09-10
-- Version: 0.1.3
+- Last-checked: 2026-09-12
+- Version: 0.1.4
 - Module status: `active`; visibility projection: `public`; release gate: `USER`.
 - Architecture: Local-First / Dual-Pane Timeline Cockpit / Edge CDP Automator / FFmpeg Assembly
 - Module Family: ellmos domain modules (`domain.media.direction`, `workflow.video.storyboard`, `workflow.media.pipeline`)
@@ -89,3 +89,21 @@ print(f"Master output: {master_path}")
 - **Zero Telemetry**: No tracking, phone-home telemetry, or external API leaks.
 - **Path Neutrality**: All default directories resolve dynamically relative to user home (`~/Downloads`) or explicitly configured project roots.
 - **Safe Media Handling**: Strict file extension filtering, local socket isolation on loopback interfaces (`127.0.0.1`), and sanitization of user-provided filenames.
+
+## Target Personas
+1. AI Filmmakers & Narrative Directors (scene continuity, 4D persistence buffer, clue-frame chaining)
+2. Generative Media Engineers (scriptable Edge CDP browser automation, download watcher, FFmpeg assembly)
+3. Content Creators & YouTubers (integrated voiceover synthesis via edge-tts, automatic side-chain ducking)
+4. Autonomous Coding Agents (unprivileged RunAsInvoker CLI, deterministic exits, llms.txt machine context)
+
+## Governance Invariants
+- `INV-LOCAL-01`: 100% Local-First & Zero-Egress
+- `INV-UNPRIV-02`: Non-Elevation / RunAsInvoker
+- `INV-LOOPBACK-03`: Loopback IPC Isolation (`127.0.0.1`)
+- `INV-SANDBOX-04`: Subprocess Sandboxing (FFmpeg, edge-tts)
+- `INV-CONTINUITY-05`: 4D Persistence Continuity (`project.yaml`)
+- `INV-CLUEFRAME-06`: Clue-Frame Optical Chaining
+- `INV-STANDALONE-07`: Standalone Production Guarantee
+- `INV-MULTIOS-08`: Multi-OS Parity (Windows, Linux, macOS)
+- `INV-SYNC-09`: Cloud-Sync & Mutex Resilience
+- `INV-SLA-10`: 48h Security Response & 5-Day Triage SLA

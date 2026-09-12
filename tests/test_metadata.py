@@ -34,8 +34,8 @@ def test_required_root_documents_exist():
 
 
 def test_version_parity():
-    """Verify version 0.1.3 parity across code, manifests, and documentation."""
-    expected_version = "0.1.3"
+    """Verify version 0.1.4 parity across code, manifests, and documentation."""
+    expected_version = "0.1.4"
 
     # 1. Python package __version__
     import clip_director
@@ -72,11 +72,11 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/python-3.10",
         "https://img.shields.io/badge/ecosystem-ellmos--ai-purple",
         "https://img.shields.io/badge/umbrella-open--bricks-blueviolet",
-        "https://img.shields.io/badge/version-0.1.3",
+        "https://img.shields.io/badge/version-0.1.4",
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--09--10-informational",
+        "https://img.shields.io/badge/last%20checked-2026--09--12-informational",
         "license-MIT",
     ]
 
@@ -93,7 +93,7 @@ def test_quick_navigation_anchors():
 
         # Extract markdown anchor links [Text](#anchor)
         anchor_links = re.findall(r"\[([^\]]+)\]\(#([^\)]+)\)", content)
-        assert len(anchor_links) >= 12, f"Expected at least 12 quick nav links in {filename}"
+        assert len(anchor_links) == 16, f"Expected exactly 16 quick nav links in {filename}, got {len(anchor_links)}"
 
         # Extract headers ## Header Title
         headers = re.findall(r"^#{2,4}\s+(.+)$", content, re.MULTILINE)
@@ -230,3 +230,87 @@ def test_changelog_recent_pfad_a_entry():
     """Verify CHANGELOG.md contains the 0.1.3 Pfad A technical hygiene release entry."""
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     assert "## [0.1.3] - 2026-09-10" in changelog
+
+
+def test_changelog_recent_pfad_b_entry():
+    """Verify CHANGELOG.md contains the 0.1.4 Pfad B marketing and discoverability release entry."""
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [0.1.4] - 2026-09-12" in changelog
+
+
+def test_target_personas_and_discoverability_section():
+    """Verify target personas and bilingual keywords in both English and German READMEs."""
+    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
+
+    assert "## Target Personas & Discoverability" in readme_en
+    assert "## Zielgruppen & Auffindbarkeit" in readme_de
+
+    # English personas and pain points
+    assert "AI Filmmakers & Narrative Directors" in readme_en
+    assert "Generative Media Engineers" in readme_en
+    assert "Content Creators & YouTubers" in readme_en
+    assert "Autonomous Coding Agents" in readme_en
+
+    # German personas and pain points
+    assert "KI-Filmschaffende & Narrative Regisseure" in readme_de
+    assert "Generative Medien-Entwickler" in readme_de
+    assert "Content Creator & YouTuber" in readme_de
+    assert "Autonome Coding-Agenten" in readme_de
+
+    # High-Intent search queries
+    assert "High-Intent Search Queries" in readme_en
+    assert "Suchbegriffe mit hoher Absicht" in readme_de
+
+
+def test_third_party_licenses_section_and_invariants():
+    """Verify third-party licenses section and invariant guarantees in both READMEs."""
+    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
+
+    assert "## Third-Party Licenses & Transparency" in readme_en
+    assert "## Drittanbieter-Lizenzen & Transparenz" in readme_de
+
+    for content in [readme_en, readme_de]:
+        assert "PyYAML" in content
+        assert "edge-tts" in content
+        assert "websocket-client" in content
+        assert "requests" in content
+        assert "INV-LOCAL-01" in content
+        assert "INV-UNPRIV-02" in content
+        assert "THIRD_PARTY_LICENSES.md" in content
+
+
+def test_pep621_extended_project_urls():
+    """Verify pyproject.toml defines extended PEP 621 URLs for discoverability."""
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert '"Third-Party Licenses"' in pyproject
+    assert '"Marketing-Log"' in pyproject
+    assert '"LLM-Ready"' in pyproject
+    assert "THIRD_PARTY_LICENSES.md" in pyproject
+    assert "MARKETING-LOG.txt" in pyproject
+    assert "llms.txt" in pyproject
+
+
+def test_third_party_licenses_file_contract():
+    """Verify THIRD_PARTY_LICENSES.md inventory, audit date, and compliance invariants."""
+    licenses_doc = (ROOT / "THIRD_PARTY_LICENSES.md").read_text(encoding="utf-8")
+    assert "Audit Date:** 2026-09-12" in licenses_doc
+    assert "GPL-3.0" in licenses_doc
+    assert "LGPL" in licenses_doc
+    assert "INV-LOCAL-01" in licenses_doc
+    assert "INV-UNPRIV-02" in licenses_doc
+    assert "INV-LOOPBACK-03" in licenses_doc
+
+
+def test_marketing_log_contract():
+    """Verify local MARKETING-LOG.txt contains personas, 5-way matrix, invariants, and latest audit."""
+    marketing_log = (ROOT / "MARKETING-LOG.txt").read_text(encoding="utf-8")
+    assert "TARGET PERSONAS & AUDIENCE PROFILES" in marketing_log
+    assert "HIGH-INTENT SEARCH QUERIES" in marketing_log
+    assert "5-WAY COMPETITIVE DIFFERENTIATION MATRIX" in marketing_log
+    assert "GOVERNANCE & RUNTIME INVARIANTS" in marketing_log
+    assert "SIBLING ECOSYSTEM & PARTNER MATRIX" in marketing_log
+    assert "2026-09-12 — Pfad B" in marketing_log
+    assert "INV-LOCAL-01" in marketing_log
+    assert "INV-SLA-10" in marketing_log

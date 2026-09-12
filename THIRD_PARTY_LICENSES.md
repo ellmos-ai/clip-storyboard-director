@@ -1,8 +1,8 @@
 # Third-Party Licenses & Software Inventory
 
-**Project:** `clip-storyboard-director`  
-**License:** [MIT License](LICENSE)  
-**Audit Date:** 2026-09-09  
+**Project:** `clip-storyboard-director`<br>
+**License:** [MIT License](LICENSE)<br>
+**Audit Date:** 2026-09-12
 
 ---
 
@@ -77,3 +77,24 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+### GNU General Public License v3.0 (`edge-tts`)
+
+`edge-tts` is licensed under the GNU General Public License v3.0 (GPL-3.0).
+`clip-storyboard-director` invokes `edge-tts` strictly as an optional external utility /
+library subprocess for audio speech synthesis. The core orchestrator is licensed under MIT,
+and users may freely substitute or swap speech synthesis backends without modifying the core.
+
+### GNU Lesser General Public License v2.1+ (`FFmpeg` / `FFprobe`)
+
+FFmpeg is licensed under the LGPL v2.1+ (or GPL v2.0+ depending on build flags).
+`clip-storyboard-director` executes FFmpeg strictly via standard unprivileged system
+subprocesses (`subprocess.run`) across standard OS PATHs without linking FFmpeg C/C++ libraries.
+
+---
+
+## Compliance & Zero-Egress Invariants
+
+- **INV-LOCAL-01 (100% Local-First & Zero-Egress)**: None of the above dependencies transmit user media, scripts, storyboard parameters, or prompt metadata to external cloud telemetry servers.
+- **INV-UNPRIV-02 (Non-Elevation / RunAsInvoker)**: All third-party packages execute within standard user-space without administrative or root escalation.
+- **INV-LOOPBACK-03 (Loopback Socket Isolation)**: Network communications (`websocket-client`, `requests`, `board_server.py`) are strictly restricted to local loopback addresses (`127.0.0.1`).

@@ -22,9 +22,9 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"></a>
   <a href="https://github.com/ellmos-ai"><img src="https://img.shields.io/badge/ecosystem-ellmos--ai-purple.svg" alt="Ecosystem"></a>
   <a href="https://github.com/open-bricks"><img src="https://img.shields.io/badge/umbrella-open--bricks-blueviolet.svg" alt="Umbrella"></a>
-  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.3-blue.svg" alt="Version 0.1.3"></a>
+  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.4-blue.svg" alt="Version 0.1.4"></a>
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-Discovery%20Context-informational" alt="llms.txt"></a>
-  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--10-informational" alt="Last Checked"></a>
+  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--12-informational" alt="Last Checked"></a>
 </p>
 
 ---
@@ -40,11 +40,13 @@
 - [7. Multi-Track Audio Staging & Ducking](#multi-track-audio-staging--ducking)
 - [8. Key Governance & Runtime Invariants](#key-governance--runtime-invariants)
 - [9. End-to-End Media Production Lifecycle](#end-to-end-media-production-lifecycle)
-- [10. Sibling Tools & Ecosystem Matrix](#sibling-tools--ecosystem-matrix)
-- [11. Installation & CLI Usage](#installation--cli-usage)
-- [12. Reference Production "Sternenseufzer"](#reference-production-sternenseufzer)
-- [13. Security & Privacy](#security--privacy)
-- [14. Development & Verification](#development--verification)
+- [10. Target Personas & Discoverability](#target-personas--discoverability)
+- [11. Third-Party Licenses & Transparency](#third-party-licenses--transparency)
+- [12. Sibling Tools & Ecosystem Matrix](#sibling-tools--ecosystem-matrix)
+- [13. Installation & CLI Usage](#installation--cli-usage)
+- [14. Reference Production "Sternenseufzer"](#reference-production-sternenseufzer)
+- [15. Security & Privacy](#security--privacy)
+- [16. Development & Verification](#development--verification)
 
 ---
 
@@ -209,6 +211,44 @@ sequenceDiagram
     Engine->>FFmpeg: Concatenate takes + mix voiceover & audio
     FFmpeg-->>Director: film_master.mp4 ready for playback or editing
 ```
+
+---
+
+## Target Personas & Discoverability
+
+`clip-storyboard-director` is engineered to empower four primary user profiles across the generative media ecosystem:
+
+| Target Persona | Key Pain Points | Core Solution & Value Proposition | Typical Workflow |
+| :--- | :--- | :--- | :--- |
+| **AI Filmmakers & Narrative Directors** | Face and wardrobe drift across shots, disjointed scene cuts, manual prompt juggling. | Declarative 4D Persistence Buffer (`project.yaml`) and automated optical clue-frame chaining between shot ends and starts. | `clip-director init` -> define 4D buffer -> review clue-frames -> assemble cut. |
+| **Generative Media Engineers** | Web-based generator portals lack scriptable automation and structured asset ingestion. | Chrome DevTools Protocol (CDP) bridge on port 9222 and real-time downloads watcher with automatic asset sorting. | Launch Edge CDP bridge -> execute scripted take loop -> auto-ingest clips. |
+| **Content Creators & YouTubers** | Manual speech synthesis, timing, and mixing with music beds in heavy editing suites is slow. | Integrated speech synthesis via `edge-tts` and automated side-chain audio ducking across four dedicated audio tracks. | Script scene dialogue -> `clip-director voice` -> `clip-director assemble`. |
+| **Autonomous Coding Agents** | Cloud-dependent tools require OAuth/API tokens, elevate permissions, or fail without GUI. | 100% Local-first zero-egress architecture (`INV-LOCAL-01`), unprivileged `RunAsInvoker` CLI, and machine-readable `llms.txt`. | Headless execution via `clip-director auto` -> system check via `clip-director doctor`. |
+
+### High-Intent Search Queries
+
+- **English**: `ai storyboard director`, `scene continuity python`, `clue-frame video generator`, `local-first ai video orchestrator`, `veo kling runway automation`, `edge cdp video workflow`, `4d persistence buffer`, `automated audio staging and ducking python`.
+- **German**: `clip-storyboard-director lokale KI-Regie`, `KI Storyboard Regisseur Python`, `Szenen-Kontinuität generative Videomodelle`, `Clue-Frame optische Bildverkettung`, `Lokale Video-Orchestrierung ohne Cloud-Zwang`, `Edge CDP Browser-Automatisierung KI Video`, `4D-Persistenzpuffer Charakter-Kontinuität`, `Mehrspur-Audio-Staging und Ducking FFmpeg`.
+
+---
+
+## Third-Party Licenses & Transparency
+
+`clip-storyboard-director` adheres to strict open-source governance, permissive licensing, and zero-egress runtime invariants:
+
+- **Core Module**: Licensed under the permissive [MIT License](LICENSE).
+- **Runtime Dependencies**:
+  - `PyYAML` (MIT License): Declarative project configuration and persistence buffer parsing.
+  - `edge-tts` (GNU GPL-3.0): Standalone local speech synthesis subprocess.
+  - `websocket-client` (Apache-2.0): Loopback Chrome DevTools Protocol socket communication.
+  - `requests` (Apache-2.0): Loopback HTTP target discovery on `127.0.0.1:9222`.
+- **External Binaries**:
+  - `FFmpeg / FFprobe` (LGPL-2.1+ / GPL-2.0+): System PATH media probing, clue-frame extraction, and audio-video stitching.
+  - `Microsoft Edge`: Optional host browser for dual-pane cockpit and CDP automation.
+- **Compliance & Local-First Invariants**:
+  - `INV-LOCAL-01`: 100% offline, zero cloud tracking, zero external telemetry.
+  - `INV-UNPRIV-02`: Operates strictly within unprivileged user mode (`RunAsInvoker`).
+  - Complete software inventory and license attributions are detailed in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
 
 ---
 
