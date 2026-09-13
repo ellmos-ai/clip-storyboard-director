@@ -170,7 +170,7 @@ const evalRes = await send('Runtime.evaluate', {{
       const editable = document.querySelector('rich-textarea div[contenteditable="true"]') ||
                        document.querySelector('div[contenteditable="true"]') ||
                        document.querySelector('textarea');
-                       
+
       if (!editable) {{
         return {{ success: false, error: 'Eingabefeld auf gemini.google.com nicht gefunden.' }};
       }}

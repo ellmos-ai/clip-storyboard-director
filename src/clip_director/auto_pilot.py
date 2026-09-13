@@ -147,7 +147,7 @@ def run_production_loop(project_name="sternenseufzer"):
         import yaml
         with open(yaml_file, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
-        
+
         all_shots = data.get("shots", [])
         pending = [s for s in all_shots if not s.get("selected_take")]
 

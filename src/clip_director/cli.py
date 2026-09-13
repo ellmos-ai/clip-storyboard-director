@@ -173,12 +173,12 @@ def cmd_handoff(args):
     sys.exit(res.returncode)
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="clip-director",
         description="Local-first AI Storyboard Director & Video Pipeline Controller"
     )
-    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
     subparsers = parser.add_subparsers(dest="command", help="Verfügbare Befehle")
 
     # doctor
@@ -233,12 +233,13 @@ def main():
     p_render.add_argument("--project", default="projects/sternenseufzer", help="Pfad zum Projektverzeichnis")
     p_render.set_defaults(func=cmd_render)
 
-    args = parser.parse_args()
+    args = parser.parse_args(args=argv)
     if hasattr(args, "func"):
-        args.func(args)
+        return args.func(args) or 0
     else:
         parser.print_help()
+        return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

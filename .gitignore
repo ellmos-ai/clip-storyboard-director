@@ -98,3 +98,11 @@ uv.lock
 *.bak
 wheelhouse/
 .wheel-smoke/
+
+# Typing & Mypy caches
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.coverage.*

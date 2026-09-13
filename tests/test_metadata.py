@@ -34,8 +34,8 @@ def test_required_root_documents_exist():
 
 
 def test_version_parity():
-    """Verify version 0.1.4 parity across code, manifests, and documentation."""
-    expected_version = "0.1.4"
+    """Verify version 0.1.5 parity across code, manifests, and documentation."""
+    expected_version = "0.1.5"
 
     # 1. Python package __version__
     import clip_director
@@ -72,11 +72,11 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/python-3.10",
         "https://img.shields.io/badge/ecosystem-ellmos--ai-purple",
         "https://img.shields.io/badge/umbrella-open--bricks-blueviolet",
-        "https://img.shields.io/badge/version-0.1.4",
+        "https://img.shields.io/badge/version-0.1.5",
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--09--12-informational",
+        "https://img.shields.io/badge/last%20checked-2026--09--13-informational",
         "license-MIT",
     ]
 
@@ -312,5 +312,65 @@ def test_marketing_log_contract():
     assert "GOVERNANCE & RUNTIME INVARIANTS" in marketing_log
     assert "SIBLING ECOSYSTEM & PARTNER MATRIX" in marketing_log
     assert "2026-09-12 — Pfad B" in marketing_log
+    assert "2026-09-13 — Pfad A" in marketing_log
     assert "INV-LOCAL-01" in marketing_log
     assert "INV-SLA-10" in marketing_log
+
+
+def test_pep561_typing_marker_and_package_data_contract():
+    """Verify PEP 561 py.typed marker and setuptools package-data configuration."""
+    marker = ROOT / "src" / "clip_director" / "py.typed"
+    assert marker.is_file(), "Missing src/clip_director/py.typed marker file"
+
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert "[tool.setuptools.package-data]" in pyproject
+    assert '"py.typed"' in pyproject
+    assert '"*.html"' in pyproject
+    assert '"*.yaml"' in pyproject
+
+
+def test_pep639_license_files_contract():
+    """Verify PEP 639 license-files declaration and referenced file existence."""
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'license = "MIT"' in pyproject
+    assert 'license-files = ["LICENSE", "THIRD_PARTY_LICENSES.md"]' in pyproject
+    assert (ROOT / "LICENSE").is_file()
+    assert (ROOT / "THIRD_PARTY_LICENSES.md").is_file()
+
+
+def test_ruff_configuration_contract():
+    """Verify explicit tool.ruff and tool.ruff.lint tables in pyproject.toml."""
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert "[tool.ruff]" in pyproject
+    assert "line-length = 100" in pyproject
+    assert '[tool.ruff.lint]' in pyproject
+
+
+def test_ci_workflow_timeout_and_dev_install_contract():
+    """Verify CI workflow defines execution timeout guardrails and dev editable install."""
+    ci_yaml = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert "timeout-minutes: 15" in ci_yaml
+    assert 'pip install -e ".[dev]"' in ci_yaml
+
+
+def test_todo_version_and_date_parity():
+    """Verify TODO.md version header and update date match active release."""
+    todo_text = (ROOT / "TODO.md").read_text(encoding="utf-8")
+    assert "**Version:** 0.1.5" in todo_text
+    assert "**Updated:** 2026-09-13" in todo_text
+    assert "TASK-CSD-05" in todo_text
+
+
+def test_changelog_recent_pfad_a_015_entry():
+    """Verify CHANGELOG.md has a dedicated [0.1.5] - 2026-09-13 entry with Pfad A details."""
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [0.1.5] - 2026-09-13" in changelog
+    assert "PEP 561 Inline Typing Support" in changelog
+    assert "Executable Module Entrypoint" in changelog
+    assert "CI Workflow Hardening" in changelog
+
+
+def test_executable_module_entrypoint_file():
+    """Verify src/clip_director/__main__.py entrypoint exists."""
+    main_py = ROOT / "src" / "clip_director" / "__main__.py"
+    assert main_py.is_file(), "Missing src/clip_director/__main__.py"

@@ -1,17 +1,17 @@
 # TODO.md — Active work
 
-**Version:** 0.1.1  
-**Updated:** 2026-09-08  
-**Reason:** Standardization, path neutrality, gate readiness, and AI discoverability  
-**Purpose:** Track only work that remains open.
+- **Version:** 0.1.5
+- **Updated:** 2026-09-13
+- **Reason:** Pfad A technical hygiene, PEP 561 inline typing, PEP 639 license-files, CI dev install hardening, and contract test suite expansion
+- **Purpose:** Track only work that remains open.
 
 ## STATUS
 
 | Category | Status | Evidence / next gate |
 |---|---|---|
-| Core Director Pipeline | DONE | Project lifecycle, init, doctor, serve, cockpit, assemble verified and passing pytest (4/4 tests green). |
+| Core Director Pipeline | DONE | Project lifecycle, init, doctor, serve, cockpit, assemble verified and passing pytest. |
 | Path Neutrality & Hygiene | DONE | Neutral paths (`~/Downloads`), sanitized docstrings, and strict `.gitignore` patterns aligned with gate standards. |
-| AI Discoverability | DONE | Machine-readable `llms.txt`, PEP 621 classifiers, and schema v2 metadata parity established. |
+| AI Discoverability & Navigation | DONE | Machine-readable `llms.txt`, 16-point quick navigation, target personas, and PEP 621 metadata parity established. |
 | Ecosystem Integration | DONE | Bi-directional handoff with `ai-media-editor`, catalog registration in `.MODULES/.DOMAINS`, Plan-D pointer configured. |
 | Public Release Gate | USER | MIT License selected; explicit public visibility approval pending from user. |
 
@@ -27,6 +27,12 @@
 
 - [x] **TASK-CSD-03: Release-Hygiene & Gate-Bereitschaft (v0.1.1)** (`effort=low`, `scope=hygiene`, priority `high`).
   - **Result:** Pfadneutralität in Templates und Watcher umgesetzt, `.gitignore` vervollständigt, `TODO.md` und `llms.txt` hinterlegt.
+
+- [x] **TASK-CSD-04: Pfad B Discoverability, 16-Point Quick Navigation & Third-Party Audit (v0.1.4)** (`effort=low`, `scope=marketing`, priority `normal`).
+  - **Result:** 16-Punkte-Schnellnavigation, Target Personas, Drittanbieter-Lizenzen, PEP 621 URLs und Marketing-Logbuch etabliert.
+
+- [x] **TASK-CSD-05: Pfad A Technische Hygiene, PEP 561 Inline-Typisierung & CI-Härtung (v0.1.5)** (`effort=low`, `scope=hygiene`, priority `high`).
+  - **Result:** `py.typed` integriert, `python -m clip_director` Executable Entrypoint mit `-v` / `--version` Flag, `timeout-minutes: 15` in CI-Matrix, package-data für HTML/YAML Templates in Wheel-Build, und Vertragstestsuite erweitert.
 
 ---
 <!-- REMEMBER: ENDUSERTEXTE BEKOMMEN ECHTE UMLAUTE Ü Ö Ä ß -->

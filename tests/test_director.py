@@ -5,7 +5,7 @@ from clip_director.storyboard_init import create_project
 
 
 def test_version():
-    assert __version__ == "0.1.4"
+    assert __version__ == "0.1.5"
 
 
 def test_project_lifecycle(tmp_path):
@@ -44,4 +44,21 @@ def test_standalone_without_media_editor(monkeypatch):
     monkeypatch.setenv("AI_MEDIA_EDITOR_DIR", "C:/nonexistent/path/for/tests")
     ret = cmd_doctor()
     assert ret == 0, "Director doctor must pass even if ai-media-editor is not installed"
+
+
+def test_cli_version_flag():
+    import subprocess
+    import sys
+    for flag in ["--version", "-v"]:
+        res = subprocess.run([sys.executable, "-m", "clip_director", flag], capture_output=True, text=True)
+        assert res.returncode == 0
+        assert "clip-director 0.1.5" in res.stdout or "clip-director 0.1.5" in res.stderr
+
+
+def test_pep561_typing_marker_file():
+    from pathlib import Path
+    import clip_director
+    pkg_dir = Path(clip_director.__file__).resolve().parent
+    marker = pkg_dir / "py.typed"
+    assert marker.is_file(), "src/clip_director/py.typed must exist for PEP 561 compliance"
 

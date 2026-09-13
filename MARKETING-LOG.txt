@@ -189,3 +189,28 @@ Part of the ellmos-ai suite and open-bricks umbrella:
     - Release 0.1.2 Discoverability- und Pfad-B-Eintrag ergänzt.
 12. Automatisierte Vertragstestsuite (tests/test_metadata.py):
     - Contract-Tests zur kontinuierlichen Absicherung aller Discoverability-, Paritäts-, Governance- und Sicherheitsstandards.
+
+================================================================================
+6. AUDIT- & METADATEN-AKTUALISIERUNG (2026-09-13 — Pfad A Technical Hygiene & PEP 621/639 Hardening)
+================================================================================
+Im Rahmen des regelmäßigen Pfad-A-Wartungsdurchlaufs wurden folgende technische Qualitätsstandards etabliert:
+1. Version-Parity & Invarianten-Sync (v0.1.5):
+   - Vollständiger Versionsabgleich über clip_director/__init__.py, pyproject.toml, ellmos-module.v2.json, llms.txt, READMEs und Test-Suiten.
+2. PEP 561 Inline-Typisierung & Distribution-Data:
+   - py.typed Marker in src/clip_director/ hinterlegt.
+   - [tool.setuptools.package-data] in pyproject.toml für py.typed, *.html und *.yaml konfiguriert, sodass gebaute Wheels alle Vorlagen enthalten.
+3. Executable Module Entrypoint:
+   - src/clip_director/__main__.py eingerichtet für native `python -m clip_director` Aufrufe.
+   - CLI-Parser mit Kurzoption `-v` neben `--version` ausgestattet.
+4. CI Multi-OS Matrix & Timeout-Schutz (.github/workflows/ci.yml):
+   - `timeout-minutes: 15` Guardrail gegen hängende CI-Runner eingefügt.
+   - Abhängigkeiten-Installation auf standardisiertes `pip install -e ".[dev]"` harmonisiert.
+5. PEP 639 Lizenzstandardisierung (pyproject.toml):
+   - `license-files = ["LICENSE", "THIRD_PARTY_LICENSES.md"]` verankert.
+   - SPDX-Lizenzangabe `license = "MIT"` und Bereinigung redundanter Legacy-Classifier.
+6. Linter-Konfiguration:
+   - `[tool.ruff]` und `[tool.ruff.lint]` in pyproject.toml mit line-length = 100 und Standardregeln (E, F, W).
+7. Sync- & Cache-Hygiene (.gitignore):
+   - Typing-Caches (.mypy_cache/, .dmypy.json, dmypy.json, .pyre/, .pytype/) und Coverage-Wildcards (.coverage.*) ergänzt.
+8. Vertragstest-Erweiterung (tests/test_director.py & tests/test_metadata.py):
+   - Automatisierte Assertions für alle neuen Pfad-A-Standards integriert.

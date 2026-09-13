@@ -24,7 +24,7 @@ def test_version_parity():
     manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest_version = manifest_data.get("version")
 
-    assert pkg_version == pyproject_version == manifest_version == "0.1.4"
+    assert pkg_version == pyproject_version == manifest_version == "0.1.5"
 
 
 def test_llms_txt_structure():

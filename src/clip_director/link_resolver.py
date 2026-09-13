@@ -75,7 +75,7 @@ try {{
   await send('Runtime.evaluate', {{
     expression: `
       (() => {{
-        const btn = document.querySelector('[data-test-id="reject-button"]') || 
+        const btn = document.querySelector('[data-test-id="reject-button"]') ||
                     document.querySelector('button[aria-label*="ablehnen"]');
         if (btn) btn.click();
       }})()

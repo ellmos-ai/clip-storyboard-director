@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-09-13
+
+### Added
+- **PEP 561 Inline Typing Support**: Added `py.typed` marker in `src/clip_director/` and declared package-data in `pyproject.toml` (`["py.typed", "*.html", "*.yaml"]`) ensuring distribution wheels include static typing markers and all HTML/YAML cockpit templates.
+- **Executable Module Entrypoint (`python -m clip_director`)**: Added `src/clip_director/__main__.py` and enhanced CLI parser with short `-v` version flag and optional `argv` passing for robust programmatic invocation and testing.
+- **CI Workflow Hardening**: Added `timeout-minutes: 15` execution guardrail to test matrix in `.github/workflows/ci.yml` and standardized dependency installation via `pip install -e ".[dev]"`.
+- **PEP 639 License Metadata Parity**: Standardized `pyproject.toml` with `license-files = ["LICENSE", "THIRD_PARTY_LICENSES.md"]` and superseded legacy classifier with SPDX expression.
+- **Ruff Linter Configuration**: Added explicit `[tool.ruff]` and `[tool.ruff.lint]` configurations in `pyproject.toml` (`line-length = 100`, `target-version = "py310"`, rules `["E", "F", "W"]`).
+- **Contract Test Suite Expansion**: Added comprehensive test contracts in `tests/test_director.py` and `tests/test_metadata.py` verifying PEP 561 typing markers, PEP 639 license files, ruff configuration, CI timeout guardrails, dev extra installation, CLI `-v` and module execution, and TODO version parity.
+
+### Changed
+- **Version Bump**: Synchronized version `0.1.5` across `clip_director/__init__.py`, `pyproject.toml`, `ellmos-module.v2.json`, `llms.txt`, and automated test suites.
+- **Badge Parity**: Updated Shields.io badges for version `0.1.5` and last-checked date `2026-09-13` across `README.md` and `README_de.md`.
+- **Git Ignore Hardening**: Added typing cache patterns (`.mypy_cache/`, `.dmypy.json`, `dmypy.json`, `.pyre/`, `.pytype/`) and coverage wildcards (`.coverage.*`) to `.gitignore`.
+
 ## [0.1.4] - 2026-09-12
 
 ### Added
