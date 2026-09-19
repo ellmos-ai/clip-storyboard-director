@@ -1,0 +1,755 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 680" width="2400" height="680">
+  <defs>
+    <style>
+      .font-sans { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .font-mono { font-family: 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', 'Cascadia Code', Consolas, monospace; }
+    </style>
+
+    <!-- Gradients -->
+    <linearGradient id="bg-canvas" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060912" />
+      <stop offset="40%" stop-color="#0a101e" />
+      <stop offset="70%" stop-color="#0c1426" />
+      <stop offset="100%" stop-color="#05070d" />
+    </linearGradient>
+
+    <radialGradient id="radial-ambient" cx="18%" cy="25%" r="65%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.18" />
+      <stop offset="50%" stop-color="#6366f1" stop-opacity="0.04" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="radial-amber" cx="72%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.15" />
+      <stop offset="60%" stop-color="#d97706" stop-opacity="0.03" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="grad-gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <linearGradient id="panel-bezel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="30%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <linearGradient id="panel-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#04060d" />
+      <stop offset="30%" stop-color="#0b1326" />
+      <stop offset="65%" stop-color="#16153b" />
+      <stop offset="100%" stop-color="#0a2540" />
+    </linearGradient>
+
+    <radialGradient id="moon-cyan" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#f0f9ff" />
+      <stop offset="40%" stop-color="#7dd3fc" />
+      <stop offset="85%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </radialGradient>
+
+    <radialGradient id="moon-amber" cx="35%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#fef3c7" />
+      <stop offset="40%" stop-color="#f59e0b" />
+      <stop offset="90%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </radialGradient>
+
+    <linearGradient id="crystal-shard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9" stop-opacity="0.95" />
+      <stop offset="50%" stop-color="#0284c7" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#082f49" stop-opacity="0.95" />
+    </linearGradient>
+
+    <radialGradient id="orb-core" cx="45%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="25%" stop-color="#fde047" />
+      <stop offset="65%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </radialGradient>
+
+    <radialGradient id="orb-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.95" />
+      <stop offset="35%" stop-color="#f59e0b" stop-opacity="0.5" />
+      <stop offset="75%" stop-color="#d97706" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="suit-base" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="45%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+
+    <linearGradient id="visor-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="30%" stop-color="#f59e0b" />
+      <stop offset="75%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+
+    <linearGradient id="flow-line" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="strong-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="blur1" />
+      <feGaussianBlur stdDeviation="2" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur1" />
+        <feMergeNode in="blur2" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Patterns -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#334155" stroke-width="0.6" opacity="0.25" />
+      <circle cx="0" cy="0" r="1.2" fill="#475569" opacity="0.3" />
+    </pattern>
+
+    <pattern id="sprocket-track" width="28" height="14" patternUnits="userSpaceOnUse">
+      <rect x="5" y="2" width="18" height="10" rx="2" fill="#0b111e" stroke="#334155" stroke-width="1" />
+    </pattern>
+
+    <!-- Clip Paths for 16:9 Storyboard Frames -->
+    <clipPath id="frame1-clip">
+      <rect x="910" y="65" width="430" height="290" rx="8" />
+    </clipPath>
+    <clipPath id="frame2-clip">
+      <rect x="1400" y="65" width="430" height="290" rx="8" />
+    </clipPath>
+    <clipPath id="frame3-clip">
+      <rect x="1890" y="65" width="430" height="290" rx="8" />
+    </clipPath>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="2400" height="680" fill="url(#bg-canvas)" />
+  <rect width="2400" height="680" fill="url(#radial-ambient)" />
+  <rect width="2400" height="680" fill="url(#radial-amber)" />
+  <rect width="2400" height="680" fill="url(#grid)" />
+
+  <!-- Perimeter Borders -->
+  <rect x="14" y="14" width="2372" height="652" rx="14" fill="none" stroke="#1e293b" stroke-width="1.5" />
+  <rect x="22" y="22" width="2356" height="636" rx="10" fill="none" stroke="#0f172a" stroke-width="1" />
+
+  <!-- Technical Framing Brackets -->
+  <path d="M 14 50 L 14 14 L 50 14" fill="none" stroke="#38bdf8" stroke-width="3" />
+  <path d="M 2386 50 L 2386 14 L 2350 14" fill="none" stroke="#38bdf8" stroke-width="3" />
+  <path d="M 14 630 L 14 666 L 50 666" fill="none" stroke="#38bdf8" stroke-width="3" />
+  <path d="M 2386 630 L 2386 666 L 2350 666" fill="none" stroke="#38bdf8" stroke-width="3" />
+
+  <!-- Vertical Divider -->
+  <line x1="880" y1="35" x2="880" y2="645" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="6 6" />
+
+  <!-- ================= LEFT COLUMN ================= -->
+  <!-- System Status / Mode Header -->
+  <g transform="translate(60, 48)">
+    <g transform="translate(0, 1)">
+      <rect x="0" y="0" width="24" height="18" rx="2" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5" />
+      <path d="M 0 5 L 24 5" stroke="#f59e0b" stroke-width="1.5" />
+      <path d="M 4 0 L 8 5 M 12 0 L 16 5 M 20 0 L 24 5" stroke="#f59e0b" stroke-width="1.5" />
+    </g>
+    <text x="34" y="14" class="font-sans" font-size="12" font-weight="800" letter-spacing="2" fill="#94a3b8">
+      DIRECTOR COCKPIT
+    </text>
+    
+    <g transform="translate(200, 0)">
+      <rect x="0" y="0" width="105" height="20" rx="10" fill="#0c1e33" stroke="#0284c7" stroke-width="1" />
+      <circle cx="9" cy="10" r="3.5" fill="#38bdf8" />
+      <text x="18" y="14" class="font-mono" font-size="10" font-weight="700" fill="#38bdf8">PORT :8765</text>
+    </g>
+
+    <g transform="translate(315, 0)">
+      <rect x="0" y="0" width="115" height="20" rx="10" fill="#062e24" stroke="#059669" stroke-width="1" />
+      <circle cx="9" cy="10" r="3.5" fill="#34d399" />
+      <text x="18" y="14" class="font-mono" font-size="10" font-weight="700" fill="#34d399">ZERO-EGRESS</text>
+    </g>
+
+    <g transform="translate(440, 0)">
+      <rect x="0" y="0" width="105" height="20" rx="10" fill="#1e1838" stroke="#7c3aed" stroke-width="1" />
+      <circle cx="9" cy="10" r="3.5" fill="#c084fc" />
+      <text x="18" y="14" class="font-mono" font-size="10" font-weight="700" fill="#c084fc">CDP :9222</text>
+    </g>
+  </g>
+
+  <!-- Main Wordmark -->
+  <g transform="translate(60, 142)">
+    <!-- Viewfinder Frame Accent on left -->
+    <path d="M 0 -30 L 0 70" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" />
+    <path d="M 0 -30 L 16 -30" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+    <path d="M 0 70 L 16 70" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+
+    <text x="24" y="0" class="font-sans" font-size="54" font-weight="900" letter-spacing="-1">
+      <tspan fill="#f8fafc">clip·</tspan><tspan fill="url(#grad-gold)">storyboard</tspan>
+    </text>
+    <text x="24" y="64" class="font-sans" font-size="68" font-weight="950" letter-spacing="4" fill="url(#grad-cyan)" filter="url(#soft-glow)">
+      DIRECTOR
+    </text>
+  </g>
+
+  <!-- Primary Tagline (Exact README Text) -->
+  <g transform="translate(60, 252)">
+    <text x="0" y="0" class="font-sans" font-size="20" font-weight="700" fill="#f1f5f9" letter-spacing="0.2">
+      Local-First AI Storyboard Director &amp; Scene Continuity Orchestrator
+    </text>
+    <text x="0" y="24" class="font-sans" font-size="13.5" font-weight="400" fill="#94a3b8" letter-spacing="0.3">
+      Automates generative AI video pipelines with bounded 4D context, optical clue-frames &amp; audio.
+    </text>
+  </g>
+
+  <!-- Architecture Feature Cards (2x2 Grid) -->
+  <g transform="translate(60, 306)">
+    <!-- Card 1: 4D Persistence -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="375" height="50" rx="8" fill="#0d1527" stroke="#b45309" stroke-width="1.2" />
+      <circle cx="25" cy="25" r="12" fill="#451a03" stroke="#f59e0b" stroke-width="1.5" />
+      <text x="25" y="29" class="font-sans" font-size="11" font-weight="900" fill="#fbbf24" text-anchor="middle">4D</text>
+      <text x="48" y="21" class="font-sans" font-size="12.5" font-weight="800" fill="#f8fafc" letter-spacing="0.5">4D PERSISTENCE BUFFER</text>
+      <text x="48" y="38" class="font-sans" font-size="11" font-weight="500" fill="#f59e0b">Locks characters, props &amp; style across cuts</text>
+    </g>
+
+    <!-- Card 2: Clue-Frame Continuity -->
+    <g transform="translate(390, 0)">
+      <rect x="0" y="0" width="395" height="50" rx="8" fill="#08182b" stroke="#0284c7" stroke-width="1.2" />
+      <circle cx="25" cy="25" r="12" fill="#083344" stroke="#38bdf8" stroke-width="1.5" />
+      <path d="M 19 25 L 31 25 M 25 19 L 25 31" stroke="#38bdf8" stroke-width="1.5" />
+      <circle cx="25" cy="25" r="3.5" fill="none" stroke="#38bdf8" stroke-width="1" />
+      <text x="48" y="21" class="font-sans" font-size="12.5" font-weight="800" fill="#f8fafc" letter-spacing="0.5">CLUE-FRAME CONTINUITY</text>
+      <text x="48" y="38" class="font-sans" font-size="11" font-weight="500" fill="#38bdf8">Auto-extracts T_end to seed next shot T_0</text>
+    </g>
+
+    <!-- Card 3: CDP Browser Automation -->
+    <g transform="translate(0, 60)">
+      <rect x="0" y="0" width="375" height="50" rx="8" fill="#08201a" stroke="#059669" stroke-width="1.2" />
+      <circle cx="25" cy="25" r="12" fill="#064e3b" stroke="#34d399" stroke-width="1.5" />
+      <path d="M 20 20 L 26 25 L 20 30" fill="none" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" />
+      <text x="48" y="21" class="font-sans" font-size="12.5" font-weight="800" fill="#f8fafc" letter-spacing="0.5">CDP BROWSER AUTOMATION</text>
+      <text x="48" y="38" class="font-sans" font-size="11" font-weight="500" fill="#34d399">Directs web AI video generators via Edge/Chrome</text>
+    </g>
+
+    <!-- Card 4: Audio Staging -->
+    <g transform="translate(390, 60)">
+      <rect x="0" y="0" width="395" height="50" rx="8" fill="#151228" stroke="#7c3aed" stroke-width="1.2" />
+      <circle cx="25" cy="25" r="12" fill="#2e1065" stroke="#c084fc" stroke-width="1.5" />
+      <path d="M 17 25 L 19 19 L 21 30 L 23 17 L 25 32 L 27 21 L 29 27 L 31 25" fill="none" stroke="#c084fc" stroke-width="1.5" stroke-linecap="round" />
+      <text x="48" y="21" class="font-sans" font-size="12.5" font-weight="800" fill="#f8fafc" letter-spacing="0.5">MULTI-TRACK AUDIO DUCKING</text>
+      <text x="48" y="38" class="font-sans" font-size="11" font-weight="500" fill="#c084fc">Voiceover, ambience &amp; score auto-leveling</text>
+    </g>
+  </g>
+
+  <!-- Live Persistence State Inspector (Cockpit Terminal) -->
+  <g transform="translate(60, 442)">
+    <rect x="0" y="0" width="785" height="182" rx="8" fill="#080d16" stroke="#1e293b" stroke-width="1.5" />
+    
+    <!-- Terminal Title Bar -->
+    <path d="M 0 8 Q 0 0 8 0 L 777 0 Q 785 0 785 8 L 785 28 L 0 28 Z" fill="#0f172a" />
+    <circle cx="16" cy="14" r="3.5" fill="#ef4444" />
+    <circle cx="28" cy="14" r="3.5" fill="#f59e0b" />
+    <circle cx="40" cy="14" r="3.5" fill="#10b981" />
+    
+    <text x="56" y="18" class="font-mono" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1">
+      PERSISTENCE_BUFFER.YAML // ACTIVE CONSTRAINTS
+    </text>
+    
+    <g transform="translate(625, 5)">
+      <rect x="0" y="0" width="150" height="18" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1" />
+      <text x="75" y="13" class="font-mono" font-size="9.5" font-weight="800" fill="#34d399" text-anchor="middle">DRIFT: 0.00% [LOCKED]</text>
+    </g>
+
+    <!-- Key-Value rows -->
+    <g transform="translate(18, 52)" class="font-mono" font-size="11">
+      <!-- Row 1 -->
+      <text x="0" y="0" font-weight="700" fill="#fbbf24">CHARACTERS:</text>
+      <text x="110" y="0" fill="#e2e8f0">id="hero_astronaut" | suit="cobalt_eva" | helmet="gold_tint"</text>
+      <text x="690" y="0" font-weight="700" fill="#38bdf8">100%</text>
+
+      <!-- Row 2 -->
+      <text x="0" y="24" font-weight="700" fill="#fbbf24">PROPS:</text>
+      <text x="110" y="24" fill="#e2e8f0">id="lumen_relic" | shape="octahedron" | emission="amber_pulse"</text>
+      <text x="690" y="24" font-weight="700" fill="#38bdf8">100%</text>
+
+      <!-- Row 3 -->
+      <text x="0" y="48" font-weight="700" fill="#38bdf8">ENVIRONMENT:</text>
+      <text x="110" y="48" fill="#e2e8f0">world="xenon_canyon" | celestial="twin_moons" | flora="biolum_cyan"</text>
+      <text x="690" y="48" font-weight="700" fill="#38bdf8">100%</text>
+
+      <!-- Row 4 -->
+      <text x="0" y="72" font-weight="700" fill="#c084fc">WORKFLOW:</text>
+      <text x="110" y="72" fill="#e2e8f0">pipeline="director_and_editor_duo" | audio="ffmpeg_sidechain"</text>
+      <text x="690" y="72" font-weight="700" fill="#34d399">SYNC</text>
+    </g>
+
+    <!-- Progress Bar / Status Line -->
+    <g transform="translate(18, 146)">
+      <rect x="0" y="0" width="749" height="12" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+      <rect x="1" y="1" width="747" height="10" rx="5" fill="url(#flow-line)" opacity="0.85" />
+    </g>
+  </g>
+
+  <!-- ================= RIGHT COLUMN: STORYBOARD & CONTINUITY METAPHOR ================= -->
+  <!-- Top Storyboard Sequence Header -->
+  <g transform="translate(910, 46)">
+    <rect x="0" y="0" width="1410" height="12" rx="2" fill="url(#sprocket-track)" />
+  </g>
+
+  <!-- ================= PANEL 1: SHOT 01 (WIDE ESTABLISHING) ================= -->
+  <g>
+    <!-- Frame Box -->
+    <rect x="910" y="65" width="430" height="290" rx="8" fill="#0c1220" stroke="url(#panel-bezel)" stroke-width="2" />
+    
+    <g clip-path="url(#frame1-clip)">
+      <rect x="910" y="65" width="430" height="290" fill="url(#panel-sky)" />
+      
+      <!-- Stars -->
+      <circle cx="950" cy="95" r="1.2" fill="#ffffff" opacity="0.8" />
+      <circle cx="1020" cy="80" r="1.4" fill="#ffffff" opacity="0.9" />
+      <circle cx="1080" cy="115" r="1" fill="#7dd3fc" opacity="0.7" />
+      <circle cx="1140" cy="85" r="1.2" fill="#ffffff" opacity="0.85" />
+      <circle cx="1200" cy="105" r="1.3" fill="#fde68a" opacity="0.8" />
+      <circle cx="1290" cy="90" r="1" fill="#ffffff" opacity="0.75" />
+
+      <!-- TWIN MOONS (Crucial Continuity Element #1) -->
+      <!-- Primary Moon -->
+      <circle cx="1190" cy="115" r="30" fill="url(#moon-cyan)" filter="url(#soft-glow)" />
+      <circle cx="1190" cy="115" r="28" fill="#0b1322" />
+      <circle cx="1184" cy="112" r="26" fill="#e0f2fe" opacity="0.9" />
+      <circle cx="1178" cy="106" r="4.5" fill="#7dd3fc" opacity="0.6" />
+      <circle cx="1192" cy="120" r="6" fill="#7dd3fc" opacity="0.5" />
+      
+      <!-- Secondary Minor Moon -->
+      <circle cx="1250" cy="145" r="11" fill="url(#moon-amber)" filter="url(#soft-glow)" />
+      <circle cx="1248" cy="143" r="9" fill="#fef3c7" opacity="0.9" />
+
+      <!-- Mountain Silhouettes -->
+      <polygon points="910,220 990,165 1060,205 1150,155 1240,200 1340,170 1340,360 910,360" fill="#090f1d" />
+      <polygon points="910,245 1010,195 1090,230 1180,185 1270,225 1340,200 1340,360 910,360" fill="#111c30" />
+
+      <!-- Glowing Crystal Pillars (Continuity Element #2) -->
+      <polygon points="960,270 968,195 976,270" fill="url(#crystal-shard)" filter="url(#soft-glow)" />
+      <polygon points="975,270 980,215 986,270" fill="url(#crystal-shard)" />
+      <polygon points="1230,280 1240,185 1250,280" fill="url(#crystal-shard)" filter="url(#soft-glow)" />
+      <polygon points="1248,280 1254,205 1260,280" fill="url(#crystal-shard)" />
+
+      <!-- Foreground Crag / Ledge -->
+      <path d="M 910 285 Q 1000 260 1100 275 Q 1200 290 1340 270 L 1340 360 L 910 360 Z" fill="#06090f" />
+      <path d="M 910 286 Q 1000 261 1100 276 Q 1200 291 1340 271" stroke="#1e293b" stroke-width="2" fill="none" />
+
+      <!-- Explorer Silhouette & EVA Suit (Continuity Element #3) -->
+      <g transform="translate(1030, 205)">
+        <!-- Shadow -->
+        <ellipse cx="40" cy="88" rx="28" ry="6" fill="#000000" opacity="0.6" />
+        <!-- Legs -->
+        <path d="M 28 58 L 22 86 L 31 86 L 38 60" fill="#1e293b" />
+        <path d="M 46 58 L 52 86 L 43 86 L 38 60" fill="#1e293b" />
+        <!-- Torso -->
+        <path d="M 24 58 L 28 32 Q 40 28 52 32 L 56 58 Z" fill="#334155" stroke="#475569" stroke-width="1" />
+        <circle cx="40" cy="45" r="2.5" fill="#38bdf8" />
+        <!-- Backpack -->
+        <rect x="18" y="30" width="9" height="25" rx="3" fill="#1e293b" stroke="#334155" stroke-width="1" />
+        <!-- Helmet with amber reflective visor -->
+        <circle cx="40" cy="22" r="13" fill="#334155" stroke="#64748b" stroke-width="1.5" />
+        <ellipse cx="43" cy="22" rx="8" ry="6.5" fill="url(#visor-grad)" filter="url(#soft-glow)" />
+        <!-- Arms holding artifact -->
+        <path d="M 29 36 L 42 46 L 55 45" stroke="#475569" stroke-width="4.5" stroke-linecap="round" fill="none" />
+        
+        <!-- LUMEN ARTIFACT (Core Continuity Prop #4 - Glows Amber) -->
+        <g transform="translate(56, 45)">
+          <circle cx="0" cy="0" r="18" fill="url(#orb-halo)" />
+          <polygon points="0,-10 8,0 0,10 -8,0" fill="url(#orb-core)" filter="url(#soft-glow)" />
+        </g>
+      </g>
+
+      <!-- Film Frame Corner Ticks -->
+      <path d="M 920 76 L 920 72 L 926 72" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 1330 76 L 1330 72 L 1324 72" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 920 346 L 920 350 L 926 350" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 1330 346 L 1330 350 L 1324 350" stroke="#64748b" stroke-width="1.5" fill="none" />
+    </g>
+
+    <!-- Overlay Tags -->
+    <g transform="translate(922, 74)">
+      <rect x="0" y="0" width="138" height="20" rx="4" fill="#070a12" fill-opacity="0.85" stroke="#334155" stroke-width="1" />
+      <text x="8" y="14" class="font-mono" font-size="10" font-weight="700" fill="#f8fafc">SHOT 01 · 24mm</text>
+    </g>
+    <g transform="translate(1222, 74)">
+      <rect x="0" y="0" width="108" height="20" rx="4" fill="#070a12" fill-opacity="0.85" stroke="#334155" stroke-width="1" />
+      <text x="8" y="14" class="font-mono" font-size="9.5" font-weight="700" fill="#94a3b8">00:00 - 04:00</text>
+    </g>
+
+    <!-- Last Frame Target Box -->
+    <g transform="translate(1160, 310)">
+      <rect x="0" y="0" width="170" height="38" rx="6" fill="#0a1220" fill-opacity="0.9" stroke="#f59e0b" stroke-width="1.5" />
+      <circle cx="14" cy="19" r="4" fill="#f59e0b" />
+      <text x="26" y="15" class="font-mono" font-size="9.5" font-weight="800" fill="#fbbf24">CLUE-FRAME EXTRACT</text>
+      <text x="26" y="28" class="font-mono" font-size="8.5" font-weight="700" fill="#fef08a">T_end ➔ PERSISTENCE</text>
+    </g>
+  </g>
+
+  <!-- ================= BRIDGE 1 (PIPELINE VECTOR) ================= -->
+  <g transform="translate(1340, 180)">
+    <!-- Flow Lines -->
+    <path d="M 0 30 C 25 15, 35 15, 60 30" fill="none" stroke="#f59e0b" stroke-width="3" filter="url(#soft-glow)" />
+    <path d="M 0 30 C 25 15, 35 15, 60 30" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3" />
+    <!-- Node -->
+    <circle cx="30" cy="22" r="13" fill="#0f172a" stroke="#f59e0b" stroke-width="2" />
+    <path d="M 27 17 L 35 22 L 27 27 Z" fill="#f59e0b" />
+    <!-- Label -->
+    <rect x="-8" y="46" width="76" height="18" rx="4" fill="#0c1e33" stroke="#0284c7" stroke-width="1" />
+    <text x="30" y="59" class="font-mono" font-size="8" font-weight="800" fill="#38bdf8" text-anchor="middle">CDP SEED</text>
+  </g>
+
+  <!-- ================= PANEL 2: SHOT 02 (MEDIUM CONTINUITY) ================= -->
+  <g>
+    <!-- Frame Box -->
+    <rect x="1400" y="65" width="430" height="290" rx="8" fill="#0c1220" stroke="url(#panel-bezel)" stroke-width="2" />
+    
+    <g clip-path="url(#frame2-clip)">
+      <rect x="1400" y="65" width="430" height="290" fill="url(#panel-sky)" />
+      
+      <!-- Stars -->
+      <circle cx="1440" cy="90" r="1.1" fill="#ffffff" opacity="0.8" />
+      <circle cx="1500" cy="110" r="1.3" fill="#7dd3fc" opacity="0.7" />
+      <circle cx="1590" cy="80" r="1.5" fill="#ffffff" opacity="0.9" />
+      <circle cx="1680" cy="115" r="1.2" fill="#ffffff" opacity="0.85" />
+      <circle cx="1780" cy="95" r="1.4" fill="#fde68a" opacity="0.75" />
+
+      <!-- TWIN MOONS (Exact Same Celestial Feature, Scaled for 50mm) -->
+      <circle cx="1490" cy="110" r="42" fill="url(#moon-cyan)" filter="url(#soft-glow)" />
+      <circle cx="1490" cy="110" r="39" fill="#0b1322" />
+      <circle cx="1482" cy="105" r="36" fill="#e0f2fe" opacity="0.9" />
+      <circle cx="1472" cy="98" r="6" fill="#7dd3fc" opacity="0.6" />
+      <circle cx="1493" cy="118" r="8" fill="#7dd3fc" opacity="0.5" />
+      <!-- Secondary Moon -->
+      <circle cx="1575" cy="150" r="15" fill="url(#moon-amber)" filter="url(#soft-glow)" />
+      <circle cx="1573" cy="148" r="13" fill="#fef3c7" opacity="0.9" />
+
+      <!-- Crystal Spires (Matching Shot 1, closer perspective) -->
+      <polygon points="1420,280 1432,165 1445,280" fill="url(#crystal-shard)" filter="url(#soft-glow)" />
+      <polygon points="1780,280 1795,150 1812,280" fill="url(#crystal-shard)" filter="url(#soft-glow)" />
+      <polygon points="1805,280 1816,180 1827,280" fill="url(#crystal-shard)" />
+
+      <!-- Midground Ground Ridge -->
+      <path d="M 1400 295 Q 1520 265 1620 275 Q 1740 290 1830 270 L 1830 360 L 1400 360 Z" fill="#090d16" />
+      <path d="M 1400 296 Q 1520 266 1620 276 Q 1740 291 1830 271" stroke="#334155" stroke-width="2" fill="none" />
+
+      <!-- Explorer (Medium Framed, Same Suit, Same Visor, Same Artifact) -->
+      <g transform="translate(1555, 140)">
+        <!-- Shoulders & Upper Torso -->
+        <path d="M -15 120 L 5 45 Q 45 35 85 45 L 105 120 Z" fill="url(#suit-base)" stroke="#64748b" stroke-width="1.5" />
+        <!-- Collar Assembly -->
+        <path d="M 15 48 Q 45 40 75 48 L 72 58 Q 45 50 18 58 Z" fill="#1e293b" stroke="#475569" stroke-width="1" />
+        <!-- Chest Badge / Life Support Light (Cyan) -->
+        <circle cx="45" cy="74" r="5" fill="#38bdf8" filter="url(#soft-glow)" />
+        <rect x="25" y="86" width="40" height="6" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1" />
+
+        <!-- Helmet -->
+        <circle cx="45" cy="22" r="34" fill="#334155" stroke="#64748b" stroke-width="2" />
+        <!-- Gold Reflective Visor -->
+        <ellipse cx="45" cy="24" rx="24" ry="19" fill="url(#visor-grad)" filter="url(#soft-glow)" />
+        <!-- Highlight Reflection -->
+        <path d="M 28 17 Q 45 10 62 17" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.85" />
+
+        <!-- Arms / Gauntlets Cradle the Artifact -->
+        <path d="M 8 75 L 24 105 L 36 94" stroke="#475569" stroke-width="8" stroke-linecap="round" fill="none" />
+        <path d="M 82 75 L 66 105 L 54 94" stroke="#475569" stroke-width="8" stroke-linecap="round" fill="none" />
+
+        <!-- THE LUMEN ARTIFACT (Exact Continuity) -->
+        <g transform="translate(45, 98)">
+          <circle cx="0" cy="0" r="30" fill="url(#orb-halo)" />
+          <polygon points="0,-16 14,0 0,16 -14,0" fill="url(#orb-core)" filter="url(#strong-glow)" />
+          <polygon points="0,-16 0,16 14,0" fill="#fef08a" opacity="0.65" />
+        </g>
+      </g>
+
+      <!-- Frame Corner Ticks -->
+      <path d="M 1410 76 L 1410 72 L 1416 72" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 1820 76 L 1820 72 L 1814 72" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 1410 346 L 1410 350 L 1416 350" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 1820 346 L 1820 350 L 1814 350" stroke="#64748b" stroke-width="1.5" fill="none" />
+    </g>
+
+    <!-- Overlay Tags -->
+    <g transform="translate(1412, 74)">
+      <rect x="0" y="0" width="145" height="20" rx="4" fill="#070a12" fill-opacity="0.85" stroke="#334155" stroke-width="1" />
+      <text x="8" y="14" class="font-mono" font-size="10" font-weight="700" fill="#f8fafc">SHOT 02 · 50mm</text>
+    </g>
+    <g transform="translate(1564, 74)">
+      <rect x="0" y="0" width="148" height="20" rx="4" fill="#062e24" fill-opacity="0.9" stroke="#059669" stroke-width="1" />
+      <circle cx="10" cy="10" r="3" fill="#34d399" />
+      <text x="18" y="14" class="font-mono" font-size="9.5" font-weight="800" fill="#34d399">CONTINUITY 100%</text>
+    </g>
+    <g transform="translate(1719, 74)">
+      <rect x="0" y="0" width="108" height="20" rx="4" fill="#070a12" fill-opacity="0.85" stroke="#334155" stroke-width="1" />
+      <text x="8" y="14" class="font-mono" font-size="9.5" font-weight="700" fill="#94a3b8">04:00 - 08:00</text>
+    </g>
+
+    <!-- Last Frame Extraction Reticle (T_end Clue-Frame) -->
+    <g transform="translate(1650, 310)">
+      <rect x="0" y="0" width="170" height="38" rx="6" fill="#0a1220" fill-opacity="0.9" stroke="#f59e0b" stroke-width="1.5" />
+      <circle cx="14" cy="19" r="4" fill="#f59e0b" />
+      <text x="26" y="15" class="font-mono" font-size="9.5" font-weight="800" fill="#fbbf24">CLUE-FRAME EXTRACT</text>
+      <text x="26" y="28" class="font-mono" font-size="8.5" font-weight="700" fill="#fef08a">T_end: FRAME #0192</text>
+    </g>
+  </g>
+
+  <!-- ================= BRIDGE 2 (PIPELINE VECTOR) ================= -->
+  <g transform="translate(1830, 180)">
+    <!-- Flow Lines -->
+    <path d="M 0 30 C 25 15, 35 15, 60 30" fill="none" stroke="#f59e0b" stroke-width="3" filter="url(#soft-glow)" />
+    <path d="M 0 30 C 25 15, 35 15, 60 30" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3" />
+    <!-- Node -->
+    <circle cx="30" cy="22" r="13" fill="#0f172a" stroke="#f59e0b" stroke-width="2" />
+    <path d="M 27 17 L 35 22 L 27 27 Z" fill="#f59e0b" />
+    <!-- Label -->
+    <rect x="-8" y="46" width="76" height="18" rx="4" fill="#0c1e33" stroke="#0284c7" stroke-width="1" />
+    <text x="30" y="59" class="font-mono" font-size="8" font-weight="800" fill="#38bdf8" text-anchor="middle">CDP INJECT</text>
+  </g>
+
+  <!-- ================= PANEL 3: SHOT 03 (CLOSE-UP / REFLECTION) ================= -->
+  <g>
+    <!-- Frame Box -->
+    <rect x="1890" y="65" width="430" height="290" rx="8" fill="#0c1220" stroke="url(#panel-bezel)" stroke-width="2" />
+    
+    <g clip-path="url(#frame3-clip)">
+      <rect x="1890" y="65" width="430" height="290" fill="url(#panel-sky)" />
+
+      <!-- Helmet Profile / Visor Extreme Close Up -->
+      <g transform="translate(1955, 55)">
+        <!-- Outer Helmet Composite Shell -->
+        <path d="M -10 260 L 5 110 Q 150 15 295 110 L 310 260 Z" fill="url(#suit-base)" stroke="#64748b" stroke-width="2" />
+        
+        <!-- Collar Ring Assembly -->
+        <path d="M -15 235 Q 150 205 315 235 L 310 270 Q 150 240 -10 270 Z" fill="#0f172a" stroke="#475569" stroke-width="2" />
+        <rect x="40" y="235" width="22" height="12" rx="3" fill="#38bdf8" opacity="0.8" />
+        <rect x="238" y="235" width="22" height="12" rx="3" fill="#38bdf8" opacity="0.8" />
+
+        <!-- High Tech Helmet Seams -->
+        <path d="M 50 80 L 150 40 L 250 80" fill="none" stroke="#475569" stroke-width="2" />
+
+        <!-- Massive Spherical Gold Visor -->
+        <ellipse cx="150" cy="140" rx="135" ry="98" fill="url(#visor-grad)" filter="url(#soft-glow)" />
+        
+        <!-- Visor Spherical Reflection (Showing previous scene elements!) -->
+        <ellipse cx="150" cy="140" rx="130" ry="93" fill="#0b1120" opacity="0.45" />
+        
+        <!-- Reflected Twin Moons in Visor Glass -->
+        <circle cx="205" cy="105" r="26" fill="url(#moon-cyan)" opacity="0.85" />
+        <circle cx="202" cy="103" r="24" fill="#090d16" />
+        <circle cx="198" cy="100" r="21" fill="#e0f2fe" opacity="0.9" />
+        <circle cx="245" cy="125" r="10" fill="#fde68a" opacity="0.9" />
+
+        <!-- Reflected Crystalline Monoliths in Visor -->
+        <polygon points="100,180 115,120 130,180" fill="#0284c7" opacity="0.5" />
+        <polygon points="125,180 135,135 145,180" fill="#38bdf8" opacity="0.6" />
+
+        <!-- Specular Highlight Curve -->
+        <path d="M 45 95 Q 150 55 255 95" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.9" />
+        <path d="M 55 112 Q 150 75 245 112" stroke="#fde68a" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6" />
+
+        <!-- Intense reflection of the Lumen Artifact in front of the visor -->
+        <ellipse cx="150" cy="225" rx="70" ry="35" fill="url(#orb-flare)" />
+        <polygon points="150,195 168,225 150,255 132,225" fill="url(#orb-core)" filter="url(#strong-glow)" />
+      </g>
+
+      <!-- Frame Corner Ticks -->
+      <path d="M 1900 76 L 1900 72 L 1906 72" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 2310 76 L 2310 72 L 2304 72" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 1900 346 L 1900 350 L 1906 350" stroke="#64748b" stroke-width="1.5" fill="none" />
+      <path d="M 2310 346 L 2310 350 L 2304 350" stroke="#64748b" stroke-width="1.5" fill="none" />
+    </g>
+
+    <!-- Overlay Tags -->
+    <g transform="translate(1902, 74)">
+      <rect x="0" y="0" width="145" height="20" rx="4" fill="#070a12" fill-opacity="0.85" stroke="#334155" stroke-width="1" />
+      <text x="8" y="14" class="font-mono" font-size="10" font-weight="700" fill="#f8fafc">SHOT 03 · 85mm</text>
+    </g>
+    <g transform="translate(2055, 74)">
+      <rect x="0" y="0" width="148" height="20" rx="4" fill="#062e24" fill-opacity="0.9" stroke="#059669" stroke-width="1" />
+      <circle cx="10" cy="10" r="3" fill="#34d399" />
+      <text x="18" y="14" class="font-mono" font-size="9.5" font-weight="800" fill="#34d399">ZERO DRIFT 100%</text>
+    </g>
+    <g transform="translate(2210, 74)">
+      <rect x="0" y="0" width="108" height="20" rx="4" fill="#070a12" fill-opacity="0.85" stroke="#334155" stroke-width="1" />
+      <text x="8" y="14" class="font-mono" font-size="9.5" font-weight="700" fill="#94a3b8">08:00 - 12:00</text>
+    </g>
+
+    <!-- Complete Badge -->
+    <g transform="translate(2135, 310)">
+      <rect x="0" y="0" width="175" height="38" rx="6" fill="#080e1a" fill-opacity="0.9" stroke="#34d399" stroke-width="1.5" />
+      <circle cx="14" cy="19" r="4" fill="#34d399" />
+      <text x="26" y="15" class="font-mono" font-size="9.5" font-weight="800" fill="#34d399">STORYBOARD READY</text>
+      <text x="26" y="28" class="font-mono" font-size="8.5" font-weight="700" fill="#a7f3d0">3/3 SHOTS LINKED</text>
+    </g>
+  </g>
+
+  <!-- ================= MULTI-TRACK AUDIO STAGING & ASSEMBLY TIMELINE ================= -->
+  <!-- Aligned precisely with the panels: x starts at 910, width is 1410. Cut 1 at x=910+460=1370, Cut 2 at x=910+950=1860 -->
+  <g transform="translate(910, 395)">
+    <!-- Container Panel -->
+    <rect x="0" y="0" width="1410" height="230" rx="8" fill="#080d16" stroke="#1e293b" stroke-width="1.5" />
+    
+    <!-- Timeline Header / Ruler -->
+    <path d="M 0 8 Q 0 0 8 0 L 1402 0 Q 1410 0 1410 8 L 1410 32 L 0 32 Z" fill="#0f172a" />
+    
+    <!-- Title -->
+    <g transform="translate(18, 20)">
+      <circle cx="4" cy="0" r="4" fill="#f59e0b" />
+      <text x="16" y="4" class="font-mono" font-size="11" font-weight="800" fill="#e2e8f0" letter-spacing="1">
+        MULTI-TRACK AUDIO STAGING &amp; DUCKING ENGINE
+      </text>
+      <text x="400" y="4" class="font-mono" font-size="10" font-weight="600" fill="#64748b">
+        // assemble.py · automatic ducking &amp; master mix
+      </text>
+    </g>
+
+    <!-- Timecode Ruler Numbers -->
+    <g transform="translate(155, 20)" class="font-mono" font-size="10" font-weight="700">
+      <text x="0" y="0" fill="#94a3b8">00:00:00</text>
+      <text x="150" y="0" fill="#64748b">00:00:02</text>
+      <text x="305" y="0" fill="#f59e0b">00:00:04 [CUT 1]</text>
+      <text x="495" y="0" fill="#64748b">00:00:06</text>
+      <text x="795" y="0" fill="#f59e0b">00:00:08 [CUT 2]</text>
+      <text x="1000" y="0" fill="#64748b">00:00:10</text>
+      <text x="1120" y="0" fill="#34d399">00:00:12 [END]</text>
+    </g>
+
+    <!-- Cut Vertical Markers Across All Tracks -->
+    <line x1="460" y1="32" x2="460" y2="225" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6" />
+    <line x1="950" y1="32" x2="950" y2="225" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6" />
+
+    <!-- TRACK 1: A1 - VOX / DIALOGUE -->
+    <g transform="translate(16, 40)">
+      <!-- Track Header -->
+      <rect x="0" y="0" width="135" height="48" rx="4" fill="#0c1e33" stroke="#0284c7" stroke-width="1" />
+      <text x="12" y="20" class="font-mono" font-size="10.5" font-weight="800" fill="#38bdf8">A1: DIALOGUE</text>
+      <text x="12" y="36" class="font-mono" font-size="9" font-weight="600" fill="#64748b">TTS / MASTER VOX</text>
+
+      <!-- Audio Waveform Lane -->
+      <rect x="145" y="0" width="1235" height="48" rx="4" fill="#070f1a" stroke="#1e293b" stroke-width="1" />
+
+      <!-- Waveform Block 1 (Shot 1 Dialogue) -->
+      <g transform="translate(165, 6)">
+        <rect x="0" y="0" width="250" height="36" rx="4" fill="#0d2847" stroke="#0284c7" stroke-width="1" />
+        <text x="10" y="14" class="font-mono" font-size="9" font-weight="700" fill="#7dd3fc">"Target coordinates locked..."</text>
+        <path d="M 10 26 L 16 18 L 22 34 L 28 20 L 36 32 L 44 16 L 52 34 L 60 22 L 70 30 L 80 18 L 90 32 L 100 20 L 110 32 L 120 18 L 130 30 L 140 22 L 150 32 L 160 18 L 170 32 L 180 22 L 190 30 L 200 20 L 210 32 L 220 18 L 230 26" fill="none" stroke="#38bdf8" stroke-width="1.8" />
+      </g>
+
+      <!-- Waveform Block 2 (Shot 2 Dialogue) -->
+      <g transform="translate(520, 6)">
+        <rect x="0" y="0" width="370" height="36" rx="4" fill="#0d2847" stroke="#0284c7" stroke-width="1" />
+        <text x="10" y="14" class="font-mono" font-size="9" font-weight="700" fill="#7dd3fc">"The relic... it resonates with the monolith."</text>
+        <path d="M 10 26 L 18 16 L 26 34 L 34 18 L 44 32 L 54 16 L 64 34 L 74 20 L 84 32 L 94 18 L 104 32 L 114 20 L 124 34 L 134 18 L 144 32 L 154 20 L 164 34 L 174 18 L 184 32 L 194 20 L 204 34 L 214 18 L 224 32 L 234 20 L 244 34 L 254 18 L 264 32 L 274 20 L 284 34 L 294 18 L 304 32 L 314 20 L 324 34 L 334 18 L 344 30 L 354 26" fill="none" stroke="#38bdf8" stroke-width="1.8" />
+      </g>
+
+      <!-- Waveform Block 3 (Shot 3 Dramatic Line) -->
+      <g transform="translate(980, 6)">
+        <rect x="0" y="0" width="360" height="36" rx="4" fill="#0d2847" stroke="#0284c7" stroke-width="1" />
+        <text x="10" y="14" class="font-mono" font-size="9" font-weight="700" fill="#7dd3fc">"Look at the reflection: a star map."</text>
+        <path d="M 10 26 L 18 16 L 26 34 L 34 16 L 44 34 L 54 18 L 64 34 L 74 16 L 84 34 L 94 18 L 104 34 L 114 18 L 124 32 L 134 18 L 144 34 L 154 18 L 164 34 L 174 18 L 184 32 L 194 20 L 204 34 L 214 18 L 224 32 L 234 20 L 244 34 L 254 18 L 264 34 L 274 20 L 284 32 L 294 18 L 304 34 L 314 20 L 324 32 L 334 22 L 344 26" fill="none" stroke="#38bdf8" stroke-width="1.8" />
+      </g>
+    </g>
+
+    <!-- TRACK 2: A2 - AMBIENCE / ATMO -->
+    <g transform="translate(16, 96)">
+      <!-- Track Header -->
+      <rect x="0" y="0" width="135" height="48" rx="4" fill="#1b122c" stroke="#7c3aed" stroke-width="1" />
+      <text x="12" y="20" class="font-mono" font-size="10.5" font-weight="800" fill="#c084fc">A2: AMBIENCE</text>
+      <text x="12" y="36" class="font-mono" font-size="9" font-weight="600" fill="#94a3b8">CANYON BED</text>
+      
+      <!-- Audio Waveform Lane -->
+      <rect x="145" y="0" width="1235" height="48" rx="4" fill="#100b1a" stroke="#1e293b" stroke-width="1" />
+      
+      <!-- DUCKING ENVELOPE (Visual Demonstration of Ducking) -->
+      <path d="M 155 12 
+               L 165 12 
+               C 175 12, 185 36, 195 36 
+               L 415 36 
+               C 425 36, 435 12, 445 12 
+               L 520 12 
+               C 530 12, 540 36, 550 36 
+               L 890 36 
+               C 900 36, 910 12, 920 12 
+               L 980 12 
+               C 990 12, 1000 36, 1010 36 
+               L 1340 36 
+               C 1350 36, 1360 12, 1370 12" 
+            fill="none" stroke="#a855f7" stroke-width="2.5" />
+      
+      <!-- Ambient texture wave behind envelope -->
+      <path d="M 155 24 Q 180 18 210 24 T 270 24 T 330 38 T 390 38 T 450 38 T 510 38 T 570 38 T 630 24 T 690 38 T 750 38 T 810 38 T 870 38 T 930 38 T 990 24 T 1050 38 T 1110 38 T 1170 38 T 1230 38 T 1290 38 T 1350 24" 
+            fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.5" stroke-dasharray="2 2" />
+
+      <!-- Ducking Callout Badges -->
+      <g transform="translate(260, 24)">
+        <rect x="0" y="0" width="105" height="15" rx="3" fill="#2e1065" stroke="#9333ea" stroke-width="0.8" />
+        <text x="52" y="11" class="font-mono" font-size="8" font-weight="800" fill="#e9d5ff" text-anchor="middle">AUTO-DUCK -14dB</text>
+      </g>
+      <g transform="translate(680, 24)">
+        <rect x="0" y="0" width="105" height="15" rx="3" fill="#2e1065" stroke="#9333ea" stroke-width="0.8" />
+        <text x="52" y="11" class="font-mono" font-size="8" font-weight="800" fill="#e9d5ff" text-anchor="middle">AUTO-DUCK -14dB</text>
+      </g>
+      <g transform="translate(1095, 24)">
+        <rect x="0" y="0" width="105" height="15" rx="3" fill="#2e1065" stroke="#9333ea" stroke-width="0.8" />
+        <text x="52" y="11" class="font-mono" font-size="8" font-weight="800" fill="#e9d5ff" text-anchor="middle">AUTO-DUCK -14dB</text>
+      </g>
+    </g>
+
+    <!-- TRACK 3: A3 - CINEMATIC SCORE -->
+    <g transform="translate(16, 152)">
+      <!-- Track Header -->
+      <rect x="0" y="0" width="135" height="48" rx="4" fill="#261a08" stroke="#d97706" stroke-width="1" />
+      <text x="12" y="20" class="font-mono" font-size="10.5" font-weight="800" fill="#fbbf24">A3: OST SCORE</text>
+      <text x="12" y="36" class="font-mono" font-size="9" font-weight="600" fill="#94a3b8">SYNTH / STRINGS</text>
+      
+      <!-- Score Waveform Lane -->
+      <rect x="145" y="0" width="1235" height="48" rx="4" fill="#140f06" stroke="#1e293b" stroke-width="1" />
+      
+      <!-- Rhythmic & Rising Score Track (Swells around the cuts) -->
+      <path d="M 155 24 Q 210 16 260 24 T 370 24 T 420 18 T 460 7 T 500 22 T 600 24 T 700 24 T 800 24 T 910 16 T 950 6 T 990 22 T 1100 24 T 1200 24 T 1320 10 T 1370 24" 
+            fill="none" stroke="#f59e0b" stroke-width="2" />
+      <path d="M 155 24 Q 210 32 260 24 T 370 24 T 420 30 T 460 41 T 500 26 T 600 24 T 700 24 T 800 24 T 910 32 T 950 42 T 990 26 T 1100 24 T 1200 24 T 1320 38 T 1370 24" 
+            fill="none" stroke="#f59e0b" stroke-width="2" />
+
+      <!-- Cut markers -->
+      <g transform="translate(425, 6)">
+        <rect x="0" y="0" width="70" height="15" rx="3" fill="#451a03" stroke="#f59e0b" stroke-width="0.8" />
+        <text x="35" y="11" class="font-mono" font-size="7.5" font-weight="800" fill="#fbbf24" text-anchor="middle">CRESCENDO</text>
+      </g>
+      <g transform="translate(915, 6)">
+        <rect x="0" y="0" width="70" height="15" rx="3" fill="#451a03" stroke="#f59e0b" stroke-width="0.8" />
+        <text x="35" y="11" class="font-mono" font-size="7.5" font-weight="800" fill="#fbbf24" text-anchor="middle">CRESCENDO</text>
+      </g>
+
+      <g transform="translate(1265, 12)">
+        <rect x="0" y="0" width="105" height="24" rx="4" fill="#064e3b" stroke="#34d399" stroke-width="1" />
+        <text x="52" y="16" class="font-mono" font-size="9" font-weight="800" fill="#34d399" text-anchor="middle">MASTER EXPORT</text>
+      </g>
+    </g>
+
+    <!-- Playhead Marker -->
+    <line x1="680" y1="20" x2="680" y2="210" stroke="#ef4444" stroke-width="2" />
+    <polygon points="673,20 687,20 680,30" fill="#ef4444" />
+  </g>
+</svg>

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.svg" alt="clip-storyboard-director — Local-First AI Storyboard Director & Scene Continuity Orchestrator" width="100%">
+</p>
+
 # clip-storyboard-director
 
 <p align="center">

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.svg" alt="clip-storyboard-director — Local-First KI-Regisseur & Szenen-Kontinuitäts-Orchestrator" width="100%">
+</p>
+
 # clip-storyboard-director
 
 <p align="center">
