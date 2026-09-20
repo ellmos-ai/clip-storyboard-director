@@ -1,6 +1,7 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="clip-storyboard-director — Local-First AI Storyboard Director & Scene Continuity Orchestrator" width="100%">
+  <img src="assets/banner.png" alt="clip-storyboard-director — Local-First AI Storyboard Director & Scene Continuity Orchestrator" width="100%">
 </p>
+<!-- alternate banner: assets/banner.svg (swap on occasion) -->
 
 # clip-storyboard-director
 
