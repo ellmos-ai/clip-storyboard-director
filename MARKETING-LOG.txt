@@ -207,10 +207,59 @@ Im Rahmen des regelmäßigen Pfad-A-Wartungsdurchlaufs wurden folgende technisch
    - Abhängigkeiten-Installation auf standardisiertes `pip install -e ".[dev]"` harmonisiert.
 5. PEP 639 Lizenzstandardisierung (pyproject.toml):
    - `license-files = ["LICENSE", "THIRD_PARTY_LICENSES.md"]` verankert.
-   - SPDX-Lizenzangabe `license = "MIT"` und Bereinigung redundanter Legacy-Classifier.
+   - SPDX-Lizenzangabe `license = "MIT"` und Bereinigung redundanter Classifier.
 6. Linter-Konfiguration:
    - `[tool.ruff]` und `[tool.ruff.lint]` in pyproject.toml mit line-length = 100 und Standardregeln (E, F, W).
 7. Sync- & Cache-Hygiene (.gitignore):
    - Typing-Caches (.mypy_cache/, .dmypy.json, dmypy.json, .pyre/, .pytype/) und Coverage-Wildcards (.coverage.*) ergänzt.
 8. Vertragstest-Erweiterung (tests/test_director.py & tests/test_metadata.py):
    - Automatisierte Assertions für alle neuen Pfad-A-Standards integriert.
+
+================================================================================
+7. MARKETING-, DESIGN- & DISCOVERABILITY-AKTUALISIERUNG (2026-09-20 — Pfad B v0.1.6)
+================================================================================
+Im Rahmen des planmäßigen Pfad-B-Laufs (Marketing, Visual Design, Discoverability & Governance)
+wurden folgende Maßnahmen umgesetzt:
+
+1. 18-Punkte Navigationsparität mit reziproken HTML-Ankern:
+   - README.md und README_de.md auf identische 18-Punkte-Struktur synchronisiert.
+   - Jeder Hauptabschnitt verfügt über reziproke duale HTML-Anker (<a id="..."></a>)
+     sowohl für englische als auch deutsche Bezeichner plus historische Legacy-Anker,
+     sodass alle internen und externen Links stabil auflösen.
+
+2. 10-Dimensionen Vergleichsmatrix gegenüber 4 Alternativen:
+   - Neuer Abschnitt 11 in README.md und README_de.md vergleicht clip-storyboard-director
+     mit kommerziellen Video-SaaS (Runway, Pika, Kling), manuellem Browser-Workflow,
+     schwergewichtigen Desktop-NLEs (Premiere, DaVinci) und ad-hoc Skripten.
+   - Dimensionen umfassen u.a. Local-First/Zero-Egress, 4D-Persistenzpuffer, Clue-Frame-
+     Kopplung, CDP-Automatisierung, Audio-Staging/Ducking, Ressourcen-Footprint, LLM-Ready-
+     Auffindbarkeit, RunAsInvoker-Sicherheit und 48h Security-SLA.
+
+3. Formeller Urheberrechts- und Attributierungsnachweis (NOTICE):
+   - NOTICE-Datei im Repo-Root angelegt zur formellen Nennung von Lukas Geiger, ellmos-ai
+     und der Dachorganisation open-bricks unter MIT-Lizenz.
+   - Deklaration in pyproject.toml unter `license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md"]`
+     gemäß modernem PEP 639 Standard.
+
+4. Level 1 SBOM & RunAsInvoker Non-Elevation Zertifizierung:
+   - THIRD_PARTY_LICENSES.md auf Stand 2026-09-20 aktualisiert.
+   - Invarianten-Kreuzreferenzmatrix (INV-LOCAL-01 bis INV-SLA-10) und formelle
+     RunAsInvoker Non-Elevation Bestätigung verankert.
+
+5. Gesetzlicher Hinweis & Haftungsbeschränkung (§ 521 BGB):
+   - Abschnitt 18 in README.md und README_de.md verankert die gesetzliche Haftungsbeschränkung
+     auf Vorsatz und grobe Fahrlässigkeit bei unentgeltlicher Bereitstellung (Gefälligkeit/Schenkung).
+
+6. Mermaid-Syntaxbereinigung:
+   - Semikolons auf allen classDef- und class-Zeilen im Systemarchitektur-Diagramm entfernt,
+     um 100% fehlerfreies Rendering in allen GitHub- und Markdown-Viewern zu sichern.
+
+7. Erweiterte SEO- und Discoverability-Keywords:
+   - pyproject.toml um "zero-egress", "ellmos-ai", "open-bricks", "edge-cdp", "browser-automation"
+     erweitert.
+   - GitHub-Repository-Topics auf 20 High-Intent-Schlagwörter ausgebaut.
+
+8. Automatisierte Vertragstest-Suite (tests/test_metadata.py & tests/test_director.py):
+   - Versionserwartung auf 0.1.6 angehoben.
+   - Prüfungen für NOTICE-Präsenz, PEP 639 license-files, 18-Punkte-Navigationsanker in beiden
+     READMEs, semikolonfreie Mermaid-Blöcke, Level 1 SBOM und § 521 BGB Hinweis hinzugefügt.

@@ -5,7 +5,7 @@ from clip_director.storyboard_init import create_project
 
 
 def test_version():
-    assert __version__ == "0.1.5"
+    assert __version__ == "0.1.6"
 
 
 def test_project_lifecycle(tmp_path):
@@ -52,7 +52,7 @@ def test_cli_version_flag():
     for flag in ["--version", "-v"]:
         res = subprocess.run([sys.executable, "-m", "clip_director", flag], capture_output=True, text=True)
         assert res.returncode == 0
-        assert "clip-director 0.1.5" in res.stdout or "clip-director 0.1.5" in res.stderr
+        assert "clip-director 0.1.6" in res.stdout or "clip-director 0.1.6" in res.stderr
 
 
 def test_pep561_typing_marker_file():

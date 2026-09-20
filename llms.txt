@@ -2,8 +2,8 @@
 
 > Local-first AI storyboard director, scene continuity orchestrator, and video pipeline controller with browser CDP automation and interactive timeline cockpit.
 
-- Last-checked: 2026-09-13
-- Version: 0.1.5
+- Last-checked: 2026-09-20
+- Version: 0.1.6
 - Module status: `active`; visibility projection: `public`; release gate: `USER`.
 - Architecture: Local-First / Dual-Pane Timeline Cockpit / Edge CDP Automator / FFmpeg Assembly
 - Module Family: ellmos domain modules (`domain.media.direction`, `workflow.video.storyboard`, `workflow.media.pipeline`)
@@ -107,3 +107,8 @@ print(f"Master output: {master_path}")
 - `INV-MULTIOS-08`: Multi-OS Parity (Windows, Linux, macOS)
 - `INV-SYNC-09`: Cloud-Sync & Mutex Resilience
 - `INV-SLA-10`: 48h Security Response & 5-Day Triage SLA
+
+## Attribution & Legal
+- **Attribution NOTICE**: Declared in [NOTICE](NOTICE) for Lukas Geiger, ellmos-ai, and open-bricks.
+- **Level 1 SBOM**: Audited and cataloged in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+- **Statutory Notice (§ 521 BGB)**: Courtesy provision under German Civil Code (§ 521 BGB) with statutory liability limited to intent and gross negligence.

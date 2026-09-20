@@ -20,6 +20,7 @@ def test_required_root_documents_exist():
         "README_de.md",
         "SECURITY.md",
         "LICENSE",
+        "NOTICE",
         "THIRD_PARTY_LICENSES.md",
         "CHANGELOG.md",
         "MARKETING-LOG.txt",
@@ -34,8 +35,8 @@ def test_required_root_documents_exist():
 
 
 def test_version_parity():
-    """Verify version 0.1.5 parity across code, manifests, and documentation."""
-    expected_version = "0.1.5"
+    """Verify version 0.1.6 parity across code, manifests, and documentation."""
+    expected_version = "0.1.6"
 
     # 1. Python package __version__
     import clip_director
@@ -72,12 +73,15 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/python-3.10",
         "https://img.shields.io/badge/ecosystem-ellmos--ai-purple",
         "https://img.shields.io/badge/umbrella-open--bricks-blueviolet",
-        "https://img.shields.io/badge/version-0.1.5",
+        "https://img.shields.io/badge/version-0.1.6",
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--09--13-informational",
+        "https://img.shields.io/badge/last%20checked-2026--09--20-informational",
         "license-MIT",
+        "Attribution-NOTICE-blue.svg",
+        "Level%201%20SBOM-Audited-brightgreen.svg",
+        "RunAsInvoker-Certified-success.svg",
     ]
 
     for badge in expected_badges:
@@ -86,35 +90,42 @@ def test_readme_badges_parity():
 
 
 def test_quick_navigation_anchors():
-    """Verify quick navigation links resolve to headers in READMEs."""
+    """Verify quick navigation links resolve to headers or HTML anchors in READMEs."""
     for filename in ["README.md", "README_de.md"]:
         content = (ROOT / filename).read_text(encoding="utf-8")
         assert "Quick Navigation" in content or "Schnellnavigation" in content
 
         # Extract markdown anchor links [Text](#anchor)
         anchor_links = re.findall(r"\[([^\]]+)\]\(#([^\)]+)\)", content)
-        assert len(anchor_links) == 16, f"Expected exactly 16 quick nav links in {filename}, got {len(anchor_links)}"
+        assert len(anchor_links) == 18, f"Expected exactly 18 quick nav links in {filename}, got {len(anchor_links)}"
 
         # Extract headers ## Header Title
         headers = re.findall(r"^#{2,4}\s+(.+)$", content, re.MULTILINE)
         normalized_headers = [
             re.sub(r"[^\w\s-]", "", h).strip().lower().replace(" ", "-") for h in headers
         ]
+        # Also extract HTML anchors <a id="...">
+        html_anchors = re.findall(r'<a id="([^"]+)">', content)
+        all_targets = set(normalized_headers) | set(html_anchors)
 
         for _text, anchor in anchor_links:
-            assert anchor in normalized_headers or any(
-                anchor in nh for nh in normalized_headers
-            ), f"Anchor #{anchor} in {filename} does not match any header"
+            assert anchor in all_targets or any(
+                anchor in nh for nh in all_targets
+            ), f"Anchor #{anchor} in {filename} does not match any header or HTML anchor"
 
 
 def test_mermaid_diagrams_syntax():
-    """Verify Mermaid diagrams in both READMEs are present and well-formed."""
+    """Verify Mermaid diagrams in both READMEs are present, well-formed, and without trailing semicolons."""
     for filename in ["README.md", "README_de.md"]:
         content = (ROOT / filename).read_text(encoding="utf-8")
         diagrams = re.findall(r"```mermaid\n(.*?)```", content, re.DOTALL)
         assert len(diagrams) >= 2, f"Expected at least 2 Mermaid diagrams in {filename}"
         assert any("flowchart TD" in d for d in diagrams), f"Missing flowchart TD in {filename}"
         assert any("sequenceDiagram" in d for d in diagrams), f"Missing sequenceDiagram in {filename}"
+        for d in diagrams:
+            assert not re.search(r"class(Def)?\s+[^;]+;\s*$", d, re.MULTILINE), (
+                f"Trailing semicolon detected in Mermaid diagram in {filename}"
+            )
 
 
 def test_governance_invariants_table():
@@ -243,8 +254,8 @@ def test_target_personas_and_discoverability_section():
     readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
     readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
 
-    assert "## Target Personas & Discoverability" in readme_en
-    assert "## Zielgruppen & Auffindbarkeit" in readme_de
+    assert "Target Personas & Discoverability" in readme_en
+    assert "Zielgruppen & Auffindbarkeit" in readme_de
 
     # English personas and pain points
     assert "AI Filmmakers & Narrative Directors" in readme_en
@@ -268,8 +279,8 @@ def test_third_party_licenses_section_and_invariants():
     readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
     readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
 
-    assert "## Third-Party Licenses & Transparency" in readme_en
-    assert "## Drittanbieter-Lizenzen & Transparenz" in readme_de
+    assert "Third-Party Licenses" in readme_en
+    assert "Drittanbieter-Lizenzen" in readme_de
 
     for content in [readme_en, readme_de]:
         assert "PyYAML" in content
@@ -293,18 +304,21 @@ def test_pep621_extended_project_urls():
 
 
 def test_third_party_licenses_file_contract():
-    """Verify THIRD_PARTY_LICENSES.md inventory, audit date, and compliance invariants."""
+    """Verify THIRD_PARTY_LICENSES.md inventory, audit date, Level 1 SBOM and invariants."""
     licenses_doc = (ROOT / "THIRD_PARTY_LICENSES.md").read_text(encoding="utf-8")
-    assert "Audit Date:** 2026-09-12" in licenses_doc
+    assert "Audit Date:** 2026-09-20" in licenses_doc
     assert "GPL-3.0" in licenses_doc
     assert "LGPL" in licenses_doc
+    assert "Level 1 SBOM" in licenses_doc
     assert "INV-LOCAL-01" in licenses_doc
     assert "INV-UNPRIV-02" in licenses_doc
     assert "INV-LOOPBACK-03" in licenses_doc
+    assert "INV-SLA-10" in licenses_doc
+    assert "RunAsInvoker" in licenses_doc
 
 
 def test_marketing_log_contract():
-    """Verify local MARKETING-LOG.txt contains personas, 5-way matrix, invariants, and latest audit."""
+    """Verify local MARKETING-LOG.txt contains personas, matrices, invariants, and latest audits."""
     marketing_log = (ROOT / "MARKETING-LOG.txt").read_text(encoding="utf-8")
     assert "TARGET PERSONAS & AUDIENCE PROFILES" in marketing_log
     assert "HIGH-INTENT SEARCH QUERIES" in marketing_log
@@ -313,6 +327,7 @@ def test_marketing_log_contract():
     assert "SIBLING ECOSYSTEM & PARTNER MATRIX" in marketing_log
     assert "2026-09-12 — Pfad B" in marketing_log
     assert "2026-09-13 — Pfad A" in marketing_log
+    assert "2026-09-20 — Pfad B" in marketing_log
     assert "INV-LOCAL-01" in marketing_log
     assert "INV-SLA-10" in marketing_log
 
@@ -333,8 +348,9 @@ def test_pep639_license_files_contract():
     """Verify PEP 639 license-files declaration and referenced file existence."""
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert 'license = "MIT"' in pyproject
-    assert 'license-files = ["LICENSE", "THIRD_PARTY_LICENSES.md"]' in pyproject
+    assert 'license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md"]' in pyproject
     assert (ROOT / "LICENSE").is_file()
+    assert (ROOT / "NOTICE").is_file()
     assert (ROOT / "THIRD_PARTY_LICENSES.md").is_file()
 
 
@@ -356,9 +372,9 @@ def test_ci_workflow_timeout_and_dev_install_contract():
 def test_todo_version_and_date_parity():
     """Verify TODO.md version header and update date match active release."""
     todo_text = (ROOT / "TODO.md").read_text(encoding="utf-8")
-    assert "**Version:** 0.1.5" in todo_text
-    assert "**Updated:** 2026-09-13" in todo_text
-    assert "TASK-CSD-05" in todo_text
+    assert "**Version:** 0.1.6" in todo_text
+    assert "**Updated:** 2026-09-20" in todo_text
+    assert "TASK-CSD-06" in todo_text
 
 
 def test_changelog_recent_pfad_a_015_entry():
@@ -368,6 +384,69 @@ def test_changelog_recent_pfad_a_015_entry():
     assert "PEP 561 Inline Typing Support" in changelog
     assert "Executable Module Entrypoint" in changelog
     assert "CI Workflow Hardening" in changelog
+
+
+def test_changelog_recent_pfad_b_016_entry():
+    """Verify CHANGELOG.md contains the 0.1.6 Pfad B marketing and discoverability release entry."""
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [0.1.6] - 2026-09-20" in changelog
+    assert "18-Point Quick Navigation Parity" in changelog
+    assert "10-Dimension Comparative Matrix" in changelog
+    assert "Root Attribution NOTICE" in changelog
+    assert "Level 1 SBOM" in changelog
+    assert "§ 521 BGB" in changelog
+
+
+def test_comparative_matrix_10_dimensions():
+    """Verify 10-dimension comparative matrix in both READMEs."""
+    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
+
+    assert "Comparative Matrix vs. Alternatives" in readme_en
+    assert "Vergleichsmatrix gegenüber Alternativen" in readme_de
+
+    for content in [readme_en, readme_de]:
+        assert "Commercial Video SaaS" in content or "Kommerzielle Video-SaaS" in content
+        assert "Manual Web Browser Workflow" in content or "Manueller Browser-Workflow" in content
+        assert "INV-LOCAL-01" in content
+        assert "INV-CONTINUITY-05" in content
+        assert "INV-CLUEFRAME-06" in content
+        assert "INV-UNPRIV-02" in content
+        assert "INV-SLA-10" in content
+
+
+def test_statutory_notice_521_bgb():
+    """Verify statutory courtesy and liability disclaimer under § 521 BGB."""
+    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
+
+    assert "§ 521 BGB" in readme_en
+    assert "§ 521 BGB" in readme_de
+    assert "Statutory Notice, Liability Limitation & License" in readme_en
+    assert "Gesetzlicher Hinweis, Haftungsbeschränkung & Lizenz" in readme_de
+    assert "grobe Fahrlässigkeit" in readme_en or "gross negligence" in readme_en
+    assert "grobe Fahrlässigkeit" in readme_de
+
+
+def test_level1_sbom_invariants_table():
+    """Verify Level 1 SBOM invariant mapping table in THIRD_PARTY_LICENSES.md."""
+    doc = (ROOT / "THIRD_PARTY_LICENSES.md").read_text(encoding="utf-8")
+    assert "Level 1 SBOM" in doc
+    assert "Invariant Cross-Reference Matrix" in doc
+    invariants = [
+        "INV-LOCAL-01",
+        "INV-UNPRIV-02",
+        "INV-LOOPBACK-03",
+        "INV-SANDBOX-04",
+        "INV-CONTINUITY-05",
+        "INV-CLUEFRAME-06",
+        "INV-STANDALONE-07",
+        "INV-MULTIOS-08",
+        "INV-SYNC-09",
+        "INV-SLA-10",
+    ]
+    for inv in invariants:
+        assert inv in doc
 
 
 def test_executable_module_entrypoint_file():

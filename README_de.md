@@ -17,45 +17,53 @@
 
 <p align="center">
   <a href="https://github.com/ellmos-ai/clip-storyboard-director/actions/workflows/ci.yml"><img src="https://github.com/ellmos-ai/clip-storyboard-director/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://img.shields.io/badge/pytest-passing-brightgreen"><img src="https://img.shields.io/badge/pytest-passing-brightgreen" alt="Tests"></a>
+  <a href="#17-entwicklung-verifikation--qualitaets-gates"><img src="https://img.shields.io/badge/pytest-passing-brightgreen" alt="Tests"></a>
   <a href="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue"><img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue" alt="Python"></a>
   <a href="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey"><img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey" alt="Plattformen"></a>
-  <a href="https://img.shields.io/badge/privacy-100%25%20Local--First%20%7C%20Zero--Egress-brightgreen"><img src="https://img.shields.io/badge/privacy-100%25%20Local--First%20%7C%20Zero--Egress-brightgreen" alt="Datenschutz"></a>
-  <a href="https://img.shields.io/badge/security-RunAsInvoker%20%7C%20Localhost%20Isolated-blue"><img src="https://img.shields.io/badge/security-RunAsInvoker%20%7C%20Localhost%20Isolated-blue" alt="Sicherheit"></a>
-  <a href="https://img.shields.io/badge/security%20SLA-48h%20response%20%7C%205d%20triage-blue"><img src="https://img.shields.io/badge/security%20SLA-48h%20response%20%7C%205d%20triage-blue" alt="Sicherheits-SLA"></a>
-  <a href="https://img.shields.io/badge/code%20style-ruff-000000.svg"><img src="https://img.shields.io/badge/code%20style-ruff-000000.svg" alt="Code Style: Ruff"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="Lizenz: MIT"></a>
+  <a href="SECURITY.md"><img src="https://img.shields.io/badge/privacy-100%25%20Local--First%20%7C%20Zero--Egress-brightgreen" alt="Datenschutz"></a>
+  <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/security-RunAsInvoker%20%7C%20Localhost%20Isolated-blue" alt="Sicherheit"></a>
+  <a href="SECURITY.md"><img src="https://img.shields.io/badge/security%20SLA-48h%20response%20%7C%205d%20triage-blue" alt="Sicherheits-SLA"></a>
+  <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/Level%201%20SBOM-Audited-brightgreen.svg" alt="Level 1 SBOM"></a>
+  <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/RunAsInvoker-Certified-success.svg" alt="RunAsInvoker"></a>
+  <a href="NOTICE"><img src="https://img.shields.io/badge/Attribution-NOTICE-blue.svg" alt="Attribution NOTICE"></a>
+  <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/Third--Party-Audited%20%7C%20Permissive%20Core-success.svg" alt="Third-Party Audited"></a>
+  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/marketing%20log-active-blue.svg" alt="Marketing Log"></a>
+  <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/badge/code%20style-ruff-000000.svg" alt="Code Style: Ruff"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="Lizenz: MIT"></a>
   <a href="https://github.com/ellmos-ai"><img src="https://img.shields.io/badge/ecosystem-ellmos--ai-purple.svg" alt="Ökosystem"></a>
   <a href="https://github.com/open-bricks"><img src="https://img.shields.io/badge/umbrella-open--bricks-blueviolet.svg" alt="Dachorganisation"></a>
-  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.5-blue.svg" alt="Version 0.1.5"></a>
+  <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.6-blue.svg" alt="Version 0.1.6"></a>
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-Discovery%20Context-informational" alt="llms.txt"></a>
-  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--13-informational" alt="Zuletzt geprüft"></a>
+  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--20-informational" alt="Zuletzt geprüft"></a>
 </p>
 
 ---
 
 ### 🧭 Schnellnavigation
 
-- [1. Warum dieses Projekt existiert](#warum-dieses-projekt-existiert)
-- [2. Systemarchitektur & Workflow](#systemarchitektur--workflow)
-- [3. Das Regie- & Cutter-Duo](#das-regie---cutter-duo)
-- [4. 4D-Persistenz & Bündige Kontinuität](#4d-persistenz--bündige-kontinuität)
-- [5. Clue-Frame Kontinuitätskette](#clue-frame-kontinuitätskette)
-- [6. Dual-Pane Regie-Cockpit](#dual-pane-regie-cockpit)
-- [7. Mehrspur-Audio-Staging & Dynamisches Ducking](#mehrspur-audio-staging--dynamisches-ducking)
-- [8. Governance- & Laufzeit-Invarianten](#governance---laufzeit-invarianten)
-- [9. End-to-End Medien- & Produktions-Lebenszyklus](#end-to-end-medien---produktions-lebenszyklus)
-- [10. Zielgruppen & Auffindbarkeit](#zielgruppen--auffindbarkeit)
-- [11. Drittanbieter-Lizenzen & Transparenz](#drittanbieter-lizenzen--transparenz)
-- [12. Geschwisterwerkzeuge & Partner-Matrix](#geschwisterwerkzeuge--partner-matrix)
-- [13. Installation & CLI-Befehlsreferenz](#installation--cli-befehlsreferenz)
-- [14. Referenzproduktion „Sternenseufzer“](#referenzproduktion-sternenseufzer)
-- [15. Sicherheit & Datenschutz](#sicherheit--datenschutz)
-- [16. Entwicklung & Verifikation](#entwicklung--verifikation)
+- [1. Executive Summary & Warum dieses Projekt existiert](#1-executive-summary--warum-dieses-projekt-existiert)
+- [2. Systemarchitektur & Workflow](#2-systemarchitektur--workflow)
+- [3. Das Regie- & Cutter-Duo](#3-das-regie---cutter-duo)
+- [4. 4D-Persistenz & Bündige Kontinuität](#4-4d-persistenz--bündige-kontinuität)
+- [5. Clue-Frame Kontinuitätskette](#5-clue-frame-kontinuitätskette)
+- [6. Dual-Pane Regie-Cockpit](#6-dual-pane-regie-cockpit)
+- [7. Mehrspur-Audio-Staging & Dynamisches Ducking](#7-mehrspur-audio-staging--dynamisches-ducking)
+- [8. Governance- & Laufzeit-Invarianten](#8-governance---laufzeit-invarianten)
+- [9. End-to-End Medien- & Produktions-Lebenszyklus](#9-end-to-end-medien---produktions-lebenszyklus)
+- [10. Zielgruppen & Auffindbarkeit](#10-zielgruppen--auffindbarkeit)
+- [11. Vergleichsmatrix gegenüber Alternativen](#11-vergleichsmatrix-vs-alternativen)
+- [12. Drittanbieter-Lizenzen, Level 1 SBOM & RunAsInvoker](#12-drittanbieter-lizenzen-level-1-sbom--runasinvoker)
+- [13. Geschwisterwerkzeuge & Partner-Matrix](#13-geschwisterwerkzeuge--partner-matrix)
+- [14. Installation & CLI-Befehlsreferenz](#14-installation--cli-befehlsreferenz)
+- [15. Referenzproduktion „Sternenseufzer“](#15-referenzproduktion-sternenseufzer)
+- [16. Sicherheit & Datenschutz](#16-sicherheit--datenschutz)
+- [17. Entwicklung, Verifikation & Qualitäts-Gates](#17-entwicklung-verifikation--qualitaets-gates)
+- [18. Gesetzlicher Hinweis, Haftungsbeschränkung & Lizenz (§ 521 BGB)](#18-gesetzlicher-hinweis-haftungsbeschraenkung--lizenz--521-bgb)
 
 ---
 
-## Warum dieses Projekt existiert
+<a id="1-executive-summary--why-this-exists"></a><a id="1-executive-summary--warum-dieses-projekt-existiert"></a><a id="why-this-exists"></a><a id="warum-dieses-projekt-existiert"></a>
+## 1. Executive Summary & Warum dieses Projekt existiert
 
 Einzelne KI-Videoclips über Modelle wie Veo, Kling, Sora oder Runway zu generieren, ist heute unkompliziert. Aus isolierten Kurzclips jedoch einen **zusammenhängenden narrativen Film** zu erstellen, scheitert in der Praxis an grundlegenden Hürden:
 
@@ -68,7 +76,8 @@ Einzelne KI-Videoclips über Modelle wie Veo, Kling, Sora oder Runway zu generie
 
 ---
 
-## Systemarchitektur & Workflow
+<a id="2-architecture--system-flow"></a><a id="2-systemarchitektur--workflow"></a><a id="architecture--system-flow"></a><a id="systemarchitektur--workflow"></a>
+## 2. Systemarchitektur & Workflow
 
 ```mermaid
 flowchart TD
@@ -99,17 +108,18 @@ flowchart TD
         Master -.-> Handoff["ai-media-editor<br/>(Timeline-Postproduktion)"]
     end
 
-    classDef core fill:#2563eb,stroke:#1d4ed8,color:#ffffff;
-    classDef buffer fill:#7c3aed,stroke:#6d28d9,color:#ffffff;
-    classDef io fill:#059669,stroke:#047857,color:#ffffff;
-    class Server,Bridge,Ingest,Assemble core;
-    class Config,Clue,Master buffer;
-    class Cockpit,Gen,DL,Voice io;
+    classDef core fill:#2563eb,stroke:#1d4ed8,color:#ffffff
+    classDef buffer fill:#7c3aed,stroke:#6d28d9,color:#ffffff
+    classDef io fill:#059669,stroke:#047857,color:#ffffff
+    class Server,Bridge,Ingest,Assemble core
+    class Config,Clue,Master buffer
+    class Cockpit,Gen,DL,Voice io
 ```
 
 ---
 
-## Das Regie- & Cutter-Duo
+<a id="3-director--editor-duo"></a><a id="3-das-regie---cutter-duo"></a><a id="director--editor-duo"></a><a id="das-regie---cutter-duo"></a>
+## 3. Das Regie- & Cutter-Duo
 
 `clip-storyboard-director` ist gezielt als der **Regisseur** in einem spezialisierten Zwei-Agenten-Medienproduktionsmodell konzipiert:
 
@@ -122,7 +132,8 @@ flowchart TD
 
 ---
 
-## 4D-Persistenz & Bündige Kontinuität
+<a id="4-4d-persistence--bounded-continuity"></a><a id="4-4d-persistenz--buendige-kontinuitaet"></a><a id="4d-persistence--bounded-continuity"></a><a id="4d-persistenz--bündige-kontinuität"></a>
+## 4. 4D-Persistenz & Bündige Kontinuität
 
 Im Filmbereich umfasst Kontinuität drei Raumdimensionen plus die Zeitachse ($3D + T = 4D$). `clip-storyboard-director` sichert diese Parameter deklarativ über den `persistence_buffer` in `project.yaml`:
 
@@ -135,7 +146,8 @@ Jeder vom Regisseur erzeugte Prompt erbt automatisch diese Persistenzmerkmale, w
 
 ---
 
-## Clue-Frame Kontinuitätskette
+<a id="5-clue-frame-continuity-chain"></a><a id="5-clue-frame-kontinuitaetskette"></a><a id="clue-frame-continuity-chain"></a><a id="clue-frame-kontinuitätskette"></a>
+## 5. Clue-Frame Kontinuitätskette
 
 Die kritischste Bruchstelle bei sequentiellen KI-Videos ist der Schnittübergang. `clip-storyboard-director` etabliert die **Clue-Frame-Kontinuitätskette**:
 
@@ -146,7 +158,8 @@ Die kritischste Bruchstelle bei sequentiellen KI-Videos ist der Schnittübergang
 
 ---
 
-## Dual-Pane Regie-Cockpit
+<a id="6-dual-pane-director-cockpit"></a><a id="6-dual-pane-regie-cockpit"></a><a id="dual-pane-director-cockpit"></a><a id="dual-pane-regie-cockpit"></a>
+## 6. Dual-Pane Regie-Cockpit
 
 Der Regisseur bietet ein webbasiertes Timeline-Cockpit, das über `start_cockpit.py` im Microsoft Edge App-Modus gestartet wird (`--app=http://localhost:8765/cockpit.html`):
 
@@ -156,7 +169,8 @@ Der Regisseur bietet ein webbasiertes Timeline-Cockpit, das über `start_cockpit
 
 ---
 
-## Mehrspur-Audio-Staging & Dynamisches Ducking
+<a id="7-multi-track-audio-staging--ducking"></a><a id="7-mehrspur-audio-staging--dynamisches-ducking"></a><a id="multi-track-audio-staging--ducking"></a><a id="mehrspur-audio-staging--dynamisches-ducking"></a>
+## 7. Mehrspur-Audio-Staging & Dynamisches Ducking
 
 Filmische Erzählungen leben vom mehrschichtigen Klang. `clip-storyboard-director` strukturiert das Audio in drei Ebenen:
 
@@ -166,7 +180,8 @@ Filmische Erzählungen leben vom mehrschichtigen Klang. `clip-storyboard-directo
 
 ---
 
-## Governance- & Laufzeit-Invarianten
+<a id="8-key-governance--runtime-invariants"></a><a id="8-governance---laufzeit-invarianten"></a><a id="key-governance--runtime-invariants"></a><a id="governance---laufzeit-invarianten"></a>
+## 8. Governance- & Laufzeit-Invarianten
 
 Die folgenden 10 Kern-Invarianten garantieren die Zuverlässigkeit und Sicherheit von `clip-storyboard-director`:
 
@@ -185,7 +200,8 @@ Die folgenden 10 Kern-Invarianten garantieren die Zuverlässigkeit und Sicherhei
 
 ---
 
-## End-to-End Medien- & Produktions-Lebenszyklus
+<a id="9-end-to-end-media-production-lifecycle"></a><a id="9-end-to-end-medien---produktions-lebenszyklus"></a><a id="end-to-end-media-production-lifecycle"></a><a id="end-to-end-medien---produktions-lebenszyklus"></a>
+## 9. End-to-End Medien- & Produktions-Lebenszyklus
 
 ```mermaid
 sequenceDiagram
@@ -219,7 +235,8 @@ sequenceDiagram
 
 ---
 
-## Zielgruppen & Auffindbarkeit
+<a id="10-target-personas--discoverability"></a><a id="10-zielgruppen--auffindbarkeit"></a><a id="target-personas--discoverability"></a><a id="zielgruppen--auffindbarkeit"></a>
+## 10. Zielgruppen & Auffindbarkeit
 
 `clip-storyboard-director` wurde für vier zentrale Nutzergruppen im Ökosystem generativer Medien entwickelt:
 
@@ -237,11 +254,32 @@ sequenceDiagram
 
 ---
 
-## Drittanbieter-Lizenzen & Transparenz
+<a id="11-comparative-matrix-vs-alternatives"></a><a id="11-vergleichsmatrix-vs-alternativen"></a><a id="comparative-matrix-vs-alternatives"></a><a id="vergleichsmatrix-vs-alternativen"></a>
+## 11. Vergleichsmatrix gegenüber Alternativen
+
+Die nachfolgende Matrix vergleicht `clip-storyboard-director` über 10 Architektur- und Governance-Dimensionen mit vier gängigen Branchenalternativen:
+
+| Dimension / Kriterium | `clip-storyboard-director` | Kommerzielle Video-SaaS (Runway / Pika / Kling) | Manueller Browser-Workflow | Schwergewichtige Desktop-NLEs (Premiere / DaVinci) | Ad-Hoc Python-Skripte & Shell-Glue |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **1. Local-First & Zero-Egress** | **100% Local-First (`INV-LOCAL-01`)**; null Cloud-Telemetrie oder Medien-Leaks. | ❌ Zwingende Cloud-SaaS; Medien verbleiben auf Fremdservern. | ❌ Händische Web-Uploads; hohes Risiko von Datenabflüssen. | Lokale Desktop-App; kontinuierliche Hintergrund-Telemetrie. | Variiert; meist ungepinnte externe Cloud-APIs. |
+| **2. Szenenkontinuität & 4D-Puffer** | **Integrierter 4D-Persistenzpuffer (`INV-CONTINUITY-05`)** für Figuren, Schauplätze, Objekte. | ⚠️ Ephemerer Prompt-Verlauf; häufiger Drift von Gesichtern & Kleidung. | ❌ Händisches Prompt-Kopieren; gravierender Kontextverlust. | ❌ Keine native generative Kontinuitäts-Engine. | ❌ Fragil; keine formalen 4D-Kontextmodelle implementiert. |
+| **3. Optische Clue-Frame-Kopplung** | **Automatische Letzt-Frame-Extraktion (`INV-CLUEFRAME-06`)** zur Prompt-Vorbereitung. | ❌ Händisches Frame-Extrahieren und Re-Upload je Take. | ❌ Zeitintensiver Kreislauf aus Download, Frame-Schnitt und Upload. | ❌ Keine native Bildkopplung für KI-Generatoren vorhanden. | ⚠️ Ad-hoc FFmpeg-Skripte; keine automatische Seed-Prüfung. |
+| **4. Browser-Generator-Steuerung** | **Direkte Chrome DevTools Protocol (CDP)** Kopplung auf Port `9222`. | ❌ Proprietäre geschlossene Web-UIs ohne API-Zugriff. | ❌ 100% manuelle Klicks, Drag-and-Drop und Parameter-Eingaben. | ❌ Keine direkte Browser-zu-Generator-Automationsbrücke. | ⚠️ Fragile Selenium- oder Playwright-Scraper. |
+| **5. Audio-Staging & Mehrspur-Ducking** | **Integrierter 4-Spur-Mix + automatisches Sprach-Ducking** (`assemble.py`). | ❌ Minimaler oder einspuriger Ton; kein automatisches Ducking. | ❌ Kein Audio-Staging; erfordert separate Schnittwerkzeuge. | Manueller Mehrspur-Mix; hoher zeitlicher Bedienungsaufwand. | ❌ Komplexe Filtergraphen mit hohem Desynchronisationsrisiko. |
+| **6. Dual-Pane Regie-Cockpit** | **Integriertes Split-Screen Dashboard** (Timeline & Generator-Bridge). | ❌ Einzeltab-Ansicht; unübersichtliche Vorschauen. | ❌ Unübersichtliches Desktop-Fenster- und Tab-Chaos. | Komplexe Bedienoberflächen mit hoher Einarbeitungszeit. | ❌ Reine Kommandozeile; keinerlei visuelle Timeline-Kontrollen. |
+| **7. Ressourcen-Footprint & Level 1 SBOM** | **Schlanke Python-Stdlib + PyYAML / edge-tts**; auditierte Level 1 SBOM. | Hohe Systemlast durch permanente Web-Frontend-Bandbreite. | N/A (hohe manuelle Arbeitszeit und Browser-Speicherlast). | 5 GB+ proprietäre Installer mit starker GPU-Belastung. | Ungepinnte Virtualenvs; unvorhersehbare Abhängigkeiten. |
+| **8. Agenten-Auffindbarkeit (LLM-Ready)** | **Standardisiertes `llms.txt` + `ellmos-module.v2.json`**; deterministisches CLI. | ❌ Anti-Bot Captchas und Login-Sperren. | ❌ Ungeeignet für autonome KI-Ausführung. | ❌ Proprietäre geschlossene Scripting-APIs (Lua/ExtendScript). | ⚠️ Ad-hoc CLI-Flags ohne strukturierte Metadaten. |
+| **9. Berechtigungsmodell & Nutzersicherheit** | **Unprivilegiertes `RunAsInvoker` (`INV-UNPRIV-02`)**; Loopback-Bindung (`127.0.0.1`). | Cloud-Account mit Bezahlschranken und API-Schlüsseln. | Browser-Sitzung anfällig für Session-Hijacking. | Erfordert häufig administrative Elevation bei der Installation. | Variiert; gelegentlich versehentlich mit Root-Rechten ausgeführt. |
+| **10. Sicherheits-SLA & Governance** | **Verbindliche 48h Antwort & 5 Tage Triage (`INV-SLA-10`)**; § 521 BGB Hinweis. | Allgemeine Standard-SaaS AGBs. | N/A; Eigenverantwortung des Endnutzers im Browser. | Träge unternehmensweite Patch-Zyklen des Herstellers. | ❌ Keinerlei Sicherheits-SLAs oder Triage-Garantien. |
+
+---
+
+<a id="12-third-party-licenses-level-1-sbom--runasinvoker"></a><a id="12-drittanbieter-lizenzen-level-1-sbom--runasinvoker"></a><a id="third-party-licenses--transparency"></a><a id="drittanbieter-lizenzen--transparenz"></a>
+## 12. Drittanbieter-Lizenzen, Level 1 SBOM & RunAsInvoker
 
 `clip-storyboard-director` folgt strengen Open-Source-Governance-Standards, permissiven Lizenzen und Zero-Egress-Laufzeitgarantien:
 
-- **Hauptmodul**: Lizenziert unter der permissiven [MIT-Lizenz](LICENSE).
+- **Hauptmodul**: Lizenziert unter der permissiven [MIT-Lizenz](LICENSE) mit Urheberrechtsnachweis in [NOTICE](NOTICE).
 - **Laufzeit-Abhängigkeiten**:
   - `PyYAML` (MIT-Lizenz): Deklarative Projektkonfiguration und Persistenzpuffer-Parsing.
   - `edge-tts` (GNU GPL-3.0): Eigenständiger lokaler Sprachsynthese-Subprozess.
@@ -250,14 +288,15 @@ sequenceDiagram
 - **System-Binärdateien**:
   - `FFmpeg / FFprobe` (LGPL-2.1+ / GPL-2.0+): Medieninspektion, Clue-Frame-Extraktion und Video-Assemblierung über System-`PATH`.
   - `Microsoft Edge`: Optionaler Host-Browser für Dual-Pane Cockpit und CDP-Automatisierung.
-- **Compliance & Local-First Invarianten**:
+- **Compliance & Level 1 SBOM**:
   - `INV-LOCAL-01`: 100% offline, null Cloud-Tracking, null externe Telemetrie.
   - `INV-UNPRIV-02`: Ausführung streng im unprivilegierten Benutzermodus (`RunAsInvoker`).
-  - Ein vollständiges Softwareinventar und Lizenztexte sind in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) dokumentiert.
+  - Eine vollständige Level 1 SBOM und Invarianten-Kreuzreferenzmatrix sind in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) dokumentiert.
 
 ---
 
-## Geschwisterwerkzeuge & Partner-Matrix
+<a id="13-sibling-tools--ecosystem-matrix"></a><a id="13-geschwisterwerkzeuge--partner-matrix"></a><a id="sibling-tools--ecosystem-matrix"></a><a id="geschwisterwerkzeuge--partner-matrix"></a>
+## 13. Geschwisterwerkzeuge & Partner-Matrix
 
 `clip-storyboard-director` ist Teil des **ellmos-ai**-Ökosystems und der Dachorganisation **open-bricks**:
 
@@ -283,7 +322,8 @@ sequenceDiagram
 
 ---
 
-## Installation & CLI-Befehlsreferenz
+<a id="14-installation--cli-usage"></a><a id="14-installation--cli-befehlsreferenz"></a><a id="installation--cli-usage"></a><a id="installation--cli-befehlsreferenz"></a>
+## 14. Installation & CLI-Befehlsreferenz
 
 ### Voraussetzungen
 
@@ -344,7 +384,8 @@ clip-director auto --project projects/my_film
 
 ---
 
-## Referenzproduktion „Sternenseufzer“
+<a id="15-reference-production-sternenseufzer"></a><a id="15-referenzproduktion-sternenseufzer"></a><a id="reference-production-sternenseufzer"></a><a id="referenzproduktion-sternenseufzer"></a>
+## 15. Referenzproduktion „Sternenseufzer“
 
 Das Repository enthält unter `projects/sternenseufzer/` eine vollständige Referenzproduktion:
 
@@ -361,16 +402,18 @@ clip-director assemble --project projects/sternenseufzer
 
 ---
 
-## Sicherheit & Datenschutz
+<a id="16-security-policy--privacy"></a><a id="16-sicherheit--datenschutz"></a><a id="security--privacy"></a><a id="sicherheit--datenschutz"></a>
+## 16. Sicherheit & Datenschutz
 
-- **Null-Telemetrie**: Keine Tracking-Pixel, keine Nutzungsstatistiken und keine externen Serveranfragen.
-- **Unprivilegierter Modus**: Läuft vollständig im Benutzermodus (`RunAsInvoker`).
-- **Localhost-Bindung**: Web-Dienste lauschen strikt auf `127.0.0.1`.
-- **Sicherheits-SLA**: Bestätigung von Meldungen binnen 48 Stunden, qualifizierte Triage in 5 Werktagen. Siehe [SECURITY.md](SECURITY.md).
+- **Null-Telemetrie**: Keine Tracking-Pixel, keine Nutzungsstatistiken und keine externen Serveranfragen (`INV-LOCAL-01`).
+- **Unprivilegierter Modus**: Läuft vollständig im Benutzermodus (`RunAsInvoker`, `INV-UNPRIV-02`).
+- **Localhost-Bindung**: Web-Dienste lauschen strikt auf `127.0.0.1` (`INV-LOOPBACK-03`).
+- **Sicherheits-SLA**: Bestätigung von Meldungen binnen 48 Stunden, qualifizierte Triage in 5 Werktagen (`INV-SLA-10`). Siehe [SECURITY.md](SECURITY.md).
 
 ---
 
-## Entwicklung & Verifikation
+<a id="17-development-verification--quality-gates"></a><a id="17-entwicklung-verifikation--qualitaets-gates"></a><a id="development--verification"></a><a id="entwicklung--verifikation"></a>
+## 17. Entwicklung, Verifikation & Qualitäts-Gates
 
 ### Code-Prüfung & Bytecode-Kompilierung
 
@@ -384,6 +427,17 @@ python -m compileall -q src tests
 ```bash
 pytest -v
 ```
+
+---
+
+<a id="18-statutory-notice-liability-limitation--license--521-bgb"></a><a id="18-gesetzlicher-hinweis-haftungsbeschraenkung--lizenz--521-bgb"></a><a id="license--statutory-liability-limitation"></a><a id="lizenz--gesetzliche-haftungsbeschraenkung"></a><a id="license"></a>
+## 18. Gesetzlicher Hinweis, Haftungsbeschränkung & Lizenz (§ 521 BGB)
+
+### Gesetzlicher Hinweis & Haftungsbeschränkung (§ 521 BGB)
+Die Bereitstellung dieser Software erfolgt unentgeltlich als Gefälligkeit (*unentgeltliche Schenkung* gemäß **§ 521 BGB**). Die Haftung des Autors sowie der Mitwirkenden ist gemäß deutschem Gesetzesrecht auf Vorsatz und grobe Fahrlässigkeit beschränkt.
+
+### Lizenz
+Dieses Projekt ist unter den Bedingungen der **MIT-Lizenz** lizenziert. Siehe [LICENSE](LICENSE) und [NOTICE](NOTICE) für vollständige Urheberrechts- und Attributierungsangaben.
 
 ---
 

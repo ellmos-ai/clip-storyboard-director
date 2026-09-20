@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clip-storyboard-director"
-version = "0.1.5"
+version = "0.1.6"
 description = "Local-first AI storyboard director and video pipeline orchestrator with browser CDP automation and interactive timeline cockpit"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-license-files = ["LICENSE", "THIRD_PARTY_LICENSES.md"]
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md"]
 keywords = [
     "ai",
     "video-director",
@@ -23,7 +23,12 @@ keywords = [
     "continuity",
     "agent-workflow",
     "generative-ui",
-    "llm-ready"
+    "llm-ready",
+    "zero-egress",
+    "ellmos-ai",
+    "open-bricks",
+    "edge-cdp",
+    "browser-automation"
 ]
 authors = [
     { name = "ellmos-ai" },

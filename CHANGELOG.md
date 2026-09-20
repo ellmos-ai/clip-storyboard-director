@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-09-20
+
+### Added
+- **18-Point Quick Navigation Parity**: Upgraded `README.md` and `README_de.md` to a comprehensive 18-point navigation structure equipped with reciprocal dual HTML anchors (`<a id="..."></a>`) supporting English, German, and legacy anchor IDs.
+- **10-Dimension Comparative Matrix**: Integrated an exhaustive comparative differentiation table into Section 11 of both READMEs benchmarking `clip-storyboard-director` against commercial video SaaS, manual browser workflows, heavy desktop NLEs, and ad-hoc scripts across 10 governance and technical criteria.
+- **Root Attribution NOTICE**: Added repository-root [NOTICE](NOTICE) formally attributing Lukas Geiger, `ellmos-ai`, and `open-bricks` under the MIT License, and registered it in `pyproject.toml` under `license-files` following modern PEP 639 packaging standards.
+- **Level 1 SBOM & Non-Elevation Governance**: Enhanced [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) with a Level 1 Software Bill of Materials (SBOM) Invariant Cross-Reference Matrix mapping all 10 governance invariants (`INV-LOCAL-01` through `INV-SLA-10`) and certified `RunAsInvoker` unprivileged execution.
+- **Statutory Notice & Liability Limitation (§ 521 BGB)**: Added Section 18 to both READMEs declaring software provision as a statutory courtesy (*unentgeltliche Schenkung* / Gefälligkeit) under § 521 BGB with liability restricted to intent and gross negligence.
+- **SEO & Discoverability Expansion**: Expanded `pyproject.toml` keywords with `zero-egress`, `ellmos-ai`, `open-bricks`, `edge-cdp`, and `browser-automation`, and documented High-Intent Discoverability in `MARKETING-LOG.txt`.
+- **Contract Test Suite Hardening**: Expanded `tests/test_metadata.py` and `tests/test_director.py` with contract tests verifying the root `NOTICE` file, PEP 639 `license-files` declaration, 18-point dual navigation anchors, Mermaid clean syntax (semicolon-free class definitions), Level 1 SBOM invariants, and § 521 BGB statutory disclaimer.
+
+### Changed
+- **Version Bump**: Synchronized version `0.1.6` across `clip_director/__init__.py`, `pyproject.toml`, `ellmos-module.v2.json`, `llms.txt`, and automated test suites.
+- **Badge Parity**: Updated Shields.io badges in `README.md` and `README_de.md` for version `0.1.6`, test status, Level 1 SBOM, RunAsInvoker, NOTICE attribution, and audit date `2026-09-20`.
+- **Mermaid Diagram Cleanup**: Removed trailing semicolons from all `classDef` and `class` statements in architecture diagrams for 100% clean rendering across GitHub markdown viewers.
+
 ## [0.1.5] - 2026-09-13
 
 ### Added
