@@ -78,24 +78,41 @@ LOCK
 LOCK.*
 *.lock
 LOCK*.txt
+LOCK.user.*
+LOCK.until.*
+LOCK.condition.*
 LOCK.permissions.json
+.automation-lock
 uv.lock
+!package-lock.json
 
-# Multi-Host Sync Conflict Copies
+# Multi-Host Sync Conflict Copies & Machine Suffixes
+*conflicted copy*
 *-conflict-*
 *.sync-temp-*
 *.sync-conflict-*
 *.conflict
 *-CONFLIT-*
-*-ASUS-GEI.*
+* (kopie)*
+* (Kopie)*
+* (copy)*
+* (Copy)*
+*-WORKSTATION*
+*-WORKSTATION-LG*
 *-WORKSTATION-LG.*
 *-WORKSTATION.*
-* (kopie)*
-* (copy)*
+*-ASUS*
+*-ASUS-GEI*
+*-ASUS-GEI.*
+*-LAPTOP*
+*-Mac Studio*
+*-MacBook*
+*.rej
 
 # Ephemeral & Backup files
 *.tmp
 *.bak
+*.orig
 wheelhouse/
 .wheel-smoke/
 
@@ -106,3 +123,7 @@ dmypy.json
 .pyre/
 .pytype/
 .coverage.*
+.tox/
+.turbo/
+.nyc_output/
+.hypothesis/

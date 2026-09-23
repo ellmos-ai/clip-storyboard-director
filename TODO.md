@@ -1,8 +1,8 @@
 # TODO.md — Active work
 
 - **Version:** 0.1.6
-- **Updated:** 2026-09-20
-- **Reason:** Pfad B discoverability, 18-point dual-anchor navigation parity, 10-dimension comparative matrix, Level 1 SBOM cross-reference, root NOTICE attribution, § 521 BGB statutory disclaimer, and contract test expansion
+- **Updated:** 2026-09-24
+- **Reason:** Pfad A Technische Hygiene, Stale Lifecycle Workflow, Multi-Host Sync & Lock Defense, PEP 621 Standard-URLs und Vertragstest-Erweiterung
 - **Purpose:** Track only work that remains open.
 
 ## STATUS
@@ -37,6 +37,9 @@
 
 - [x] **TASK-CSD-06: Pfad B Discoverability, 18-Point Navigation Parity, 10-Dimension Comparative Matrix, Level 1 SBOM & NOTICE Attribution (v0.1.6)** (`effort=medium`, `scope=marketing`, priority `high`).
   - **Result:** 18-Punkte Navigationsparität mit reziproken dualen HTML-Ankern in beiden READMEs, 10-Dimensionen Vergleichsmatrix gegenüber 4 Alternativen, Level 1 SBOM Invarianten-Tabelle in THIRD_PARTY_LICENSES.md, formeller NOTICE Attributierungsnachweis, § 521 BGB Haftungshinweis, Mermaid-Syntaxbereinigung und erweiterte Vertragstest-Suite.
+
+- [x] **TASK-CSD-07: Pfad A Technische Hygiene, Stale Lifecycle Workflow & Multi-Host Lock Defense (2026-09-24)** (`effort=low`, `scope=hygiene`, priority `high`).
+  - **Result:** .github/workflows/stale.yml (actions/stale@v9 mit timeout-minutes: 10 und Concurrency) angelegt, .gitignore um Multi-Host Machine Suffixes (*-WORKSTATION*, *-ASUS*, *-LAPTOP*, *-Mac Studio*, * (Kopie)*, * (Copy)*) und kanonische Locks (LOCK.user.*, LOCK.until.*, LOCK.condition.*, .automation-lock) gehärtet, PEP 621 Standard-URLs (Notice, Bug Tracker) und pytest minversion/norecursedirs in pyproject.toml ergänzt, NOTICE und THIRD_PARTY_LICENSES.md re-auditiert, und Vertragstestsuite erweitert.
 
 
 ---

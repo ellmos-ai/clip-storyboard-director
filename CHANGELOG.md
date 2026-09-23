@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Stale Issues & PRs Lifecycle Automation**: Added `.github/workflows/stale.yml` using `actions/stale@v9` with least-privilege permissions (`issues: write`, `pull-requests: write`), `timeout-minutes: 10`, concurrency group cancellation, and automated 30-day stale / 7-day close lifecycle.
+- **Extended Multi-Host Sync & Lock Defense (.gitignore)**: Hardened `.gitignore` against cross-device conflict copies (`*conflicted copy*`, `* (Kopie)*`, `* (Copy)*`, `*-WORKSTATION*`, `*-WORKSTATION-LG*`, `*-ASUS*`, `*-ASUS-GEI*`, `*-LAPTOP*`, `*-Mac Studio*`, `*-MacBook*`), canonical lock-system files (`LOCK.user.*`, `LOCK.until.*`, `LOCK.condition.*`, `.automation-lock`), patch rejects (`*.rej`), merge remnants (`*.orig`), and tooling caches (`.tox/`, `.turbo/`, `.nyc_output/`, `.hypothesis/`).
+- **PEP 621 Standard URLs**: Registered canonical `"Notice"` and `"Bug Tracker"` URLs under `[project.urls]` in `pyproject.toml`.
+- **Pytest Discovery Guardrails**: Configured `minversion = "7.0"` and explicit `norecursedirs` (`.git`, `.pytest_cache`, `__pycache__`, `build`, `dist`, `.venv`) in `pyproject.toml`.
+
+### Changed
+- **Attribution & SBOM Re-Audit**: Re-audited `THIRD_PARTY_LICENSES.md` (audit date 2026-09-24) and synchronized repository-root `NOTICE` with explicit cross-reference to third-party inventory.
+- **Documentation & KI Context Parity**: Synchronized `README.md`, `README_de.md`, `llms.txt`, and `TODO.md` with active check timestamp 2026-09-24.
+- **Contract Test Suite Expansion**: Expanded `tests/test_metadata.py` with automated contract tests verifying the stale lifecycle workflow, extended gitignore lock defense, Notice/Bug Tracker PEP 621 URLs, and third-party audit recency. Version remains `0.1.6` (Pfad A technical hygiene turnus, strict version-freeze per T-20260920-167562623).
+
 ## [0.1.6] - 2026-09-20
 
 ### Added

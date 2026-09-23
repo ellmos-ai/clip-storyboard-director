@@ -263,3 +263,43 @@ wurden folgende Maßnahmen umgesetzt:
    - Versionserwartung auf 0.1.6 angehoben.
    - Prüfungen für NOTICE-Präsenz, PEP 639 license-files, 18-Punkte-Navigationsanker in beiden
      READMEs, semikolonfreie Mermaid-Blöcke, Level 1 SBOM und § 521 BGB Hinweis hinzugefügt.
+
+================================================================================
+8. REPOSITORY-HYGIENE, WORKFLOW-HÄRTUNG & LOCK-DEFENSE (2026-09-24 — Pfad A)
+================================================================================
+Im Rahmen des turnusgemäßen Pfad-A-Laufs (Technische Hygiene, Workflow-Härtung,
+Multi-Host-Sync- und Lock-Resilienz) wurden folgende Maßnahmen umgesetzt:
+
+1. Lifecycle-Automatisierung für Issues und Pull-Requests (.github/workflows/stale.yml):
+   - Standardisierter Stale-Workflow auf Basis von actions/stale@v9 eingeführt.
+   - Geringste Rechte (permissions: issues: write, pull-requests: write), Concurrency-Gruppe
+     mit cancel-in-progress: true und strikte Laufzeitgrenze (timeout-minutes: 10).
+   - Tägliche Ausführung via cron ("30 1 * * *") und manuelle Auslösung (workflow_dispatch).
+   - 30 Tage Inaktivitätsfrist für Stale-Markierung, 7 Tage Frist bis zur Schließung.
+
+2. Umfassende Multi-Host Sync- & Lock-Defense (.gitignore):
+   - Ergänzung kanonischer Lock-System-Muster: LOCK.user.*, LOCK.until.*, LOCK.condition.*,
+     .automation-lock, uv.lock, sowie Ausnahme-Whitelist für !package-lock.json.
+   - Schutz gegen Multi-Device Cloud-Sync-Konfliktdateien und Rechner-Suffixe:
+     *conflicted copy*, * (Kopie)*, * (Copy)*, *-WORKSTATION*, *-WORKSTATION-LG*,
+     *-ASUS*, *-ASUS-GEI*, *-LAPTOP*, *-Mac Studio*, *-MacBook*, *.rej, *.orig.
+   - Isolierung moderner Tooling- und Test-Caches: .tox/, .turbo/, .nyc_output/, .hypothesis/.
+
+3. PEP 621 Standard-Projekt-URLs (pyproject.toml):
+   - Registrierung kanonischer URLs für "Bug Tracker" und "Notice".
+   - Test-Discovery-Absicherung via [tool.pytest.ini_options]: minversion = "7.0" und
+     explizite norecursedirs (.git, .pytest_cache, __pycache__, build, dist, .venv).
+
+4. Lizenz- und Attributierungs-Audit (NOTICE & THIRD_PARTY_LICENSES.md):
+   - Re-Audit von THIRD_PARTY_LICENSES.md (Stand 2026-09-24).
+   - Ergänzung der formalen Querverweiszeile zu THIRD_PARTY_LICENSES.md in NOTICE.
+   - 100% Permissive Core, Zero-Copyleft und RunAsInvoker Non-Elevation bestätigt.
+
+5. Dokumentations- und KI-Kontext-Synchronisation:
+   - README.md, README_de.md, llms.txt und TODO.md auf Prüfstand 2026-09-24 aktualisiert.
+   - Shields.io Badges für "last checked" auf 2026-09-24 synchronisiert.
+   - Version 0.1.6 strikt beibehalten gemäß T-20260920-167562623 (kein Version-Bump in Pfad A/B).
+
+6. Automatisierte Vertragstest-Suite (tests/test_metadata.py):
+   - Neue Contract-Tests für stale.yml Workflow-Konfiguration, erweiterte .gitignore Lock-Defense,
+     NOTICE-Attributierungsinhalt, PEP 621 Notice/Bug Tracker URLs und SBOM Re-Audit-Datum.

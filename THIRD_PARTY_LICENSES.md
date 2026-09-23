@@ -3,7 +3,7 @@
 **Project:** `clip-storyboard-director`<br>
 **Version:** `0.1.6`<br>
 **License:** [MIT License](LICENSE) | **Attribution:** [NOTICE](NOTICE)<br>
-**Audit Date:** 2026-09-20<br>
+**Audit Date:** 2026-09-24<br>
 **Level 1 SBOM:** Audited & Verified Permissive Core
 
 ---

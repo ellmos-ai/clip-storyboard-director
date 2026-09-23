@@ -77,7 +77,7 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--09--20-informational",
+        "https://img.shields.io/badge/last%20checked-2026--09--24-informational",
         "license-MIT",
         "Attribution-NOTICE-blue.svg",
         "Level%201%20SBOM-Audited-brightgreen.svg",
@@ -206,19 +206,37 @@ def test_gitignore_hygiene_patterns():
         "LOCK.*",
         "*.lock",
         "LOCK*.txt",
+        "LOCK.user.*",
+        "LOCK.until.*",
+        "LOCK.condition.*",
         "LOCK.permissions.json",
+        ".automation-lock",
         "uv.lock",
+        "!package-lock.json",
+        "*conflicted copy*",
         "*-conflict-*",
         "*.sync-temp-*",
         "*.sync-conflict-*",
         "*-ASUS-GEI.*",
         "*-WORKSTATION-LG.*",
         "*-WORKSTATION.*",
+        "*-ASUS*",
+        "*-LAPTOP*",
+        "*-Mac Studio*",
+        "*-MacBook*",
         "* (kopie)*",
+        "* (Kopie)*",
         "* (copy)*",
+        "* (Copy)*",
+        "*.rej",
+        "*.orig",
         "coverage/",
         "wheelhouse/",
         ".wheel-smoke/",
+        ".tox/",
+        ".turbo/",
+        ".nyc_output/",
+        ".hypothesis/",
     ]
     for pattern in required_patterns:
         assert pattern in gitignore, f"Pattern {pattern} missing in .gitignore"
@@ -306,7 +324,7 @@ def test_pep621_extended_project_urls():
 def test_third_party_licenses_file_contract():
     """Verify THIRD_PARTY_LICENSES.md inventory, audit date, Level 1 SBOM and invariants."""
     licenses_doc = (ROOT / "THIRD_PARTY_LICENSES.md").read_text(encoding="utf-8")
-    assert "Audit Date:** 2026-09-20" in licenses_doc
+    assert "Audit Date:** 2026-09-24" in licenses_doc
     assert "GPL-3.0" in licenses_doc
     assert "LGPL" in licenses_doc
     assert "Level 1 SBOM" in licenses_doc
@@ -328,6 +346,7 @@ def test_marketing_log_contract():
     assert "2026-09-12 — Pfad B" in marketing_log
     assert "2026-09-13 — Pfad A" in marketing_log
     assert "2026-09-20 — Pfad B" in marketing_log
+    assert "2026-09-24 — Pfad A" in marketing_log
     assert "INV-LOCAL-01" in marketing_log
     assert "INV-SLA-10" in marketing_log
 
@@ -373,8 +392,10 @@ def test_todo_version_and_date_parity():
     """Verify TODO.md version header and update date match active release."""
     todo_text = (ROOT / "TODO.md").read_text(encoding="utf-8")
     assert "**Version:** 0.1.6" in todo_text
-    assert "**Updated:** 2026-09-20" in todo_text
+    assert "**Updated:** 2026-09-24" in todo_text
     assert "TASK-CSD-06" in todo_text
+    assert "TASK-CSD-07" in todo_text
+
 
 
 def test_changelog_recent_pfad_a_015_entry():
@@ -453,3 +474,44 @@ def test_executable_module_entrypoint_file():
     """Verify src/clip_director/__main__.py entrypoint exists."""
     main_py = ROOT / "src" / "clip_director" / "__main__.py"
     assert main_py.is_file(), "Missing src/clip_director/__main__.py"
+
+
+def test_stale_workflow_contract():
+    """Verify .github/workflows/stale.yml exists with required parameters."""
+    stale_file = ROOT / ".github" / "workflows" / "stale.yml"
+    assert stale_file.is_file(), "Missing .github/workflows/stale.yml"
+    content = stale_file.read_text(encoding="utf-8")
+    assert "actions/stale@v9" in content
+    assert "timeout-minutes: 10" in content
+    assert "cancel-in-progress: true" in content
+    assert 'cron: "30 1 * * *"' in content
+    assert "issues: write" in content
+    assert "pull-requests: write" in content
+
+
+def test_pep621_notice_and_bugtracker_urls():
+    """Verify pyproject.toml defines Notice and Bug Tracker URLs."""
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert '"Bug Tracker"' in pyproject
+    assert "Notice = " in pyproject or '"Notice"' in pyproject
+    assert "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/NOTICE" in pyproject
+
+
+def test_notice_content_and_inventory_reference():
+    """Verify root NOTICE file attributes Lukas Geiger, ellmos-ai, and open-bricks."""
+    notice_text = (ROOT / "NOTICE").read_text(encoding="utf-8")
+    assert "clip-storyboard-director" in notice_text
+    assert "Lukas Geiger" in notice_text
+    assert "ellmos-ai" in notice_text
+    assert "open-bricks" in notice_text
+    assert "MIT License" in notice_text
+    assert "THIRD_PARTY_LICENSES.md" in notice_text
+
+
+def test_changelog_unreleased_pfad_a_section():
+    """Verify CHANGELOG.md contains the ## [Unreleased] section for Pfad A improvements."""
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [Unreleased]" in changelog
+    assert "Stale Issues & PRs Lifecycle Automation" in changelog
+    assert "Extended Multi-Host Sync & Lock Defense" in changelog
+    assert "PEP 621 Standard URLs" in changelog

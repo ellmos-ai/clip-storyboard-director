@@ -69,9 +69,11 @@ clip-director = "clip_director.cli:main"
 Homepage = "https://github.com/ellmos-ai/clip-storyboard-director"
 Repository = "https://github.com/ellmos-ai/clip-storyboard-director.git"
 Issues = "https://github.com/ellmos-ai/clip-storyboard-director/issues"
+"Bug Tracker" = "https://github.com/ellmos-ai/clip-storyboard-director/issues"
 Documentation = "https://github.com/ellmos-ai/clip-storyboard-director#readme"
 Changelog = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/CHANGELOG.md"
 Security = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/SECURITY.md"
+Notice = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/NOTICE"
 "Parent Organization" = "https://github.com/ellmos-ai"
 "Umbrella Ecosystem" = "https://github.com/open-bricks"
 "Third-Party Licenses" = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/THIRD_PARTY_LICENSES.md"
@@ -85,9 +87,18 @@ where = ["src"]
 clip_director = ["py.typed", "*.html", "*.yaml"]
 
 [tool.pytest.ini_options]
+minversion = "7.0"
 pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-ra -v"
+norecursedirs = [
+    ".git",
+    ".pytest_cache",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+]
 
 [tool.ruff]
 line-length = 100

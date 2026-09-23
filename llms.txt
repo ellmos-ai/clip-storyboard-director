@@ -2,7 +2,7 @@
 
 > Local-first AI storyboard director, scene continuity orchestrator, and video pipeline controller with browser CDP automation and interactive timeline cockpit.
 
-- Last-checked: 2026-09-20
+- Last-checked: 2026-09-24
 - Version: 0.1.6
 - Module status: `active`; visibility projection: `public`; release gate: `USER`.
 - Architecture: Local-First / Dual-Pane Timeline Cockpit / Edge CDP Automator / FFmpeg Assembly
