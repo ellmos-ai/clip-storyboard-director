@@ -107,12 +107,13 @@
     .pane-iframe { width: 100%; height: 100%; border: none; background: var(--bg); }
 
     .gutter-col {
-      width: 5px;
+      width: 8px;
       cursor: col-resize;
       background: var(--border);
       flex-shrink: 0;
     }
     .gutter-col:hover, .gutter-col.dragging { background: var(--accent); }
+    .gutter-col:focus-visible { background: var(--accent); outline-offset: -2px; }
 
     .gen-toolbar {
       min-height: 36px;
@@ -211,6 +212,13 @@
     }
     .toast.show { opacity: 1; }
 
+    @media (max-width: 700px) {
+      .split-container { flex-direction: column; }
+      .pane-left { width: 100% !important; min-width: 0; height: 50%; flex: none; }
+      .pane-right { width: 100%; min-width: 0; height: auto; flex: 1; }
+      .gutter-col { display: none; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition: none !important; animation: none !important; }
     }
@@ -252,7 +260,7 @@
       <iframe class="pane-iframe" id="storyboard-frame" src="/storyboard.html" title="Storyboard"></iframe>
     </div>
 
-    <div class="gutter-col" id="gutter" role="separator" aria-orientation="vertical" title="Breite anpassen"></div>
+    <div class="gutter-col" id="gutter" role="separator" aria-orientation="vertical" aria-label="Breite von Storyboard und Generator anpassen" aria-controls="paneLeft" aria-valuemin="320" aria-valuemax="1000" aria-valuenow="0" tabindex="0" title="Mit Pfeiltasten oder Maus Breite anpassen"></div>
 
     <div class="pane pane-right" id="paneRight">
       <div class="gen-toolbar">
@@ -346,7 +354,7 @@
     function showToast(msg, isSuccess = true) {
       const t = document.getElementById('toast');
       t.innerText = msg;
-      t.style.borderLeftColor = isSuccess ? '#06b6d4' : '#ef4444';
+      t.style.borderLeftColor = isSuccess ? 'var(--ok)' : 'var(--danger)';
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3000);
     }
@@ -542,6 +550,34 @@
     const leftPane = document.getElementById('paneLeft');
     let isDragging = false;
 
+    function updateGutterValue(width) {
+      const maxWidth = Math.max(320, window.innerWidth - 348);
+      gutter.setAttribute('aria-valuemax', String(maxWidth));
+      gutter.setAttribute('aria-valuenow', String(Math.round(width)));
+      gutter.setAttribute('aria-valuetext', Math.round(width / window.innerWidth * 100) + ' Prozent Storyboard-Breite');
+    }
+
+    function setLeftPaneWidth(width) {
+      const maxWidth = Math.max(320, window.innerWidth - 348);
+      const nextWidth = Math.max(320, Math.min(maxWidth, width));
+      leftPane.style.width = nextWidth + 'px';
+      updateGutterValue(nextWidth);
+    }
+
+    updateGutterValue(leftPane.getBoundingClientRect().width);
+    gutter.addEventListener('keydown', (e) => {
+      const currentWidth = leftPane.getBoundingClientRect().width;
+      const maxWidth = Math.max(320, window.innerWidth - 348);
+      let nextWidth;
+      if (e.key === 'ArrowLeft') nextWidth = currentWidth - 24;
+      else if (e.key === 'ArrowRight') nextWidth = currentWidth + 24;
+      else if (e.key === 'Home') nextWidth = 320;
+      else if (e.key === 'End') nextWidth = maxWidth;
+      else return;
+      e.preventDefault();
+      setLeftPaneWidth(nextWidth);
+    });
+
     gutter.addEventListener('mousedown', (e) => {
       isDragging = true;
       gutter.classList.add('dragging');
@@ -551,9 +587,7 @@
 
     window.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      const totalWidth = window.innerWidth;
-      const leftWidth = Math.max(300, Math.min(totalWidth - 300, e.clientX));
-      leftPane.style.width = leftWidth + 'px';
+      setLeftPaneWidth(e.clientX);
     });
 
     window.addEventListener('mouseup', () => {
@@ -563,6 +597,11 @@
         document.body.style.cursor = '';
         document.body.style.userSelect = '';
       }
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 700) return;
+      if (leftPane.style.width) setLeftPaneWidth(leftPane.getBoundingClientRect().width);
+      else updateGutterValue(leftPane.getBoundingClientRect().width);
     });
   </script>
 </body>

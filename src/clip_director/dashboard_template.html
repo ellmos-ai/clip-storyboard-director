@@ -101,9 +101,10 @@
       background: var(--bg);
       border-bottom: 1px solid var(--border);
       gap: 4px;
+      overflow-x: auto;
     }}
     .timeline-segment {{
-      flex: 1;
+      flex: 1 0 98px;
       text-align: center;
       font-size: 12px;
       font-weight: 600;
@@ -122,7 +123,7 @@
     /* Shot-Karten */
     .shot-grid {{
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
       gap: 16px;
       margin-bottom: 20px;
     }}
@@ -177,9 +178,14 @@
       color: var(--text); font-size: 12.5px; padding: 6px 10px;
     }}
     .link-import-bar input::placeholder {{ color: var(--muted); }}
-    .link-import-bar input:focus {{ border-color: var(--accent); outline: none; }}
+    .link-import-bar input:focus {{ border-color: var(--accent); }}
 
     .prompt-box {{
+      display: block;
+      width: 100%;
+      text-align: left;
+      color: var(--text);
+      font: inherit;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -192,7 +198,7 @@
       text-transform: uppercase; letter-spacing: 0.04em;
       margin-bottom: 4px; display: flex; justify-content: space-between; gap: 8px;
     }}
-    .prompt-box p {{ font-size: 13px; color: var(--text); }}
+    .prompt-box .prompt-text {{ display: block; font-size: 13px; color: var(--text); }}
     .copy-hint-pill {{ font-size: 11px; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--muted); }}
 
     /* Sekundaere Angaben je Shot: einklappbar */
@@ -245,6 +251,8 @@
       font-size: 13.5px;
       display: flex; justify-content: space-between; gap: 10px;
     }}
+    details.panel > summary::after {{ content: '▸'; color: var(--muted); }}
+    details.panel[open] > summary::after {{ content: '▾'; }}
     details.panel > summary .hint {{ color: var(--muted); font-weight: 400; font-size: 12px; }}
     details.panel > .panel-body {{ padding: 0 14px 14px; }}
     .persistence-grid {{
@@ -254,10 +262,11 @@
     .p-group strong {{ display: block; margin-bottom: 2px; }}
     .p-group span {{ color: var(--muted); }}
     .bible-subtitle {{ font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }}
-    .bible-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }}
+    .bible-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 10px; }}
     .bible-card {{
       background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
       padding: 10px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+      width: 100%; text-align: left; color: var(--text); font: inherit;
     }}
     .bible-card:hover {{ border-color: var(--accent); }}
     .bible-thumb {{
@@ -271,11 +280,22 @@
     .draggable-asset:active {{ cursor: grabbing; }}
     .bible-info {{ flex: 1; min-width: 0; font-size: 12px; }}
     .bible-title {{ font-weight: 700; font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }}
+    .bible-card-meta {{ display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }}
     .bible-cat {{ font-size: 11px; color: var(--muted); font-weight: 500; }}
-    .bible-desc {{ color: var(--muted); margin: 4px 0; font-size: 12px; line-height: 1.4; }}
+    .bible-desc {{ display: block; color: var(--muted); margin: 4px 0; font-size: 12px; line-height: 1.4; }}
+    .bible-meta {{ display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-top: 4px; }}
     .bible-shots {{ color: var(--muted); font-size: 11.5px; }}
     .status-ok {{ color: var(--ok); }}
     .status-warn {{ color: var(--warn); }}
+
+    .cowork-offer-banner {{
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 12px; margin: 10px 0; font-size: 12px;
+    }}
+    .cowork-offer-row {{ display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }}
+    .cowork-offer-summary {{ margin-top: 4px; color: var(--muted); }}
+    .cowork-offer-actions {{ display: flex; gap: 6px; flex-shrink: 0; }}
+    .cowork-offer-accept {{ background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }}
 
     /* Toast */
     #toast {{
@@ -305,6 +325,19 @@
     .master-video-wrapper video {{ width: 100%; max-height: 480px; display: block; background: #000; }}
     .master-timeline-jumpers {{ display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }}
     .jumper-label {{ font-size: 12px; color: var(--muted); }}
+
+    @media (max-width: 1000px) {{
+      body {{ padding: 14px; }}
+      .shot-grid {{ grid-template-columns: minmax(0, 1fr); }}
+      .shot-preview {{ max-height: 280px; }}
+      .shot-preview img, .shot-preview video {{ object-fit: contain; }}
+      .timeline-bar {{ margin: 0 -14px 16px; padding: 8px 14px; }}
+    }}
+    @media (max-width: 480px) {{
+      .link-import-bar {{ flex-wrap: wrap; }}
+      .link-import-bar input {{ flex-basis: 100%; }}
+      details.panel > summary {{ flex-wrap: wrap; }}
+    }}
 
     @media (prefers-reduced-motion: reduce) {{
       *, *::before, *::after {{ transition: none !important; animation: none !important; scroll-behavior: auto !important; }}
@@ -338,11 +371,13 @@
     {timeline_segments}
   </nav>
 
-  {master_section}
+{master_section_before}
 
   <div class="shot-grid">
     {shot_cards}
   </div>
+
+{master_section_after}
 
   <details class="panel" data-panel="persistence">
     <summary><span>Persistenzpuffer</span><span class="hint">Charaktere, Requisiten, Orte, Gegenstände</span></summary>
@@ -380,7 +415,7 @@
     </div>
   </details>
 
-  <div id="toast"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
 
   <script>
     const PROJECT_DATA = {project_data_json};
@@ -801,7 +836,7 @@ PERSISTENZ-PUFFER (Elemente im Bild):
           playerDiv.innerHTML = `
             <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <audio controls src="${{audioUrl}}" style="height: 30px; max-width: 220px;"></audio>
-              <button class="save-voice-btn" onclick="saveVoice(${{stepNr}})">💾 Stimme speichern</button>
+              <button class="save-voice-btn" onclick="saveVoice(${{stepNr}})">Stimme speichern</button>
             </div>
           `;
           window['recordedBlob_' + stepNr] = blob;
@@ -943,7 +978,6 @@ PERSISTENZ-PUFFER (Elemente im Bild):
         if (!banner) {{
           banner = document.createElement('div');
           banner.className = 'cowork-offer-banner';
-          banner.style.cssText = 'background: rgba(139, 92, 246, 0.15); border: 1px solid #8b5cf6; border-radius: 8px; padding: 10px 12px; margin: 10px 0; font-size: 12px; color: #ede9fe;';
           const body = card.querySelector('.shot-body');
           body.insertBefore(banner, body.firstChild);
         }}
@@ -951,18 +985,18 @@ PERSISTENZ-PUFFER (Elemente im Bild):
         const summaryText = offer.summary || offer.prompt || offer.url || JSON.stringify(offer);
         const encoded = encodeURIComponent(JSON.stringify(offer));
         banner.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+          <div class="cowork-offer-row">
             <div>
-              <strong style="color: #c4b5fd;">💡 Cowork Offer (${{offer.action || 'Vorschlag'}}):</strong>
-              <div style="margin-top: 4px; font-style: italic; color: #f5f3ff;">"${{summaryText}}"</div>
+              <strong>Cowork-Vorschlag (${{offer.action || 'Vorschlag'}}):</strong>
+              <div class="cowork-offer-summary">"${{summaryText}}"</div>
             </div>
-            <div style="display: flex; gap: 6px; flex-shrink: 0;">
-              <button class="btn-action" style="background: #10b981; color: white; padding: 4px 10px; font-size: 11px; border-radius: 4px; border:none; cursor:pointer;" onclick="CoworkProtocol.applyOffer(${{stepNr}}, '${{encoded}}')">✅ Annehmen</button>
-              <button class="btn-action" style="background: rgba(107, 114, 128, 0.3); color: #d1d5db; padding: 4px 8px; font-size: 11px; border-radius: 4px; border:none; cursor:pointer;" onclick="this.closest('.cowork-offer-banner').remove()">✕</button>
+            <div class="cowork-offer-actions">
+              <button class="btn-copy-card cowork-offer-accept" aria-describedby="shot-title-${{stepNr}}" onclick="CoworkProtocol.applyOffer(${{stepNr}}, '${{encoded}}')">Annehmen</button>
+              <button class="btn-copy-card" aria-label="Vorschlag für Shot ${{stepNr}} schließen" onclick="this.closest('.cowork-offer-banner').remove()">Schließen</button>
             </div>
           </div>
         `;
-        showToast('💡 Neues Cowork-Angebot für Step ' + stepNr + ' erhalten!', true);
+        showToast('Neuer Cowork-Vorschlag für Shot ' + stepNr + ' erhalten!', true);
         return {{ status: 'ok', message: 'Offer im Dashboard platziert', offerId: 'off_' + Date.now() }};
       }},
 

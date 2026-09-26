@@ -115,22 +115,22 @@ def render_project(project_dir):
             en_prompt_btn = ""
             if trans_en:
                 en_block = f'<div class="voice-line"><strong>EN:</strong> „{html.escape(trans_en)}“</div>'
-                en_prompt_btn = f'''<button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'en')" title="Visueller Prompt + englische Dialoganweisung">Prompt + EN</button>'''
+                en_prompt_btn = f'''<button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'en')" aria-describedby="shot-title-{step_nr}" title="Visueller Prompt + englische Dialoganweisung">Prompt + EN</button>'''
 
             voice_html = f"""<div class="voice-box">
               <div class="voice-head">
                 <span><strong>Sprecher:</strong> {html.escape(voice.get("speaker") or "TTS")}</span>
                 <span>
                   <span class="rec-timer" id="rec-timer-{step_nr}" style="display:none;">● 00:00</span>
-                  <button class="rec-btn" id="rec-btn-{step_nr}" onclick="toggleRecord({step_nr})">Aufnehmen</button>
+                  <button class="rec-btn" id="rec-btn-{step_nr}" onclick="toggleRecord({step_nr})" aria-describedby="shot-title-{step_nr}">Aufnehmen</button>
                 </span>
               </div>
               <div class="voice-line"><strong>DE:</strong> „{html.escape(src_text)}“</div>
               {en_block}
               <div class="voice-actions">
-                <button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'de')" title="Visueller Prompt + deutsche Dialoganweisung">Prompt + DE</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'de')" aria-describedby="shot-title-{step_nr}" title="Visueller Prompt + deutsche Dialoganweisung">Prompt + DE</button>
                 {en_prompt_btn}
-                <button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'silent')" title="Visueller Prompt + Stumm-Direktive">Prompt + stumm</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'silent')" aria-describedby="shot-title-{step_nr}" title="Visueller Prompt + Stumm-Direktive">Prompt + stumm</button>
               </div>
               <div id="voice-player-{step_nr}">{audio_player_html}</div>
             </div>"""
@@ -140,7 +140,7 @@ def render_project(project_dir):
         card = f"""
         <div class="shot-card{current_cls}" id="shot-{step_nr}">
           <div class="shot-header">
-            <div class="step-tag">{step_nr:02d} · {html.escape(slug)}{current_pill}</div>
+            <div class="step-tag" id="shot-title-{step_nr}">{step_nr:02d} · {html.escape(slug)}{current_pill}</div>
             <div class="time-tag">{start:02d}–{end:02d} s</div>
           </div>
           <div class="shot-preview">
@@ -148,20 +148,20 @@ def render_project(project_dir):
             <div class="preview-badge">{badge_text}</div>
           </div>
           <div class="shot-body">
-            <div class="prompt-box" onclick="copyShotPromptOnly({step_nr}, \'plain\')" title="Klicken: Reinen visuellen Prompt in Zwischenablage kopieren (ohne Sprachen-Mix)">
-              <div class="p-title">
+            <button type="button" class="prompt-box" onclick="copyShotPromptOnly({step_nr}, \'plain\')" title="Visuellen Prompt ohne Dialoganweisung kopieren">
+              <span class="p-title">
                 <span>Prompt {active_v}</span>
-                <span class="copy-hint-pill">Klick kopiert</span>
-              </div>
-              <p>{html.escape(prompt_text)}</p>
-            </div>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+              <span class="prompt-text">{html.escape(prompt_text)}</span>
+            </button>
             <div class="link-import-bar">
               <input type="text" id="link-input-{step_nr}" aria-label="Video-Link für Shot {step_nr}" placeholder="Gemini-Sharelink oder Video-URL">
-              <button class="btn-fetch-link" onclick="fetchVideoLink({step_nr})">Abholen</button>
+              <button class="btn-fetch-link" onclick="fetchVideoLink({step_nr})" aria-describedby="shot-title-{step_nr}">Abholen</button>
             </div>
             {voice_html}
             <details class="shot-more">
-              <summary>Kamera, Licht &amp; Ton</summary>
+              <summary aria-describedby="shot-title-{step_nr}">Kamera, Licht &amp; Ton</summary>
               <div>
                 <div class="grammar-row">
                   <div><strong>Perspektive</strong><span>{html.escape(s.get("perspective") or "-")}</span></div>
@@ -171,7 +171,7 @@ def render_project(project_dir):
                 </div>
                 <div class="audio-matrix">
                   <span class="audio-pill {track1_active}">{track1_label}</span>
-                  <button class="audio-toggle-btn" onclick="toggleAudioTrack({step_nr})" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
+                  <button class="audio-toggle-btn" onclick="toggleAudioTrack({step_nr})" aria-describedby="shot-title-{step_nr}" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
                   <span class="audio-pill {track2_active}">Spur 2: Bett</span>
                   <span class="audio-pill {track3_active}">Spur 3: MIDI</span>
                   <span class="audio-pill {track4_active}">Spur 4: SFX</span>
@@ -180,7 +180,7 @@ def render_project(project_dir):
             </details>
             <div class="shot-footer">
               <span class="takes-count">{len(takes)} Take(s) · Übergang: {html.escape(audio.get("transition_video") or "cut")}</span>
-              <button class="btn-copy-shot" onclick="copyShotDetails({step_nr})" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">Prompt &amp; Specs kopieren</button>
+              <button class="btn-copy-shot" onclick="copyShotDetails({step_nr})" aria-describedby="shot-title-{step_nr}" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">Prompt &amp; Specs kopieren</button>
             </div>
           </div>
         </div>
@@ -215,30 +215,30 @@ def render_project(project_dir):
         shots_label = f"Shots: {', '.join(appearing_shots)}" if appearing_shots else "Projektweit relevant"
 
         if i_ref and (project_path / i_ref).exists():
-            thumb_html = f'<img src="{html.escape(i_ref)}" alt="{html.escape(i_name)}" draggable="true" ondragstart="onAssetDragStart(event, this, \'{html.escape(i_name)}\')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><div class="drag-badge">Drag</div>'
+            thumb_html = f'<img src="{html.escape(i_ref)}" alt="{html.escape(i_name)}" draggable="true" ondragstart="onAssetDragStart(event, this, \'{html.escape(i_name)}\')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span>'
             status_badge = '<span class="status-ok">bereit</span>'
         else:
             thumb_html = '<span>Offen</span>'
             status_badge = '<span class="status-warn">Vorlage fehlt</span>'
 
         b_card = f"""
-        <div class="bible-card" onclick="copyBibleItem('{i_id}')" title="Klicken: Bild & Prompt in Zwischenablage kopieren">
-          <div class="bible-thumb">{thumb_html}</div>
-          <div class="bible-info">
-            <div class="bible-title">
+        <button type="button" class="bible-card" onclick="copyBibleItem('{i_id}')" aria-label="Konsistenz-Element {html.escape(i_name)} kopieren" aria-describedby="bible-cat-{idx} bible-desc-{idx} bible-meta-{idx}" title="Bild und Prompt kopieren">
+          <span class="bible-thumb">{thumb_html}</span>
+          <span class="bible-info">
+            <span class="bible-title">
               <span>{html.escape(i_name)}</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <span class="bible-cat">{html.escape(i_cat)}</span>
-                <button class="btn-copy-card" onclick="event.stopPropagation(); copyBibleItem('{i_id}')" title="Kopiert Bild + Konsistenz-Prompt für Image-Generatoren">Kopieren</button>
-              </div>
-            </div>
-            <p class="bible-desc">{html.escape(i_desc)}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="bible-card-meta">
+                <span class="bible-cat" id="bible-cat-{idx}">{html.escape(i_cat)}</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+            </span>
+            <span class="bible-desc" id="bible-desc-{idx}">{html.escape(i_desc)}</span>
+            <span class="bible-meta" id="bible-meta-{idx}">
               <span class="bible-shots">{shots_label}</span>
-              <span style="font-size: 11px;">{status_badge}</span>
-            </div>
-          </div>
-        </div>
+              <span>{status_badge}</span>
+            </span>
+          </span>
+        </button>
         """
         bible_cards_html.append(b_card)
 
@@ -320,7 +320,8 @@ def render_project(project_dir):
         timeline_segments="\n".join(segments_html),
         shot_cards="\n".join(cards_html),
         project_data_json=project_data_json,
-        master_section=master_section
+        master_section_before=master_section if current_step is None else "",
+        master_section_after=master_section if current_step is not None else ""
     )
 
     out_file = project_path / "storyboard.html"
