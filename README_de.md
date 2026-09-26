@@ -59,6 +59,7 @@
 - [16. Sicherheit & Datenschutz](#16-sicherheit--datenschutz)
 - [17. Entwicklung, Verifikation & Qualitäts-Gates](#17-entwicklung-verifikation--qualitaets-gates)
 - [18. Gesetzlicher Hinweis, Haftungsbeschränkung & Lizenz (§ 521 BGB)](#18-gesetzlicher-hinweis-haftungsbeschraenkung--lizenz--521-bgb)
+- [19. Schwesterprojekt: `ai-media-editor`](#19-schwesterprojekt-ai-media-editor)
 
 ---
 
@@ -438,6 +439,23 @@ Die Bereitstellung dieser Software erfolgt unentgeltlich als Gefälligkeit (*une
 
 ### Lizenz
 Dieses Projekt ist unter den Bedingungen der **MIT-Lizenz** lizenziert. Siehe [LICENSE](LICENSE) und [NOTICE](NOTICE) für vollständige Urheberrechts- und Attributierungsangaben.
+
+---
+
+<a id="19-schwesterprojekt-ai-media-editor"></a>
+## 19. Schwesterprojekt: `ai-media-editor`
+
+[`ai-media-editor`](https://github.com/ellmos-ai/ai-media-editor) ist der **Cutter** zum
+**Regisseur** dieses Werkzeugs im selben Zwei-Agenten-Produktionsmodell (siehe
+[Regisseur- & Cutter-Duo](#director--editor-duo) oben): Er übernimmt den hier erzeugten
+zusammengesetzten Rohschnitt und stellt ihn fertig (nichtlinearer Schnitt, Farbkorrektur,
+Übergänge, Audio-Ducking, finales Rendering). `clip-storyboard-director` funktioniert zu
+100 % eigenständig und benötigt `ai-media-editor` nicht; ist es vorhanden, läuft die
+Projektübergabe über standardisierte XML/EDL-Dateien oder gemeinsame Projektordner.
+
+`ai-media-editor` deklariert `clip-storyboard-director` als seine optionale, auf einen
+Commit gepinnte `storyboard`-Abhängigkeit (den genauen `pip install`-Befehl trägt dessen
+eigene README) — zusammen decken beide Repositories beide Hälften des Duos ab.
 
 ---
 
