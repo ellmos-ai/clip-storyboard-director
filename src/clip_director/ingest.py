@@ -85,13 +85,17 @@ def process_inbox(project_dir, step_override=None, engine_name="ki-generator", a
     inbox_dir = project_path / "_inbox"
     inbox_dir.mkdir(parents=True, exist_ok=True)
 
+    # Im Projekt-Root liegen auch eigene Erzeugnisse: das Master-Video von assemble
+    # und Zwischendateien mit "_"-Praefix. Die duerfen nie als Take einsortiert werden.
+    master_stem = f"{data.get('project', {}).get('name', 'master')}_master"
+
     # Suche Dateien in _inbox und im Projekt-Root
     candidate_files = []
     for ext in ["*.mp4", "*.mov", "*.webm", "*.png", "*.jpg"]:
         candidate_files.extend(list(inbox_dir.glob(ext)))
         # Auch im Projekt-Root (ausserhalb bekannter Unterordner)
         for f in project_path.glob(ext):
-            if f.is_file():
+            if f.is_file() and f.stem != master_stem and not f.name.startswith("_"):
                 candidate_files.append(f)
 
     if not candidate_files:
@@ -118,6 +122,9 @@ def process_inbox(project_dir, step_override=None, engine_name="ki-generator", a
         dest_ext = media_file.suffix.lower()
         new_filename = f"shot{step_nr:02d}_{take_id}{dest_ext}"
         dest_video = project_path / "video" / new_filename
+        # video/ und frames/ fehlen in frisch geklonten Projekten (Git trackt keine leeren Ordner)
+        dest_video.parent.mkdir(parents=True, exist_ok=True)
+        (project_path / "frames").mkdir(parents=True, exist_ok=True)
 
         shutil.move(str(media_file), str(dest_video))
         print(f"[OK] Datei einsortiert: {media_file.name} -> video/{new_filename}")

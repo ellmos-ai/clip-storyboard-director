@@ -92,7 +92,7 @@ def handoff_step(project_dir, step_nr, desktop_path=None, force=False):
         data = yaml.safe_load(f)
 
     shots = data.get("shots", [])
-    target_shot = next((s for s in shots if s.get("step") == step_nr), None)
+    target_shot = next((s for s in shots if s.get("step_nr", s.get("step")) == step_nr), None)
     if not target_shot:
         print(f"[FEHLER] Step {step_nr} nicht im Projekt gefunden.", file=sys.stderr)
         sys.exit(1)
@@ -103,7 +103,7 @@ def handoff_step(project_dir, step_nr, desktop_path=None, force=False):
     # 1. Clue-Frame des vorherigen Steps ermitteln
     clue_frame_src = None
     if step_nr > 1:
-        prev_shot = next((s for s in shots if s.get("step") == step_nr - 1), None)
+        prev_shot = next((s for s in shots if s.get("step_nr", s.get("step")) == step_nr - 1), None)
         if prev_shot and prev_shot.get("clue_frame"):
             clue_frame_src = project_path / prev_shot.get("clue_frame")
 

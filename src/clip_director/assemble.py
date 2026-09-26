@@ -32,6 +32,12 @@ def ensure_voice_audio(project_path, shot):
         return None
 
     step_nr = shot.get("step_nr", 1)
+
+    # Eine im Cockpit aufgenommene Stimme hat Vorrang vor TTS
+    rendered = voice.get("rendered_file")
+    if rendered and (project_path / rendered).exists():
+        return project_path / rendered
+
     text = voice.get("source_text") or voice.get("text") or ""
     if not text:
         return None
@@ -104,7 +110,8 @@ def assemble_project(project_path):
     with open(concat_txt, "w", encoding="utf-8") as f:
         for c in valid_clips:
             # Pfad mit forward slashes
-            p_str = str(c["video"]).replace("\\", "/")
+            # concat-Demuxer: ' im Pfad muss als '\'' maskiert werden
+            p_str = str(c["video"]).replace("\\", "/").replace("'", "'\\''")
             f.write(f"file '{p_str}'\n")
 
     out_video = project_dir / f"{proj_name}_master.mp4"
@@ -133,9 +140,12 @@ def assemble_project(project_path):
         # Baue Filter für Voiceover-Timing: Jede Stimme startet zur jeweiligen Shot-Zeit
         filter_inputs = ["-i", str(temp_stitched)]
         filter_parts = []
+        offset_sec = 0
         for idx, c in enumerate(valid_clips):
             filter_inputs.extend(["-i", str(c["voice"])])
-            delay_ms = idx * 10 * 1000  # 10s pro Shot
+            # Stimme startet dort, wo der Shot im Master beginnt (Summe der Vorgaenger-Dauern)
+            delay_ms = int(offset_sec * 1000)
+            offset_sec += c["duration"]
             filter_parts.append(f"[{idx+1}:a]adelay={delay_ms}|{delay_ms},volume=1.25[a{idx+1}]")
 
         mix_inputs = "".join([f"[a{i+1}]" for i in range(len(valid_clips))])
