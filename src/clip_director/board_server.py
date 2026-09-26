@@ -486,6 +486,9 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
         try:
             from assemble import assemble_project
             out_file = assemble_project(self.project_dir)
+            if out_file is None:
+                self.send_json_response({"status": "error", "message": "Assembly fehlgeschlagen (fehlender Hero-Take oder FFmpeg-Fehler, siehe Server-Log)"}, status_code=500)
+                return
             render_project(self.project_dir)
             render_cockpit(self.project_dir)
             self.send_json_response({
