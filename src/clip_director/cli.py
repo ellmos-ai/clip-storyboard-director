@@ -99,8 +99,8 @@ def cmd_serve(args):
 
 def cmd_cockpit(args):
     """Startet das Dual-Pane Storyboard-Cockpit in Microsoft Edge."""
-    from clip_director.start_cockpit import start_cockpit
-    start_cockpit(args.project, port=args.port)
+    from clip_director.start_cockpit import launch_edge_cockpit
+    launch_edge_cockpit(args.project, server_port=args.port)
 
 
 def cmd_autopilot(args):
