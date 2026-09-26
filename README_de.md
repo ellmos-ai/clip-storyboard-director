@@ -387,6 +387,22 @@ pytest -v
 
 ---
 
+## Schwesterprojekt: `ai-media-editor`
+
+[`ai-media-editor`](https://github.com/ellmos-ai/ai-media-editor) ist der **Cutter** zum
+**Regisseur** dieses Werkzeugs im selben Zwei-Agenten-Produktionsmodell (siehe
+[Regisseur- & Cutter-Duo](#director--editor-duo) oben): Er übernimmt den hier erzeugten
+zusammengesetzten Rohschnitt und stellt ihn fertig (nichtlinearer Schnitt, Farbkorrektur,
+Übergänge, Audio-Ducking, finales Rendering). `clip-storyboard-director` funktioniert zu
+100 % eigenständig und benötigt `ai-media-editor` nicht; ist es vorhanden, läuft die
+Projektübergabe über standardisierte XML/EDL-Dateien oder gemeinsame Projektordner.
+
+`ai-media-editor` deklariert `clip-storyboard-director` als seine optionale, auf einen
+Commit gepinnte `storyboard`-Abhängigkeit (den genauen `pip install`-Befehl trägt dessen
+eigene README) — zusammen decken beide Repositories beide Hälften des Duos ab.
+
+---
+
 <p align="center">
   Teil der <strong><a href="https://github.com/ellmos-ai">ellmos-ai</a></strong> Werkzeugfamilie unter dem Dach von <strong><a href="https://github.com/open-bricks">open-bricks</a></strong>.
 </p>

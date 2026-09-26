@@ -387,6 +387,22 @@ pytest -v
 
 ---
 
+## Sister Project: `ai-media-editor`
+
+[`ai-media-editor`](https://github.com/ellmos-ai/ai-media-editor) is the **Cutter** to this
+tool's **Director** in the same two-agent production model (see
+[Director & Editor Duo](#director--editor-duo) above): it takes the assembled rough cut this
+project produces and finishes it (non-linear editing, color grading, transitions, audio
+ducking, final render). `clip-storyboard-director` operates 100% standalone and does not
+require `ai-media-editor`; where present, project handoff works via standard XML/EDL or
+shared project folders.
+
+`ai-media-editor` declares `clip-storyboard-director` as its optional, commit-pinned
+`storyboard` dependency (see its own README for the exact `pip install` command), so the
+two repositories together cover both halves of the duo.
+
+---
+
 <p align="center">
   Part of the <strong><a href="https://github.com/ellmos-ai">ellmos-ai</a></strong> suite under the <strong><a href="https://github.com/open-bricks">open-bricks</a></strong> umbrella.
 </p>
