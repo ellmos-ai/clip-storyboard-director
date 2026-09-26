@@ -10,6 +10,7 @@ from ingest import process_inbox  # noqa: E402
 
 
 def _project(tmp_path):
+    tmp_path.mkdir(parents=True, exist_ok=True)
     data = {
         "project": {"name": "t"},
         "shots": [
@@ -44,3 +45,13 @@ def test_recorded_voice_wins_over_tts(tmp_path):
     rec.write_bytes(b"mp3")
     shot = {"step_nr": 1, "voice": {"enabled": True, "text": "Hallo", "rendered_file": "voice/shot01_user_voice.mp3"}}
     assert ensure_voice_audio(tmp_path, shot) == rec
+
+
+def test_desktop_handoff_finds_shot_by_step_nr(tmp_path):
+    from desktop_handoff import handoff_step
+
+    proj = _project(tmp_path / "proj")
+    desk = tmp_path / "desk"
+    # vorher: Suche nach "step" statt "step_nr" -> sys.exit(1) mitten im Ingest-Thread
+    handoff_step(proj, 2, desk, force=True)
+    assert any(desk.iterdir())
