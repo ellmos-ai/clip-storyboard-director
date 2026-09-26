@@ -24,7 +24,7 @@
 
 - [ ] **TASK-CSD-02: Erweiterte Generator-Profile für Kling 1.5 & Runway Gen-3** (`effort=medium`, `scope=cdp`, priority `normal`).
   - **Goal:** Vorkonfigurierte CDP-Injektionsskripte und Selektor-Matrizen für weitere KI-Videogeneratoren bereitstellen.
-  - **Definition of Done:** Selektoren in `cdp_automator.py` abstrahiert und mit Mock-CDP getestet.
+  - **Definition of Done:** Selektoren in `src/clip_director/edge_bridge.py` abstrahiert und mit Mock-CDP getestet.
 
 - [x] **TASK-CSD-03: Release-Hygiene & Gate-Bereitschaft (v0.1.1)** (`effort=low`, `scope=hygiene`, priority `high`).
   - **Result:** Pfadneutralität in Templates und Watcher umgesetzt, `.gitignore` vervollständigt, `TODO.md` und `llms.txt` hinterlegt.
@@ -41,6 +41,12 @@
 - [x] **TASK-CSD-07: Pfad A Technische Hygiene, Stale Lifecycle Workflow & Multi-Host Lock Defense (2026-09-24)** (`effort=low`, `scope=hygiene`, priority `high`).
   - **Result:** .github/workflows/stale.yml (actions/stale@v9 mit timeout-minutes: 10 und Concurrency) angelegt, .gitignore um Multi-Host Machine Suffixes (*-WORKSTATION*, *-ASUS*, *-LAPTOP*, *-Mac Studio*, * (Kopie)*, * (Copy)*) und kanonische Locks (LOCK.user.*, LOCK.until.*, LOCK.condition.*, .automation-lock) gehärtet, PEP 621 Standard-URLs (Notice, Bug Tracker) und pytest minversion/norecursedirs in pyproject.toml ergänzt, NOTICE und THIRD_PARTY_LICENSES.md re-auditiert, und Vertragstestsuite erweitert.
 
+
+## TASKPLAN-Register (2026-09-20)
+
+- TASKPLAN #488 registriert für TASK-CSD-01; Quelle bleibt TODO.md, Einstufung effort=medium, scope=local, Priorität medium (TODO: normal).
+- TASKPLAN #489 registriert für TASK-CSD-02; Quelle bleibt TODO.md, Einstufung effort=medium, scope=local, Priorität medium (TODO: normal).
+- Beide Tasks sind offen; kein Task wurde ausgeführt. Die USER-Freigabe im Status bleibt unberührt.
 
 ---
 <!-- REMEMBER: ENDUSERTEXTE BEKOMMEN ECHTE UMLAUTE Ü Ö Ä ß -->
