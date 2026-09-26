@@ -130,8 +130,21 @@ def run_assembly(project_path):
         print(res.stderr, file=sys.stderr)
 
 
+def resolve_project_path(project):
+    """Akzeptiert einen Projektpfad oder einen Namen unter <repo>/projects/.
+
+    SKILL_ROOT zeigt auf src/ – der fruehere Pfad src/projects/<name> existierte nie.
+    """
+    p = Path(project)
+    if (p / "project.yaml").exists():
+        return p.resolve()
+    return SKILL_ROOT.parent / "projects" / p.name
+
+
 def run_production_loop(project_name="sternenseufzer"):
-    project_path = SKILL_ROOT / "projects" / project_name
+    project_path = resolve_project_path(project_name)
+    if not (project_path / "project.yaml").exists():
+        raise FileNotFoundError(f"project.yaml nicht gefunden: {project_path}")
     print("=" * 65)
     print(f"🚀 [AUTOPILOT] STARTE VOLLAUTONOME PRODUKTION FÜR: {project_name}")
     print("=" * 65)
@@ -160,10 +173,13 @@ def run_production_loop(project_name="sternenseufzer"):
         current_target = pending[0]
         step_nr = current_target.get("step_nr")
         slug = current_target.get("slug")
-        p_obj = (current_target.get("prompts") or [{}])[0]
+        # Aktive Prompt-Version verwenden, nicht stur die erste (wie Cockpit und /api/cowork/focus)
+        active_v = current_target.get("active_prompt_version", "v1")
+        prompts = current_target.get("prompts") or [{}]
+        p_obj = next((p for p in prompts if p.get("version") == active_v), prompts[0])
         prompt = p_obj.get("text", "")
 
-        print(f"\n▶️ [SHOT {step_nr}/4] Ziel: '{slug}' ({current_target.get('start_sec')}s–{current_target.get('end_sec')}s)")
+        print(f"\n▶️ [SHOT {step_nr}/{len(all_shots)}] Ziel: '{slug}' ({current_target.get('start_sec')}s–{current_target.get('end_sec')}s)")
         print(f"   Prompt: {prompt[:90]}...")
 
         gemini_tab = get_gemini_tab()
