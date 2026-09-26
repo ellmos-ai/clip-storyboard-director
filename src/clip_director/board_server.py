@@ -10,7 +10,6 @@ Unterstützt:
 """
 
 import argparse
-import io
 import json
 import os
 import subprocess
@@ -23,8 +22,10 @@ from urllib.parse import parse_qs, urlparse, unquote
 # Windows UTF-8 Output fix
 if sys.platform == "win32":
     try:
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+        # reconfigure statt neuem TextIOWrapper: ein neuer Wrapper schliesst beim
+        # Aufraeumen den Original-Puffer und bricht jeden Importeur (z. B. pytest)
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
     except Exception:
         pass
 
@@ -51,7 +52,25 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
         self.project_dir = Path(project_dir).resolve()
         super().__init__(*args, directory=str(self.project_dir), **kwargs)
 
+    def _request_allowed(self):
+        """Nur Anfragen an den eigenen Loopback-Server zulassen.
+
+        Host-Pruefung blockt DNS-Rebinding; Origin-Pruefung blockt fremde Webseiten,
+        die per simple POST (ohne CORS-Preflight) Aktionen ausloesen wuerden.
+        """
+        port = self.server.server_address[1]
+        allowed_hosts = {f"localhost:{port}", f"127.0.0.1:{port}", f"[::1]:{port}"}
+        if (self.headers.get("Host") or "").lower() not in allowed_hosts:
+            return False
+        origin = self.headers.get("Origin")
+        if origin is not None and origin.lower() not in {f"http://{h}" for h in allowed_hosts}:
+            return False
+        return True
+
     def do_GET(self):
+        if not self._request_allowed():
+            self.send_error(403, "Forbidden")
+            return
         parsed = urlparse(self.path)
         if parsed.path in ["/", "/index.html"]:
             self.path = "/storyboard.html"
@@ -88,6 +107,9 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
+        if not self._request_allowed():
+            self.send_error(403, "Forbidden")
+            return
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
 
@@ -205,7 +227,8 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
             step_nr = int(params.get("step", [1])[0])
             content_length = int(self.headers.get("Content-Length", 0))
             raw_filename = params.get("filename", [f"upload_shot{step_nr:02d}.mp4"])[0]
-            original_filename = unquote(raw_filename)
+            # Nur der Dateiname zaehlt: "../" oder absolute Pfade duerfen die Inbox nicht verlassen
+            original_filename = Path(unquote(raw_filename).replace("\\", "/")).name or f"upload_shot{step_nr:02d}.mp4"
 
             inbox = self.project_dir / "_inbox"
             inbox.mkdir(parents=True, exist_ok=True)
@@ -531,7 +554,6 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
         self.send_response(status_code)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(body)
 
