@@ -8,6 +8,7 @@ import argparse
 import json
 import socket
 import subprocess
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -127,12 +128,15 @@ try {{
 
 
 def download_media(url, dest_path):
+    # urllib oeffnet auch file:// und ftp:// – hier nur Web-Downloads zulassen
+    if urllib.parse.urlparse(url).scheme.lower() not in ("http", "https"):
+        raise ValueError(f"Nur http(s)-URLs erlaubt: {url[:80]}")
     dest = Path(dest_path)
     dest.parent.mkdir(parents=True, exist_ok=True)
     req = urllib.request.Request(url, headers={
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     })
-    with urllib.request.urlopen(req) as resp, open(dest, "wb") as f:
+    with urllib.request.urlopen(req, timeout=120) as resp, open(dest, "wb") as f:
         f.write(resp.read())
     return dest
 

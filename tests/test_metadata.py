@@ -97,7 +97,9 @@ def test_quick_navigation_anchors():
 
         # Extract markdown anchor links [Text](#anchor)
         anchor_links = re.findall(r"\[([^\]]+)\]\(#([^\)]+)\)", content)
-        assert len(anchor_links) == 18, f"Expected exactly 18 quick nav links in {filename}, got {len(anchor_links)}"
+        # 18 Quick Navigation entries + section 19 ("Sister Project") added
+        # 2026-09-27, plus its one in-body cross-reference back to section 3.
+        assert len(anchor_links) == 20, f"Expected exactly 20 quick nav links in {filename}, got {len(anchor_links)}"
 
         # Extract headers ## Header Title
         headers = re.findall(r"^#{2,4}\s+(.+)$", content, re.MULTILINE)

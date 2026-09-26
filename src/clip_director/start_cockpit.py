@@ -15,7 +15,9 @@ import time
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-SKILL_ROOT = SCRIPT_DIR.parent
+# SCRIPT_DIR is src/clip_director/; the repo root (where projects/ lives) is two
+# levels up, not one -- SCRIPT_DIR.parent is only src/.
+SKILL_ROOT = SCRIPT_DIR.parent.parent
 DEFAULT_EDGE_PATH = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 DEFAULT_EDGE_PORT = 9222
 DEFAULT_SERVER_PORT = 8765
@@ -75,8 +77,22 @@ def create_desktop_shortcut(url="http://localhost:8765/cockpit", edge_port=DEFAU
         print(f"[HINWEIS] Konnte LNK nicht anlegen: {e}")
 
 
-def launch_edge_cockpit(project_name="sternenseufzer", edge_port=DEFAULT_EDGE_PORT, server_port=DEFAULT_SERVER_PORT):
-    project_path = SKILL_ROOT / "projects" / project_name
+def resolve_project_path(project_arg):
+    """Resolve a --project argument the same way the other subcommands do:
+    a bare name means projects/<name>, a path (relative or absolute) is used
+    as-is relative to the repo root. Never prepend "projects/" a second time
+    if the caller already included it (T-20260927 cockpit path bug)."""
+    project_path = Path(project_arg)
+    if not project_path.is_absolute():
+        parts = project_path.parts
+        if not parts or parts[0] != "projects":
+            project_path = Path("projects") / project_path
+        project_path = SKILL_ROOT / project_path
+    return project_path
+
+
+def launch_edge_cockpit(project_name="projects/sternenseufzer", edge_port=DEFAULT_EDGE_PORT, server_port=DEFAULT_SERVER_PORT):
+    project_path = resolve_project_path(project_name)
     if not project_path.exists():
         print(f"[FEHLER] Projektverzeichnis {project_path} existiert nicht.", file=sys.stderr)
         sys.exit(1)
