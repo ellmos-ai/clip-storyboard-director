@@ -18,6 +18,28 @@ except ImportError:
 SCRIPT_DIR = Path(__file__).resolve().parent
 TEMPLATE_PATH = SCRIPT_DIR / "dashboard_template.html"
 
+
+def _esc(value):
+    """HTML-Escaping fuer beliebige YAML-Werte (auch Zahlen/None)."""
+    return html.escape(str(value))
+
+
+def _js_arg(value):
+    """String-Argument fuer einen JS-Aufruf in einem HTML-Attribut.
+
+    json.dumps liefert ein korrekt maskiertes JS-Stringliteral, html.escape schuetzt
+    das umgebende Attribut; der HTML-Parser dekodiert &quot; wieder zu ".
+    Frueher: '{html.escape(name)}' - &#x27; wird vom Parser zu ' und bricht aus.
+    """
+    return html.escape(json.dumps(str(value)))
+
+
+def _script_json(data):
+    """JSON fuer einen <script>-Block: </script> und <!-- duerfen nicht auftauchen."""
+    return (json.dumps(data, ensure_ascii=False)
+            .replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+            .replace("\u2028", "\\u2028").replace("\u2029", "\\u2029"))
+
 def render_project(project_dir):
     project_path = Path(project_dir).resolve()
     yaml_file = project_path / "project.yaml"
@@ -77,10 +99,10 @@ def render_project(project_dir):
 
         if hero_video_rel and (project_path / hero_video_rel).exists():
             preview_inner = f'<video controls loop src="{html.escape(hero_video_rel)}" poster="{html.escape(clue_img or "")}"></video>'
-            badge_text = f"Hero Video ({s.get('selected_take')})"
+            badge_text = f"Hero Video ({_esc(s.get('selected_take'))})"
         elif clue_img and (project_path / clue_img).exists():
             preview_inner = f'<img src="{html.escape(clue_img)}" alt="Clue Frame" draggable="true" ondragstart="onAssetDragStart(event, this, \'shot{step_nr:02d}_clueframe\')" class="draggable-asset" title="Greifen & in externen Chat ziehen">'
-            badge_text = f"Hero Frame ({s.get('selected_take')})"
+            badge_text = f"Hero Frame ({_esc(s.get('selected_take'))})"
         elif takes:
             preview_inner = '<span>Take(s) vorhanden, noch kein Hero-Video</span>'
             badge_text = f"{len(takes)} Take(s)"
@@ -150,7 +172,7 @@ def render_project(project_dir):
           <div class="shot-body">
             <button type="button" class="prompt-box" onclick="copyShotPromptOnly({step_nr}, \'plain\')" title="Visuellen Prompt ohne Dialoganweisung kopieren">
               <span class="p-title">
-                <span>Prompt {active_v}</span>
+                <span>Prompt {_esc(active_v)}</span>
                 <span class="copy-hint-pill">Kopieren</span>
               </span>
               <span class="prompt-text">{html.escape(prompt_text)}</span>
@@ -215,14 +237,14 @@ def render_project(project_dir):
         shots_label = f"Shots: {', '.join(appearing_shots)}" if appearing_shots else "Projektweit relevant"
 
         if i_ref and (project_path / i_ref).exists():
-            thumb_html = f'<img src="{html.escape(i_ref)}" alt="{html.escape(i_name)}" draggable="true" ondragstart="onAssetDragStart(event, this, \'{html.escape(i_name)}\')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span>'
+            thumb_html = f'<img src="{html.escape(i_ref)}" alt="{html.escape(i_name)}" draggable="true" ondragstart="onAssetDragStart(event, this, {_js_arg(i_name)})" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span>'
             status_badge = '<span class="status-ok">bereit</span>'
         else:
             thumb_html = '<span>Offen</span>'
             status_badge = '<span class="status-warn">Vorlage fehlt</span>'
 
         b_card = f"""
-        <button type="button" class="bible-card" onclick="copyBibleItem('{i_id}')" aria-label="Konsistenz-Element {html.escape(i_name)} kopieren" aria-describedby="bible-cat-{idx} bible-desc-{idx} bible-meta-{idx}" title="Bild und Prompt kopieren">
+        <button type="button" class="bible-card" onclick="copyBibleItem({_js_arg(i_id)})" aria-label="Konsistenz-Element {html.escape(i_name)} kopieren" aria-describedby="bible-cat-{idx} bible-desc-{idx} bible-meta-{idx}" title="Bild und Prompt kopieren">
           <span class="bible-thumb">{thumb_html}</span>
           <span class="bible-info">
             <span class="bible-title">
@@ -252,7 +274,7 @@ def render_project(project_dir):
         "shots": {s.get("step_nr"): s for s in shots},
         "bible": bible_dict
     }
-    project_data_json = json.dumps(project_client_data, ensure_ascii=False)
+    project_data_json = _script_json(project_client_data)
 
     proj_name = proj.get("name", "master")
     master_file = project_path / f"{proj_name}_master.mp4"
@@ -279,7 +301,7 @@ def render_project(project_dir):
       <div class="master-title-group">
         <span class="premiere-badge">Masterfilm fertig</span>
         <h2>{html.escape(proj.get("title") or proj_name)}</h2>
-        <span class="master-specs-tag">{proj.get("total_duration_sec", 40)} s · {proj.get("aspect_ratio", "16:9")} · {proj.get("fps", 24)} fps</span>
+        <span class="master-specs-tag">{_esc(proj.get("total_duration_sec", 40))} s · {_esc(proj.get("aspect_ratio", "16:9"))} · {_esc(proj.get("fps", 24))} fps</span>
       </div>
       <div class="master-actions">
         <button class="btn-master-action btn-explorer" onclick="openProjectFolder()" title="Öffnet den Projektordner im Windows Explorer und markiert das Master-Video">Im Explorer zeigen</button>
@@ -304,13 +326,13 @@ def render_project(project_dir):
     rendered = html_template.format(
         project_title=html.escape(proj.get("title") or proj.get("name") or "Clip"),
         project_name=html.escape(proj.get("name") or "clip"),
-        project_created=proj.get("created", "2026-09-07"),
-        total_duration=proj.get("total_duration_sec", 30),
-        step_duration=proj.get("step_duration_sec", 10),
+        project_created=_esc(proj.get("created", "2026-09-07")),
+        total_duration=_esc(proj.get("total_duration_sec", 30)),
+        step_duration=_esc(proj.get("step_duration_sec", 10)),
         step_count=len(shots),
-        aspect_ratio=proj.get("aspect_ratio", "16:9"),
-        resolution=proj.get("resolution", "1080p"),
-        fps=proj.get("fps", 24),
+        aspect_ratio=_esc(proj.get("aspect_ratio", "16:9")),
+        resolution=_esc(proj.get("resolution", "1080p")),
+        fps=_esc(proj.get("fps", 24)),
         genre=html.escape(proj.get("default_genre", "Cinematic")),
         characters_str=html.escape(characters_str),
         props_str=html.escape(props_str),
