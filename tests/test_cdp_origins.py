@@ -26,3 +26,16 @@ def test_edge_and_shortcut_start_without_remote_allow_origins(monkeypatch, tmp_p
     flat = " ".join(" ".join(map(str, c)) for c in calls)
     assert "--remote-debugging-port" in flat, "Edge-Start und Verknuepfung muessen erfasst sein"
     assert "remote-allow-origins" not in flat
+
+
+def test_cli_autopilot_passes_full_project_path(monkeypatch, tmp_path):
+    from clip_director import cli
+
+    seen = []
+    monkeypatch.setattr("clip_director.auto_pilot.run_production_loop", lambda p: seen.append(p))
+
+    class Args:
+        project = str(tmp_path / "elsewhere" / "film")
+
+    cli.cmd_autopilot(Args())
+    assert seen == [Args.project]

@@ -106,8 +106,9 @@ def cmd_cockpit(args):
 def cmd_autopilot(args):
     """Startet den Autopiloten für browsergestützte Videogenerierung."""
     from clip_director.auto_pilot import run_production_loop
-    proj_name = Path(args.project).name
-    run_production_loop(proj_name)
+    # Vollen Pfad durchreichen: auto_pilot.resolve_project_path nimmt Ordner oder Namen;
+    # nur .name verlor Projekte ausserhalb von <repo>/projects/
+    run_production_loop(args.project)
 
 
 def cmd_assemble(args):
