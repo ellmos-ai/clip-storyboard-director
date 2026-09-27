@@ -63,7 +63,7 @@ def create_desktop_shortcut(url="http://localhost:8765/cockpit", edge_port=DEFAU
     $WshShell = New-Object -comObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut('{lnk_path}')
     $Shortcut.TargetPath = '{DEFAULT_EDGE_PATH}'
-    $Shortcut.Arguments = '--app="{url}" --remote-debugging-port={edge_port} --remote-allow-origins=* --user-data-dir="{user_data}" --no-first-run'
+    $Shortcut.Arguments = '--app="{url}" --remote-debugging-port={edge_port} --user-data-dir="{user_data}" --no-first-run'
     $Shortcut.IconLocation = '{DEFAULT_EDGE_PATH},0'
     $Shortcut.Save()
     """
@@ -124,8 +124,11 @@ def launch_edge_cockpit(project_name="projects/sternenseufzer", edge_port=DEFAUL
     cmd = [
         DEFAULT_EDGE_PATH,
         f"--app={cockpit_url}",
+        # Kein --remote-allow-origins: Edge lehnt dann WebSocket-Verbindungen mit
+        # fremdem Origin ab (Webseiten im eingeloggten Cockpit-Profil). Unsere
+        # Node-Clients (edge_bridge, link_resolver) senden keinen Origin und
+        # verbinden weiterhin (gemessen 2026-09-27: fremder Origin 403, Node 101).
         f"--remote-debugging-port={edge_port}",
-        "--remote-allow-origins=*",
         f"--user-data-dir={user_data}",
         "--no-first-run",
         "--no-default-browser-check",
