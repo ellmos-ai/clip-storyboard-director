@@ -1,3 +1,4 @@
+import html
 import json
 import re
 import sys
@@ -8,9 +9,9 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "clip_director"))
 
-from render_dashboard import render_project  # noqa: E402
+from render_dashboard import _js_arg, _script_json, render_project  # noqa: E402
 
-EVIL = "x');alert(1);//</script><script>alert(2)</script>"
+EVIL = "x');alert(1);//\"</script><script>alert(2)</script> <!--"
 
 
 class _Attrs(HTMLParser):
@@ -51,3 +52,13 @@ def test_yaml_values_cannot_break_out_of_script_or_handlers(tmp_path):
     for handler in parser.handlers:
         arg = re.search(r"\((?:event, this, )?(.*)\)$", handler).group(1)
         assert json.loads(arg) == EVIL
+
+
+def test_helpers_escape_directly():
+    # Schutz gegen Rueckbau: die Helfer selbst muessen maskieren, nicht nur der Aufrufer
+    out = _script_json({"k": EVIL})
+    assert "<" not in out and ">" not in out and "&" not in out and " " not in out
+    assert json.loads(out) == {"k": EVIL}
+    arg = _js_arg(EVIL)
+    assert "'" not in arg and '"' not in arg  # nur &quot; / &#x27; im Attribut
+    assert json.loads(html.unescape(arg)) == EVIL
