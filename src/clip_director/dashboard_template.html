@@ -249,11 +249,14 @@
       padding: 10px 14px;
       font-weight: 600;
       font-size: 13.5px;
-      display: flex; justify-content: space-between; gap: 10px;
+      display: flex; align-items: baseline; gap: 6px;
     }}
-    details.panel > summary::after {{ content: '▸'; color: var(--muted); }}
-    details.panel[open] > summary::after {{ content: '▾'; }}
-    details.panel > summary .hint {{ color: var(--muted); font-weight: 400; font-size: 12px; }}
+    details.panel > summary .count {{ color: var(--muted); font-weight: 500; margin-left: 6px; }}
+    details.panel > summary::before, .shot-more > summary::before {{ content: "▸"; display: inline-block; width: 1em; color: var(--muted); }}
+    details.panel[open] > summary::before, .shot-more[open] > summary::before {{ content: "▾"; }}
+    details.panel > summary, .shot-more > summary {{ list-style: none; }}
+    details.panel > summary::-webkit-details-marker, .shot-more > summary::-webkit-details-marker {{ display: none; }}
+    details.panel > summary .hint {{ color: var(--muted); font-weight: 400; font-size: 12px; margin-left: auto; }}
     details.panel > .panel-body {{ padding: 0 14px 14px; }}
     .persistence-grid {{
       display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -371,16 +374,8 @@
     {timeline_segments}
   </nav>
 
-{master_section_before}
-
-  <div class="shot-grid">
-    {shot_cards}
-  </div>
-
-{master_section_after}
-
-  <details class="panel" data-panel="persistence">
-    <summary><span>Persistenzpuffer</span><span class="hint">Charaktere, Requisiten, Orte, Gegenstände</span></summary>
+  <details class="panel" data-panel="persistence" open>
+    <summary><span>Persistenzpuffer <span class="count">{persistence_count}</span></span><span class="hint">Charaktere, Requisiten, Orte, Gegenstände</span></summary>
     <div class="panel-body">
       <div class="persistence-grid">
         <div class="p-group">
@@ -403,8 +398,8 @@
     </div>
   </details>
 
-  <details class="panel" data-panel="bible">
-    <summary><span>Konsistenz-Kartei</span><span class="hint">Referenzbilder und Vorlagen</span></summary>
+  <details class="panel" data-panel="bible" open>
+    <summary><span>Konsistenz-Kartei <span class="count">{bible_count}</span></span><span class="hint">Referenzbilder und Vorlagen</span></summary>
     <div class="panel-body">
       <p class="bible-subtitle">
         Klicken kopiert Bild, Prompt und Spezifikation in die Zwischenablage. Bilder lassen sich per Drag &amp; Drop in externe KI-Chats ziehen.
@@ -414,6 +409,16 @@
       </div>
     </div>
   </details>
+
+{master_section_before}
+
+  <div class="shot-grid">
+    {shot_cards}
+  </div>
+
+{master_section_after}
+
+
 
   <div id="toast" role="status" aria-live="polite"></div>
 
@@ -784,7 +789,7 @@ PERSISTENZ-PUFFER (Elemente im Bild):
     // Auf-/Zu-Zustand der Nebenbereiche merken (ueberlebt die Reloads nach Aktionen)
     document.querySelectorAll('details[data-panel]').forEach(d => {{
       const key = 'csd-panel-' + d.dataset.panel;
-      try {{ if (localStorage.getItem(key) === 'open') d.open = true; }} catch (e) {{}}
+      try {{ const s = localStorage.getItem(key); if (s === 'closed') d.open = false; else if (s === 'open') d.open = true; }} catch (e) {{}}
       d.addEventListener('toggle', () => {{
         try {{ localStorage.setItem(key, d.open ? 'open' : 'closed'); }} catch (e) {{}}
       }});
