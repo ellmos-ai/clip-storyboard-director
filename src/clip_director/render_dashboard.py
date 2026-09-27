@@ -163,7 +163,7 @@ def render_project(project_dir):
         <div class="shot-card{current_cls}" id="shot-{step_nr}">
           <div class="shot-header">
             <div class="step-tag" id="shot-title-{step_nr}">{step_nr:02d} · {html.escape(slug)}{current_pill}</div>
-            <div class="time-tag">{start:02d}–{end:02d} s</div>
+            <div class="time-tag">{start:02d}–{end:02d} s ({html.escape(str(s.get("duration_sec", end - start)))} s)</div>
           </div>
           <div class="shot-preview">
             {preview_inner}
@@ -182,7 +182,7 @@ def render_project(project_dir):
               <button class="btn-fetch-link" onclick="fetchVideoLink({step_nr})" aria-describedby="shot-title-{step_nr}">Abholen</button>
             </div>
             {voice_html}
-            <details class="shot-more">
+            <details class="shot-more" open>
               <summary aria-describedby="shot-title-{step_nr}">Kamera, Licht &amp; Ton</summary>
               <div>
                 <div class="grammar-row">
@@ -342,6 +342,8 @@ def render_project(project_dir):
         timeline_segments="\n".join(segments_html),
         shot_cards="\n".join(cards_html),
         project_data_json=project_data_json,
+        persistence_count=f"({sum(len(p_buf.get(k, []) or []) for k in ('characters', 'props', 'locations', 'objects'))})",
+        bible_count=f"({len(bible_entries)} Karten, {sum(1 for i in bible_entries if i.get('reference_image') and (project_path / i['reference_image']).exists())} mit Bild)",
         master_section_before=master_section if current_step is None else "",
         master_section_after=master_section if current_step is not None else ""
     )

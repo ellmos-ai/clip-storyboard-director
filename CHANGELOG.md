@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- **Ruhigeres Cockpit (Storyboard + Bridge)**: Eine Akzentfarbe statt sechs, keine Glows, Verläufe und Hover-Sprünge, deutlich weniger Emojis; `prefers-reduced-motion` wird respektiert, Textkontraste erfüllen WCAG AA. Timeline und Shots stehen oben (Timeline bleibt beim Scrollen sichtbar), Persistenzpuffer und Konsistenz-Kartei sind einklappbar (Zustand wird gemerkt), Kamera/Licht/Ton je Shot ebenfalls. Der aktuelle Shot ist in Timeline und Karte markiert; die Bridge-Spalte zeigt ihn zuerst, den Iframe-Hinweis nur noch auf Klick.
+- **Ruhigeres Cockpit (Storyboard + Bridge)**: Eine Akzentfarbe statt sechs, keine Glows, Verläufe und Hover-Sprünge, deutlich weniger Emojis; `prefers-reduced-motion` wird respektiert, Textkontraste erfüllen WCAG AA. Die Timeline steht oben und bleibt beim Scrollen sichtbar; Persistenzpuffer und Konsistenz-Kartei folgen direkt darunter, standardmäßig aufgeklappt, mit Zählern im Kopf und einklappbar (Zustand wird gemerkt); Kamera/Licht/Ton je Shot ist ebenfalls aufgeklappt. Keine Funktion entfernt (Inventar in PR #3). Der aktuelle Shot ist in Timeline und Karte markiert; die Bridge-Spalte zeigt ihn zuerst, den Iframe-Hinweis nur noch auf Klick.
 - **Ehrliche Statusanzeigen**: Download-Überwachung und CDP-Status werden vom Server gelesen statt statisch „Aktiv“ bzw. „Autopilot aktiv“ anzuzeigen; `/api/cowork/focus` liefert `has_hero`, damit das Cockpit „alle Shots fertig“ erkennt.
 
 ### Added
