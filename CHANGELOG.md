@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Ruhigeres Cockpit (Storyboard + Bridge)**: Eine Akzentfarbe statt sechs, keine Glows, Verläufe und Hover-Sprünge, deutlich weniger Emojis; `prefers-reduced-motion` wird respektiert, Textkontraste erfüllen WCAG AA. Die Timeline steht oben und bleibt beim Scrollen sichtbar; Persistenzpuffer und Konsistenz-Kartei folgen direkt darunter, standardmäßig aufgeklappt, mit Zählern im Kopf und einklappbar (Zustand wird gemerkt); Kamera/Licht/Ton je Shot ist ebenfalls aufgeklappt. Keine Funktion entfernt (Inventar in PR #3). Der aktuelle Shot ist in Timeline und Karte markiert; die Bridge-Spalte zeigt ihn zuerst, den Iframe-Hinweis nur noch auf Klick.
+- **Ehrliche Statusanzeigen**: Download-Überwachung und CDP-Status werden vom Server gelesen statt statisch „Aktiv“ bzw. „Autopilot aktiv“ anzuzeigen; `/api/cowork/focus` liefert `has_hero`, damit das Cockpit „alle Shots fertig“ erkennt.
+
 ### Added
 - **Stale Issues & PRs Lifecycle Automation**: Added `.github/workflows/stale.yml` using `actions/stale@v9` with least-privilege permissions (`issues: write`, `pull-requests: write`), `timeout-minutes: 10`, concurrency group cancellation, and automated 30-day stale / 7-day close lifecycle.
 - **Extended Multi-Host Sync & Lock Defense (.gitignore)**: Hardened `.gitignore` against cross-device conflict copies (`*conflicted copy*`, `* (Kopie)*`, `* (Copy)*`, `*-WORKSTATION*`, `*-WORKSTATION-LG*`, `*-ASUS*`, `*-ASUS-GEI*`, `*-LAPTOP*`, `*-Mac Studio*`, `*-MacBook*`), canonical lock-system files (`LOCK.user.*`, `LOCK.until.*`, `LOCK.condition.*`, `.automation-lock`), patch rejects (`*.rej`), merge remnants (`*.orig`), and tooling caches (`.tox/`, `.turbo/`, `.nyc_output/`, `.hypothesis/`).

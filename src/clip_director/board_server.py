@@ -391,6 +391,7 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
                 "targetId": f"shot_{step_nr}",
                 "step_nr": step_nr,
                 "slug": target_shot.get("slug", ""),
+                "has_hero": bool(target_shot.get("selected_take")),
                 "timeframe": f"{target_shot.get('start_sec', 0)}s-{target_shot.get('end_sec', 10)}s",
                 "active_prompt": p_obj.get("text", ""),
                 "clue_frame": target_shot.get("clue_frame"),

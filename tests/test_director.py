@@ -21,8 +21,8 @@ def test_project_lifecycle(tmp_path):
     assert html_dashboard.exists(), "storyboard.html should be created"
     content = html_dashboard.read_text(encoding="utf-8")
     assert "test_clip" in content
-    assert "Step 01" in content
-    assert "Step 02" in content
+    assert 'id="shot-1"' in content
+    assert 'id="shot-2"' in content
 
     # 3. Render cockpit
     html_cockpit = render_cockpit(proj_dir)

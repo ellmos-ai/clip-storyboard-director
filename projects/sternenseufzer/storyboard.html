@@ -5,730 +5,345 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sternenseufzer — Storyboard Director</title>
   <style>
+    /* Ruhige Palette: eine Akzentfarbe fuer Aktionen/Fokus, Statusfarben nur fuer Status.
+       Kontraste gegen --surface >= 4.5:1 (WCAG AA). */
     :root {
-      --bg-dark: #0f1117;
-      --card-bg: #1a1d27;
-      --card-border: #2a2f3f;
-      --accent-blue: #3b82f6;
-      --accent-cyan: #06b6d4;
-      --accent-green: #10b981;
-      --accent-amber: #f59e0b;
-      --accent-purple: #8b5cf6;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
+      --bg: #0f1115;
+      --surface: #171a21;
+      --surface-2: #1d2129;
+      --border: #2a2f3a;
+      --text: #e6e8ec;
+      --muted: #a0a6b2;
+      --accent: #6ea8f7;
+      --accent-strong: #2f6fd6;
+      --ok: #5cc29a;
+      --warn: #e0b060;
+      --danger: #f08080;
+      --radius: 8px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-main);
-      padding: 24px;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
       line-height: 1.5;
+      font-size: 14px;
     }
-    header {
-      background: linear-gradient(135deg, #1e2433 0%, #111520 100%);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .header-title h1 {
-      font-size: 26px;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .header-title p { color: var(--text-muted); font-size: 13.5px; margin-top: 4px; }
-    .meta-badges { display: flex; gap: 8px; flex-wrap: wrap; }
-    .badge {
-      padding: 6px 12px;
+    code { font-family: Consolas, ui-monospace, monospace; font-size: 0.92em; color: var(--muted); }
+    button, .btn { font: inherit; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* Einheitliche Buttons: neutral; nur .is-primary traegt Akzentfarbe */
+    .btn-watcher-toggle, .btn-copy-card, .btn-fetch-link, .audio-toggle-btn, .rec-btn,
+    .save-voice-btn, .btn-copy-shot, .btn-master-action, .btn-jumper {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 10px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
-    .badge-blue { background: rgba(59, 130, 246, 0.15); border-color: var(--accent-blue); color: #93c5fd; }
-    .badge-green { background: rgba(16, 185, 129, 0.15); border-color: var(--accent-green); color: #6ee7b7; }
-    .badge-amber { background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber); color: #fcd34d; }
-    .badge-purple { background: rgba(139, 92, 246, 0.15); border-color: var(--accent-purple); color: #c4b5fd; }
+    .btn-watcher-toggle:hover, .btn-copy-card:hover, .btn-fetch-link:hover, .audio-toggle-btn:hover,
+    .rec-btn:hover, .save-voice-btn:hover, .btn-copy-shot:hover, .btn-master-action:hover, .btn-jumper:hover {
+      border-color: var(--accent);
+    }
+    [hidden] { display: none !important; }
+    .btn-download { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }
+    .rec-btn.recording { border-color: var(--danger); color: var(--danger); }
 
-    /* Watcher Banner */
+    /* Kopf: kompakt, Metadaten als ruhige Textzeile */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      padding: 4px 2px 14px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-title h1 { font-size: 20px; font-weight: 700; }
+    .header-title p { color: var(--muted); font-size: 12.5px; }
+    .meta-badges { color: var(--muted); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+    /* Watcher-Zeile */
     .watcher-bar {
-      background: #141824;
-      border: 1px solid #2d354b;
-      border-radius: 10px;
-      padding: 12px 18px;
-      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
-      font-size: 13px;
-    }
-    .watcher-status-text {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #d1d5db;
-    }
-    .watcher-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 8px var(--accent-green);
-    }
-    .watcher-dot.paused {
-      background: var(--accent-amber);
-      box-shadow: 0 0 8px var(--accent-amber);
-    }
-    .btn-watcher-toggle {
-      background: rgba(59, 130, 246, 0.2);
-      border: 1px solid var(--accent-blue);
-      color: #93c5fd;
-      padding: 5px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-watcher-toggle:hover { background: rgba(59, 130, 246, 0.4); }
-
-    /* Persistenzpuffer Banner */
-    .persistence-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 16px 20px;
-      margin-bottom: 20px;
-    }
-    .persistence-box h3 {
-      font-size: 13.5px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--accent-cyan);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .persistence-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      font-size: 12.5px;
-    }
-    .p-group strong { color: #e5e7eb; display: block; margin-bottom: 3px; }
-    .p-group span { color: var(--text-muted); }
-
-    /* Consistency Bible */
-    .bible-box {
-      background: #141824;
-      border: 1px solid #2d354b;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-    .bible-box h2 {
-      font-size: 17px;
-      color: #f3f4f6;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
       gap: 10px;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 14px;
     }
-    .bible-box p.bible-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-    .bible-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 16px;
-    }
-    .bible-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 14px;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    }
-    .bible-card:hover {
-      border-color: rgba(59, 130, 246, 0.6);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-    }
-    .bible-thumb {
-      width: 80px;
-      height: 80px;
-      border-radius: 6px;
-      background: #10131d;
-      border: 1px dashed #374151;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: var(--text-muted);
-      flex-shrink: 0;
-      overflow: hidden;
-      position: relative;
-    }
-    .bible-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .drag-badge {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      background: rgba(0, 0, 0, 0.8);
-      color: #93c5fd;
-      font-size: 8.5px;
-      font-weight: 700;
-      padding: 1px 4px;
-      border-radius: 3px;
-      pointer-events: none;
-    }
-    .draggable-asset {
-      cursor: grab !important;
-      transition: transform 0.15s ease, filter 0.15s ease;
-    }
-    .draggable-asset:active { cursor: grabbing !important; }
-    .draggable-asset:hover { filter: brightness(1.1); }
+    .watcher-status-text { display: flex; align-items: center; gap: 8px; }
+    .watcher-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex-shrink: 0; }
+    .watcher-dot.paused { background: var(--warn); }
+    .watcher-dot.off { background: var(--muted); }
 
-    .bible-info { flex: 1; font-size: 12px; }
-    .bible-title {
-      font-weight: 700;
-      color: #fff;
-      font-size: 13.5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .bible-cat {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd;
-    }
-    .bible-desc { color: var(--text-muted); margin: 5px 0; font-size: 11.5px; line-height: 1.4; }
-    .bible-shots { color: var(--accent-cyan); font-weight: 600; font-size: 11px; }
-
-    .btn-copy-card {
-      background: rgba(59, 130, 246, 0.2);
-      border: 1px solid var(--accent-blue);
-      color: #bfdbfe;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-copy-card:hover { background: rgba(59, 130, 246, 0.4); color: #fff; }
-
-    /* Timeline Navigation */
+    /* Timeline: bleibt oben sichtbar */
     .timeline-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
       display: flex;
-      margin-bottom: 24px;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #181c28;
-      border: 1px solid var(--card-border);
-      height: 38px;
+      margin: 0 -20px 16px;
+      padding: 8px 20px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      gap: 4px;
+      overflow-x: auto;
     }
     .timeline-segment {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      flex: 1 0 98px;
+      text-align: center;
       font-size: 12px;
       font-weight: 600;
-      border-right: 1px solid var(--card-border);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
+      padding: 6px 4px;
+      border-radius: 6px;
+      color: var(--muted);
       text-decoration: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom-width: 3px;
     }
-    .timeline-segment:last-child { border-right: none; }
-    .timeline-segment:hover { background: rgba(59, 130, 246, 0.2); color: #fff; }
-    .timeline-segment.done { background: rgba(16, 185, 129, 0.15); color: #10b981; border-bottom: 3px solid #10b981; }
-    .timeline-segment.active { background: rgba(59, 130, 246, 0.25); color: #60a5fa; border-bottom: 3px solid #3b82f6; }
+    .timeline-segment:hover { color: var(--text); border-color: var(--accent); }
+    .timeline-segment.done { color: var(--text); border-bottom-color: var(--ok); }
+    .timeline-segment.active { color: var(--text); border-color: var(--accent); background: var(--surface-2); }
 
-    /* Shot Cards */
+    /* Shot-Karten */
     .shot-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
     }
     .shot-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s, border-color 0.2s;
+      scroll-margin-top: 64px;
     }
-    .shot-card:hover {
-      border-color: rgba(59, 130, 246, 0.5);
-      transform: translateY(-2px);
-    }
+    .shot-card.is-current { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+    .shot-card.drag-over { border-color: var(--ok) !important; border-style: dashed; }
     .shot-header {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--card-border);
+      padding: 10px 14px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
     }
-    .shot-header .step-tag {
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .shot-header .step-tag { font-size: 14px; font-weight: 700; }
+    .shot-header .time-tag { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .current-pill {
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      border: 1px solid var(--accent); border-radius: 999px; padding: 0 7px; margin-left: 6px;
     }
-    .shot-header .time-tag {
-      font-size: 12px;
-      color: var(--accent-cyan);
-      font-family: monospace;
-      font-weight: 600;
-    }
-
     .shot-preview {
-      height: 200px;
-      background: #11141e;
+      aspect-ratio: 16 / 9;
+      background: #0b0d11;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-muted);
-      font-size: 13px;
+      color: var(--muted);
+      font-size: 12.5px;
       position: relative;
-      border-bottom: 1px solid var(--card-border);
       overflow: hidden;
     }
-    .shot-preview img, .shot-preview video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .shot-preview img, .shot-preview video { width: 100%; height: 100%; object-fit: cover; }
     .preview-badge {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(4px);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #e5e7eb;
-      pointer-events: none;
+      position: absolute; bottom: 6px; right: 6px;
+      background: rgba(0, 0, 0, 0.75); color: var(--text);
+      padding: 2px 7px; border-radius: 4px; font-size: 11px; pointer-events: none;
     }
+    .shot-body { padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
 
-    .shot-body { padding: 18px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
-
-    /* Link Import Bar */
-    .link-import-bar {
-      display: flex;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.25);
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
+    .link-import-bar { display: flex; gap: 6px; }
     .link-import-bar input {
-      flex: 1;
-      background: #131722;
-      border: 1px solid #2d354b;
-      border-radius: 4px;
-      color: #f3f4f6;
-      font-size: 12px;
-      padding: 6px 10px;
-      outline: none;
+      flex: 1; min-width: 0;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); font-size: 12.5px; padding: 6px 10px;
     }
-    .link-import-bar input:focus { border-color: var(--accent-blue); }
-    .btn-fetch-link {
-      background: rgba(59, 130, 246, 0.25);
-      border: 1px solid var(--accent-blue);
-      color: #bfdbfe;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-    .btn-fetch-link:hover { background: rgba(59, 130, 246, 0.45); color: #fff; }
-
-    .grammar-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      font-size: 12px;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 10px;
-      border-radius: 6px;
-    }
-    .grammar-row div strong { color: #d1d5db; display: block; }
-    .grammar-row div span { color: var(--text-muted); }
+    .link-import-bar input::placeholder { color: var(--muted); }
+    .link-import-bar input:focus { border-color: var(--accent); }
 
     .prompt-box {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+      width: 100%;
+      text-align: left;
+      color: var(--text);
+      font: inherit;
+      background: var(--bg);
+      border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 12px;
+      padding: 10px 12px;
       cursor: pointer;
-      position: relative;
-      transition: all 0.2s ease;
     }
-    .prompt-box:hover {
-      border-color: var(--accent-amber);
-      background: rgba(245, 158, 11, 0.05);
-      box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
-      transform: scale(1.005);
-    }
+    .prompt-box:hover { border-color: var(--accent); }
     .prompt-box .p-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-amber);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em;
+      margin-bottom: 4px; display: flex; justify-content: space-between; gap: 8px;
     }
-    .prompt-box p { font-size: 12.5px; color: #e5e7eb; font-style: italic; }
+    .prompt-box .prompt-text { display: block; font-size: 13px; color: var(--text); }
+    .copy-hint-pill { font-size: 11px; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--muted); }
 
-    .copy-hint-pill {
-      font-size: 10px;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 4px;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      color: #fde68a;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .audio-matrix {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+    /* Sekundaere Angaben je Shot: einklappbar */
+    .shot-more > summary { cursor: pointer; font-size: 12px; color: var(--muted); font-weight: 600; }
+    .shot-more > summary:hover { color: var(--text); }
+    .shot-more[open] > summary { margin-bottom: 8px; }
+    .shot-more > div { display: flex; flex-direction: column; gap: 10px; }
+    .grammar-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 12px; }
+    .grammar-row div strong { color: var(--muted); font-weight: 600; display: block; font-size: 11px; }
+    .audio-matrix { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
     .audio-pill {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      background: #232736;
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
+      font-size: 11px; padding: 2px 8px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--muted);
     }
-    .audio-pill.active {
-      background: rgba(16, 185, 129, 0.12);
-      border-color: rgba(16, 185, 129, 0.4);
-      color: #6ee7b7;
-    }
-    .audio-toggle-btn {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid var(--accent-purple);
-      color: #d8b4fe;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .audio-toggle-btn:hover { background: rgba(139, 92, 246, 0.4); }
+    .audio-pill.active { color: var(--text); border-color: var(--ok); }
 
     .voice-box {
-      font-size: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      background: rgba(139, 92, 246, 0.1);
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      color: #d8b4fe;
+      font-size: 12.5px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      display: flex; flex-direction: column; gap: 4px;
     }
-    .shot-card.drag-over {
-      border-color: var(--accent-green) !important;
-      box-shadow: 0 0 24px rgba(16, 185, 129, 0.45);
-      transform: scale(1.02);
-    }
-    .rec-btn {
-      background: rgba(139, 92, 246, 0.25);
-      border: 1px solid var(--accent-purple);
-      color: #e9d5ff;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .rec-btn:hover { background: rgba(139, 92, 246, 0.45); }
-    .rec-btn.recording {
-      background: rgba(239, 68, 68, 0.3);
-      border-color: #ef4444;
-      color: #fca5a5;
-      animation: pulse-rec 1s infinite alternate;
-    }
-    @keyframes pulse-rec {
-      0% { opacity: 0.7; transform: scale(0.98); }
-      100% { opacity: 1; transform: scale(1.02); }
-    }
-    .save-voice-btn {
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid var(--accent-green);
-      color: #a7f3d0;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .save-voice-btn:hover { background: rgba(16, 185, 129, 0.4); }
-
-    .btn-copy-shot {
-      background: rgba(245, 158, 11, 0.2);
-      border: 1px solid var(--accent-amber);
-      color: #fde68a;
-      padding: 4px 10px;
-      border-radius: 5px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .btn-copy-shot:hover { background: rgba(245, 158, 11, 0.35); color: #fff; }
+    .voice-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .voice-line strong { color: var(--muted); font-weight: 600; }
+    .voice-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .rec-timer { color: var(--danger); font-weight: 700; font-size: 11px; }
 
     .shot-footer {
       margin-top: auto;
       padding-top: 10px;
-      border-top: 1px solid var(--card-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11.5px;
-      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
     }
-    .takes-count { font-weight: 600; color: #9ca3af; }
+    .takes-count { font-weight: 600; }
 
-    /* Toast Notification */
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #111827;
-      border: 1px solid var(--accent-blue);
-      color: #f8fafc;
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13.5px;
-      font-weight: 500;
-      z-index: 99999;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      pointer-events: none;
+    /* Einklappbare Nebenbereiche (Puffer, Kartei) */
+    details.panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
     }
-    #toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    #toast.toast-success { border-color: var(--accent-green); background: #06281e; color: #a7f3d0; }
-    #toast.toast-info { border-color: var(--accent-blue); background: #111c38; color: #bfdbfe; }
-    #toast.toast-error { border-color: #ef4444; background: #2f0d0d; color: #fecaca; }
-
-    /* Master Film Premiere Player */
-    .master-player-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98));
-      border: 2px solid rgba(59, 130, 246, 0.6);
-      border-radius: 12px;
-      padding: 22px;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(59, 130, 246, 0.2);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .master-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .master-title-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .premiere-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: #67e8f9;
-      background: rgba(6, 182, 212, 0.15);
-      border: 1px solid rgba(6, 182, 212, 0.35);
-      padding: 3px 10px;
-      border-radius: 999px;
-      width: fit-content;
-    }
-    .master-header h2 {
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0;
-    }
-    .master-specs-tag {
-      font-size: 12.5px;
-      color: #94a3b8;
-    }
-    .master-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .btn-master-action {
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 12.5px;
+    details.panel > summary {
+      cursor: pointer;
+      padding: 10px 14px;
       font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      transition: all 0.2s;
+      font-size: 13.5px;
+      display: flex; align-items: baseline; gap: 6px;
     }
-    .btn-explorer {
-      background: #1e293b;
-      border: 1px solid #475569;
-      color: #e2e8f0;
+    details.panel > summary .count { color: var(--muted); font-weight: 500; margin-left: 6px; }
+    details.panel > summary::before, .shot-more > summary::before { content: "▸"; display: inline-block; width: 1em; color: var(--muted); }
+    details.panel[open] > summary::before, .shot-more[open] > summary::before { content: "▾"; }
+    details.panel > summary, .shot-more > summary { list-style: none; }
+    details.panel > summary::-webkit-details-marker, .shot-more > summary::-webkit-details-marker { display: none; }
+    details.panel > summary .hint { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: auto; }
+    details.panel > .panel-body { padding: 0 14px 14px; }
+    .persistence-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px; font-size: 12.5px;
     }
-    .btn-explorer:hover {
-      background: #334155;
-      border-color: #94a3b8;
-      color: #fff;
-      transform: translateY(-1px);
+    .p-group strong { display: block; margin-bottom: 2px; }
+    .p-group span { color: var(--muted); }
+    .bible-subtitle { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
+    .bible-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 10px; }
+    .bible-card {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+      width: 100%; text-align: left; color: var(--text); font: inherit;
     }
-    .btn-download {
-      background: linear-gradient(135deg, #2563eb, #06b6d4);
-      border: none;
-      color: white;
-      box-shadow: 0 2px 10px rgba(6, 182, 212, 0.25);
+    .bible-card:hover { border-color: var(--accent); }
+    .bible-thumb {
+      width: 64px; height: 64px; border-radius: 4px; background: var(--bg);
+      border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--muted); flex-shrink: 0; overflow: hidden; position: relative;
     }
-    .btn-download:hover {
-      filter: brightness(1.15);
-      transform: translateY(-1px);
+    .bible-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .drag-badge { display: none; }
+    .draggable-asset { cursor: grab; }
+    .draggable-asset:active { cursor: grabbing; }
+    .bible-info { flex: 1; min-width: 0; font-size: 12px; }
+    .bible-title { font-weight: 700; font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+    .bible-card-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+    .bible-cat { font-size: 11px; color: var(--muted); font-weight: 500; }
+    .bible-desc { display: block; color: var(--muted); margin: 4px 0; font-size: 12px; line-height: 1.4; }
+    .bible-meta { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-top: 4px; }
+    .bible-shots { color: var(--muted); font-size: 11.5px; }
+    .status-ok { color: var(--ok); }
+    .status-warn { color: var(--warn); }
+
+    .cowork-offer-banner {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 12px; margin: 10px 0; font-size: 12px;
     }
-    .btn-assemble {
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid #8b5cf6;
-      color: #ddd6fe;
+    .cowork-offer-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .cowork-offer-summary { margin-top: 4px; color: var(--muted); }
+    .cowork-offer-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .cowork-offer-accept { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 20px; right: 20px;
+      background: var(--surface-2); border: 1px solid var(--border); border-left-width: 4px;
+      color: var(--text); padding: 10px 16px; border-radius: 6px;
+      font-size: 13px; z-index: 99999; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
     }
-    .btn-assemble:hover {
-      background: rgba(139, 92, 246, 0.35);
-      transform: translateY(-1px);
+    #toast.show { opacity: 1; }
+    #toast.toast-success { border-left-color: var(--ok); }
+    #toast.toast-info { border-left-color: var(--accent); }
+    #toast.toast-error { border-left-color: var(--danger); }
+
+    /* Master-Film */
+    .master-player-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px;
     }
-    .btn-handoff {
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid #10b981;
-      color: #a7f3d0;
+    .master-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+    .master-title-group { display: flex; flex-direction: column; gap: 2px; }
+    .premiere-badge { font-size: 11px; font-weight: 600; color: var(--ok); text-transform: uppercase; letter-spacing: 0.04em; }
+    .master-header h2 { font-size: 16px; font-weight: 700; }
+    .master-specs-tag { font-size: 12px; color: var(--muted); }
+    .master-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .master-video-wrapper { border-radius: 6px; overflow: hidden; background: #000; }
+    .master-video-wrapper video { width: 100%; max-height: 480px; display: block; background: #000; }
+    .master-timeline-jumpers { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .jumper-label { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 1000px) {
+      body { padding: 14px; }
+      .shot-grid { grid-template-columns: minmax(0, 1fr); }
+      .shot-preview { max-height: 280px; }
+      .shot-preview img, .shot-preview video { object-fit: contain; }
+      .timeline-bar { margin: 0 -14px 16px; padding: 8px 14px; }
     }
-    .btn-handoff:hover {
-      background: rgba(16, 185, 129, 0.35);
-      color: #fff;
-      transform: translateY(-1px);
+    @media (max-width: 480px) {
+      .link-import-bar { flex-wrap: wrap; }
+      .link-import-bar input { flex-basis: 100%; }
+      details.panel > summary { flex-wrap: wrap; }
     }
-    .master-video-wrapper {
-      position: relative;
-      width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #000;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    }
-    .master-video-wrapper video {
-      width: 100%;
-      max-height: 540px;
-      display: block;
-      background: #000;
-    }
-    .master-timeline-jumpers {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 12px 16px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .jumper-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #94a3b8;
-    }
-    .btn-jumper {
-      background: #1e2538;
-      border: 1px solid #374151;
-      color: #cbd5e1;
-      padding: 5px 12px;
-      border-radius: 5px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-jumper:hover {
-      background: rgba(59, 130, 246, 0.25);
-      border-color: #3b82f6;
-      color: #93c5fd;
-      transform: translateY(-1px);
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
     }
   </style>
 </head>
@@ -736,253 +351,225 @@
 
   <header>
     <div class="header-title">
-      <h1>🎬 Sternenseufzer</h1>
-      <p>Projekt: <code>sternenseufzer</code> | Erstellt: 2026-09-07 | Gesamtdauer: 40s</p>
+      <h1>Sternenseufzer</h1>
+      <p>Projekt <code>sternenseufzer</code> · erstellt 2026-09-07 · 40 s gesamt</p>
     </div>
     <div class="meta-badges">
-      <div class="badge badge-blue">📐 16:9 (1080p)</div>
-      <div class="badge badge-purple">⏱️ 4 Shots à ~10s</div>
-      <div class="badge badge-amber">🎞️ 24 FPS</div>
-      <div class="badge badge-green">🎨 Poetisch-Philosophischer Sci-Fi / Kosmischer Realismus</div>
+      <span>16:9 · 1080p</span>
+      <span>4 Shots à ~10 s</span>
+      <span>24 fps</span>
+      <span>Poetisch-Philosophischer Sci-Fi / Kosmischer Realismus</span>
     </div>
   </header>
 
   <div class="watcher-bar" id="watcher-bar">
     <div class="watcher-status-text">
-      <div class="watcher-dot" id="watcher-dot"></div>
-      <span><strong>Download-Ordner Überwachung:</strong> <span id="watcher-label">Aktiv</span> (<code id="watcher-folder">~/Downloads</code>)</span>
+      <div class="watcher-dot off" id="watcher-dot"></div>
+      <span>Download-Überwachung: <span id="watcher-label">wird geprüft …</span> <code id="watcher-folder"></code></span>
     </div>
-    <button class="btn-watcher-toggle" id="watcher-toggle-btn" onclick="toggleWatcher()">⏸️ Überwachung pausieren</button>
+    <button class="btn-watcher-toggle" id="watcher-toggle-btn" onclick="toggleWatcher()" hidden>Überwachung pausieren</button>
   </div>
 
-  
-  <!-- MASTER FILM PREMIERE SECTION -->
-  <section class="master-player-card" id="master-player">
-    <div class="master-header">
-      <div class="master-title-group">
-        <span class="premiere-badge">🎉 MASTER CLIP BEREIT</span>
-        <h2>🎬 Sternenseufzer — Masterfilm</h2>
-        <span class="master-specs-tag">⏱️ 40s Cut • 16:9 • 24 FPS • de-DE-ConradNeural Voiceover & Veo Raumklang</span>
-      </div>
-      <div class="master-actions">
-        <button class="btn-master-action btn-explorer" onclick="openProjectFolder()" title="Öffnet den Projektordner im Windows Explorer und markiert das Master-Video">📁 Ordner im Explorer öffnen</button>
-        <a href="sternenseufzer_master.mp4" download="sternenseufzer_master.mp4" class="btn-master-action btn-download" title="Master-Video lokal speichern">📥 Video herunterladen (16.81 MB)</a>
-        <button class="btn-master-action btn-handoff" onclick="handoffToMediaEditor()" title="Übergibt das Master-Video an ai-media-editor zur Whisper-Transkription & Nachbearbeitung">✂️ An ai-media-editor übergeben</button>
-        <button class="btn-master-action btn-assemble" onclick="triggerReassemble()" title="Führt FFmpeg-Assembly erneut aus">🔄 Neu schneiden</button>
-      </div>
-    </div>
-    <div class="master-video-wrapper">
-      <video id="main-master-video" controls playsinline preload="metadata" poster="frames/shot01_v01_lastframe.png">
-        <source src="sternenseufzer_master.mp4" type="video/mp4">
-        Dein Browser unterstützt die HTML5-Videowiedergabe nicht.
-      </video>
-    </div>
-    <div class="master-timeline-jumpers">
-      <span class="jumper-label">Kapitel / Direktsprung:</span>
-      <button class="btn-jumper" onclick="jumpMasterVideo(0)" title="Sprung zu Shot 1 (0s)">▶️ Shot 1 (0s) • opening-sternenhuegel</button>
-      <button class="btn-jumper" onclick="jumpMasterVideo(10)" title="Sprung zu Shot 2 (10s)">▶️ Shot 2 (10s) • kosmischer-dialog</button>
-      <button class="btn-jumper" onclick="jumpMasterVideo(20)" title="Sprung zu Shot 3 (20s)">▶️ Shot 3 (20s) • ferne-juwelen</button>
-      <button class="btn-jumper" onclick="jumpMasterVideo(30)" title="Sprung zu Shot 4 (30s)">▶️ Shot 4 (30s) • sehnsucht-gute-nacht</button>
-    </div>
-  </section>
+  <nav class="timeline-bar" aria-label="Shot-Timeline">
+    <a href="#shot-1" class="timeline-segment done">#1 · 0–10 s</a>
+<a href="#shot-2" class="timeline-segment done">#2 · 10–20 s</a>
+<a href="#shot-3" class="timeline-segment done">#3 · 20–30 s</a>
+<a href="#shot-4" class="timeline-segment done">#4 · 30–40 s</a>
+  </nav>
 
-
-  <div class="persistence-box">
-    <h3>📌 Persistenzpuffer (Übersicht)</h3>
-    <div class="persistence-grid">
-      <div class="p-group">
-        <strong>🎭 Charaktere</strong>
-        <span>Der Träumer: Silhouette eines jungen Mannes im wehenden Mantel, windzerzaustes Haar, im Profil gegen das Sternenlicht</span>
-      </div>
-      <div class="p-group">
-        <strong>🗡️ Requisiten</strong>
-        <span>Die Sternenstaub-Hand: Menschliche Handfläche, gegen die Sterne geöffnet, zarte Lichtfunken an den Fingerspitzen</span>
-      </div>
-      <div class="p-group">
-        <strong>🏙️ Orte / Kulisse</strong>
-        <span>Der Sternenhügel: Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme im Gegenlicht; Der tiefe Kosmos: Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und samtigem Tiefenlicht</span>
-      </div>
-      <div class="p-group">
-        <strong>📦 Gegenstände</strong>
-        <span>Die sprechenden Sonnen-Sterne: Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder und Protuberanzen</span>
+  <details class="panel" data-panel="persistence" open>
+    <summary><span>Persistenzpuffer <span class="count">(5)</span></span><span class="hint">Charaktere, Requisiten, Orte, Gegenstände</span></summary>
+    <div class="panel-body">
+      <div class="persistence-grid">
+        <div class="p-group">
+          <strong>Charaktere</strong>
+          <span>Der Träumer: Silhouette eines jungen Mannes im wehenden Mantel, windzerzaustes Haar, im Profil gegen das Sternenlicht</span>
+        </div>
+        <div class="p-group">
+          <strong>Requisiten</strong>
+          <span>Die Sternenstaub-Hand: Menschliche Handfläche, gegen die Sterne geöffnet, zarte Lichtfunken an den Fingerspitzen</span>
+        </div>
+        <div class="p-group">
+          <strong>Orte / Kulisse</strong>
+          <span>Der Sternenhügel: Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme im Gegenlicht; Der tiefe Kosmos: Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und samtigem Tiefenlicht</span>
+        </div>
+        <div class="p-group">
+          <strong>Gegenstände</strong>
+          <span>Die sprechenden Sonnen-Sterne: Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder und Protuberanzen</span>
+        </div>
       </div>
     </div>
-  </div>
+  </details>
 
-  <div class="bible-box">
-    <h2>🗂️ Konsistenz-Kartei (Asset- & Vorlagen-Karteikarten)</h2>
-    <p class="bible-subtitle">
-      Automatisch aggregiert aus allen Shots: Für jedes wiederkehrende Element (Charaktere, Requisiten, Schauplätze) wird hier eine Karteikarte geführt.
-      <strong>Klicken:</strong> Prompt + Bild + Spezifikationen in Zwischenablage kopieren. 
-      <strong>Ziehen (Drag & Drop):</strong> Bild greifen und direkt in externe KI-Chats (Gemini, Discord etc.) ziehen.
-    </p>
-    <div class="bible-grid">
-      
-        <div class="bible-card" onclick="copyBibleItem('char_traeumer')" title="Klicken: Bild & Prompt in Zwischenablage kopieren">
-          <div class="bible-thumb"><img src="assets/refs/ref_traeumer.png" alt="Der Träumer" draggable="true" ondragstart="onAssetDragStart(event, this, 'Der Träumer')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><div class="drag-badge">🤏 Drag</div></div>
-          <div class="bible-info">
-            <div class="bible-title">
+  <details class="panel" data-panel="bible" open>
+    <summary><span>Konsistenz-Kartei <span class="count">(5 Karten, 5 mit Bild)</span></span><span class="hint">Referenzbilder und Vorlagen</span></summary>
+    <div class="panel-body">
+      <p class="bible-subtitle">
+        Klicken kopiert Bild, Prompt und Spezifikation in die Zwischenablage. Bilder lassen sich per Drag &amp; Drop in externe KI-Chats ziehen.
+      </p>
+      <div class="bible-grid">
+        
+        <button type="button" class="bible-card" onclick="copyBibleItem('char_traeumer')" aria-label="Konsistenz-Element Der Träumer kopieren" aria-describedby="bible-cat-0 bible-desc-0 bible-meta-0" title="Bild und Prompt kopieren">
+          <span class="bible-thumb"><img src="assets/refs/ref_traeumer.png" alt="Der Träumer" draggable="true" ondragstart="onAssetDragStart(event, this, 'Der Träumer')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span></span>
+          <span class="bible-info">
+            <span class="bible-title">
               <span>Der Träumer</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <span class="bible-cat">Charakter</span>
-                <button class="btn-copy-card" onclick="event.stopPropagation(); copyBibleItem('char_traeumer')" title="Kopiert Bild + Konsistenz-Prompt für Image-Generatoren">⚡ Kopieren</button>
-              </div>
-            </div>
-            <p class="bible-desc">Silhouette eines nachdenklichen Mannes im Mantel, windzerzaustes Haar, im Profil gegen das Sternenlicht.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="bible-card-meta">
+                <span class="bible-cat" id="bible-cat-0">Charakter</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+            </span>
+            <span class="bible-desc" id="bible-desc-0">Silhouette eines nachdenklichen Mannes im Mantel, windzerzaustes Haar, im Profil gegen das Sternenlicht.</span>
+            <span class="bible-meta" id="bible-meta-0">
               <span class="bible-shots">Shots: #1, #4</span>
-              <span style="font-size: 11px;"><span style="color: var(--accent-green);">✅ Bereit</span></span>
-            </div>
-          </div>
-        </div>
+              <span><span class="status-ok">bereit</span></span>
+            </span>
+          </span>
+        </button>
         
 
-        <div class="bible-card" onclick="copyBibleItem('loc_huegel')" title="Klicken: Bild & Prompt in Zwischenablage kopieren">
-          <div class="bible-thumb"><img src="assets/refs/ref_sternenhuegel.png" alt="Der Sternenhügel" draggable="true" ondragstart="onAssetDragStart(event, this, 'Der Sternenhügel')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><div class="drag-badge">🤏 Drag</div></div>
-          <div class="bible-info">
-            <div class="bible-title">
+        <button type="button" class="bible-card" onclick="copyBibleItem('loc_huegel')" aria-label="Konsistenz-Element Der Sternenhügel kopieren" aria-describedby="bible-cat-1 bible-desc-1 bible-meta-1" title="Bild und Prompt kopieren">
+          <span class="bible-thumb"><img src="assets/refs/ref_sternenhuegel.png" alt="Der Sternenhügel" draggable="true" ondragstart="onAssetDragStart(event, this, 'Der Sternenhügel')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span></span>
+          <span class="bible-info">
+            <span class="bible-title">
               <span>Der Sternenhügel</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <span class="bible-cat">Ort / Kulisse</span>
-                <button class="btn-copy-card" onclick="event.stopPropagation(); copyBibleItem('loc_huegel')" title="Kopiert Bild + Konsistenz-Prompt für Image-Generatoren">⚡ Kopieren</button>
-              </div>
-            </div>
-            <p class="bible-desc">Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme im Gegenlicht.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="bible-card-meta">
+                <span class="bible-cat" id="bible-cat-1">Ort / Kulisse</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+            </span>
+            <span class="bible-desc" id="bible-desc-1">Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme im Gegenlicht.</span>
+            <span class="bible-meta" id="bible-meta-1">
               <span class="bible-shots">Shots: #1, #4</span>
-              <span style="font-size: 11px;"><span style="color: var(--accent-green);">✅ Bereit</span></span>
-            </div>
-          </div>
-        </div>
+              <span><span class="status-ok">bereit</span></span>
+            </span>
+          </span>
+        </button>
         
 
-        <div class="bible-card" onclick="copyBibleItem('obj_sonnenstern')" title="Klicken: Bild & Prompt in Zwischenablage kopieren">
-          <div class="bible-thumb"><img src="assets/refs/ref_sonnensterne.png" alt="Die sprechenden Sonnen-Sterne" draggable="true" ondragstart="onAssetDragStart(event, this, 'Die sprechenden Sonnen-Sterne')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><div class="drag-badge">🤏 Drag</div></div>
-          <div class="bible-info">
-            <div class="bible-title">
+        <button type="button" class="bible-card" onclick="copyBibleItem('obj_sonnenstern')" aria-label="Konsistenz-Element Die sprechenden Sonnen-Sterne kopieren" aria-describedby="bible-cat-2 bible-desc-2 bible-meta-2" title="Bild und Prompt kopieren">
+          <span class="bible-thumb"><img src="assets/refs/ref_sonnensterne.png" alt="Die sprechenden Sonnen-Sterne" draggable="true" ondragstart="onAssetDragStart(event, this, 'Die sprechenden Sonnen-Sterne')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span></span>
+          <span class="bible-info">
+            <span class="bible-title">
               <span>Die sprechenden Sonnen-Sterne</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <span class="bible-cat">Gegenstand</span>
-                <button class="btn-copy-card" onclick="event.stopPropagation(); copyBibleItem('obj_sonnenstern')" title="Kopiert Bild + Konsistenz-Prompt für Image-Generatoren">⚡ Kopieren</button>
-              </div>
-            </div>
-            <p class="bible-desc">Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder und Protuberanzen.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="bible-card-meta">
+                <span class="bible-cat" id="bible-cat-2">Gegenstand</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+            </span>
+            <span class="bible-desc" id="bible-desc-2">Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder und Protuberanzen.</span>
+            <span class="bible-meta" id="bible-meta-2">
               <span class="bible-shots">Shots: #2, #3</span>
-              <span style="font-size: 11px;"><span style="color: var(--accent-green);">✅ Bereit</span></span>
-            </div>
-          </div>
-        </div>
+              <span><span class="status-ok">bereit</span></span>
+            </span>
+          </span>
+        </button>
         
 
-        <div class="bible-card" onclick="copyBibleItem('loc_kosmos')" title="Klicken: Bild & Prompt in Zwischenablage kopieren">
-          <div class="bible-thumb"><img src="assets/refs/ref_kosmos.png" alt="Der tiefe Kosmos" draggable="true" ondragstart="onAssetDragStart(event, this, 'Der tiefe Kosmos')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><div class="drag-badge">🤏 Drag</div></div>
-          <div class="bible-info">
-            <div class="bible-title">
+        <button type="button" class="bible-card" onclick="copyBibleItem('loc_kosmos')" aria-label="Konsistenz-Element Der tiefe Kosmos kopieren" aria-describedby="bible-cat-3 bible-desc-3 bible-meta-3" title="Bild und Prompt kopieren">
+          <span class="bible-thumb"><img src="assets/refs/ref_kosmos.png" alt="Der tiefe Kosmos" draggable="true" ondragstart="onAssetDragStart(event, this, 'Der tiefe Kosmos')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span></span>
+          <span class="bible-info">
+            <span class="bible-title">
               <span>Der tiefe Kosmos</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <span class="bible-cat">Ort / Kulisse</span>
-                <button class="btn-copy-card" onclick="event.stopPropagation(); copyBibleItem('loc_kosmos')" title="Kopiert Bild + Konsistenz-Prompt für Image-Generatoren">⚡ Kopieren</button>
-              </div>
-            </div>
-            <p class="bible-desc">Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und sanftem Tiefenlicht.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="bible-card-meta">
+                <span class="bible-cat" id="bible-cat-3">Ort / Kulisse</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+            </span>
+            <span class="bible-desc" id="bible-desc-3">Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und sanftem Tiefenlicht.</span>
+            <span class="bible-meta" id="bible-meta-3">
               <span class="bible-shots">Shots: #2, #3</span>
-              <span style="font-size: 11px;"><span style="color: var(--accent-green);">✅ Bereit</span></span>
-            </div>
-          </div>
-        </div>
+              <span><span class="status-ok">bereit</span></span>
+            </span>
+          </span>
+        </button>
         
 
-        <div class="bible-card" onclick="copyBibleItem('prop_hand')" title="Klicken: Bild & Prompt in Zwischenablage kopieren">
-          <div class="bible-thumb"><img src="assets/refs/ref_hand.png" alt="Die Sternenstaub-Hand" draggable="true" ondragstart="onAssetDragStart(event, this, 'Die Sternenstaub-Hand')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><div class="drag-badge">🤏 Drag</div></div>
-          <div class="bible-info">
-            <div class="bible-title">
+        <button type="button" class="bible-card" onclick="copyBibleItem('prop_hand')" aria-label="Konsistenz-Element Die Sternenstaub-Hand kopieren" aria-describedby="bible-cat-4 bible-desc-4 bible-meta-4" title="Bild und Prompt kopieren">
+          <span class="bible-thumb"><img src="assets/refs/ref_hand.png" alt="Die Sternenstaub-Hand" draggable="true" ondragstart="onAssetDragStart(event, this, 'Die Sternenstaub-Hand')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span></span>
+          <span class="bible-info">
+            <span class="bible-title">
               <span>Die Sternenstaub-Hand</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <span class="bible-cat">Requisite</span>
-                <button class="btn-copy-card" onclick="event.stopPropagation(); copyBibleItem('prop_hand')" title="Kopiert Bild + Konsistenz-Prompt für Image-Generatoren">⚡ Kopieren</button>
-              </div>
-            </div>
-            <p class="bible-desc">Menschliche Handfläche, gegen die Sterne geöffnet, zarte Rauch-/Lichtfäden an den Fingerspitzen.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="bible-card-meta">
+                <span class="bible-cat" id="bible-cat-4">Requisite</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+            </span>
+            <span class="bible-desc" id="bible-desc-4">Menschliche Handfläche, gegen die Sterne geöffnet, zarte Rauch-/Lichtfäden an den Fingerspitzen.</span>
+            <span class="bible-meta" id="bible-meta-4">
               <span class="bible-shots">Shots: #4</span>
-              <span style="font-size: 11px;"><span style="color: var(--accent-green);">✅ Bereit</span></span>
-            </div>
-          </div>
-        </div>
+              <span><span class="status-ok">bereit</span></span>
+            </span>
+          </span>
+        </button>
         
+      </div>
     </div>
-  </div>
+  </details>
 
-  <div class="timeline-bar">
-    <a href="#shot-1" class="timeline-segment done">#1 (0-10s)</a>
-<a href="#shot-2" class="timeline-segment done">#2 (10-20s)</a>
-<a href="#shot-3" class="timeline-segment done">#3 (20-30s)</a>
-<a href="#shot-4" class="timeline-segment done">#4 (30-40s)</a>
-  </div>
+
 
   <div class="shot-grid">
     
         <div class="shot-card" id="shot-1">
           <div class="shot-header">
-            <div class="step-tag">Step 01: opening-sternenhuegel</div>
-            <div class="time-tag">00s – 10s (10s)</div>
+            <div class="step-tag" id="shot-title-1">01 · opening-sternenhuegel</div>
+            <div class="time-tag">00–10 s (10 s)</div>
           </div>
           <div class="shot-preview">
-            <video controls loop src="video/shot01_v01.mp4" poster="frames/shot01_v01_lastframe.png"></video>
-            <div class="preview-badge">Hero Video (v01)</div>
+            <img src="frames/shot01_v01_lastframe.png" alt="Clue Frame" draggable="true" ondragstart="onAssetDragStart(event, this, 'shot01_clueframe')" class="draggable-asset" title="Greifen & in externen Chat ziehen">
+            <div class="preview-badge">Hero Frame (v01)</div>
           </div>
           <div class="shot-body">
+            <button type="button" class="prompt-box" onclick="copyShotPromptOnly(1, 'plain')" title="Visuellen Prompt ohne Dialoganweisung kopieren">
+              <span class="p-title">
+                <span>Prompt v1</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+              <span class="prompt-text">A solitary silhouette of a thoughtful man in a long coat standing on a grassy hilltop next to an ancient gnarled oak tree at night, looking up at an immense breathtaking starry sky filled with luminous constellations, slow upward crane camera movement, cinematic 8k, Terence Malick style, tranquil, philosophical</span>
+            </button>
             <div class="link-import-bar">
-              <input type="text" id="link-input-1" placeholder="Gemini Sharelink oder Video-URL einfügen...">
-              <button class="btn-fetch-link" onclick="fetchVideoLink(1)">📥 Abholen</button>
-            </div>
-            <div class="grammar-row">
-              <div><strong>Perspektive</strong><span>Extreme Wide Shot, untersichtig vom Hügelfuß</span></div>
-              <div><strong>Kameraführung</strong><span>Langsame Kranfahrt aufwärts in Richtung Nachthimmel</span></div>
-              <div><strong>Licht/Farbe</strong><span>Tiefblaues Mondlicht, samtige Schatten, funkelnder Himmelsglanz</span></div>
-              <div><strong>Dynamik</strong><span>Stärke 2/10</span></div>
-            </div>
-            <div class="prompt-box" onclick="copyShotPromptOnly(1, 'plain')" title="Klicken: Reinen visuellen Prompt in Zwischenablage kopieren (ohne Sprachen-Mix)">
-              <div class="p-title">
-                <span>Visueller Prompt (Version v1)</span>
-                <span class="copy-hint-pill">⚡ Klick = Prompt kopieren</span>
-              </div>
-              <p>"A solitary silhouette of a thoughtful man in a long coat standing on a grassy hilltop next to an ancient gnarled oak tree at night, looking up at an immense breathtaking starry sky filled with luminous constellations, slow upward crane camera movement, cinematic 8k, Terence Malick style, tranquil, philosophical"</p>
+              <input type="text" id="link-input-1" aria-label="Video-Link für Shot 1" placeholder="Gemini-Sharelink oder Video-URL">
+              <button class="btn-fetch-link" onclick="fetchVideoLink(1)" aria-describedby="shot-title-1">Abholen</button>
             </div>
             <div class="voice-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span>🎙️ <strong>Voice & Dialog (de-DE-ConradNeural):</strong></span>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span class="rec-timer" id="rec-timer-1" style="display:none; color: #ef4444; font-weight: 700; font-size: 11px;">● 00:00</span>
-                  <button class="rec-btn" id="rec-btn-1" onclick="toggleRecord(1)">🎙️ Aufnahme</button>
-                </div>
+              <div class="voice-head">
+                <span><strong>Sprecher:</strong> de-DE-ConradNeural</span>
+                <span>
+                  <span class="rec-timer" id="rec-timer-1" style="display:none;">● 00:00</span>
+                  <button class="rec-btn" id="rec-btn-1" onclick="toggleRecord(1)" aria-describedby="shot-title-1">Aufnehmen</button>
+                </span>
               </div>
-              <div style="font-size: 12.5px; color: #f3f4f6; margin-bottom: 2px;">
-                <strong style="color: #e9d5ff;">🇩🇪 Source (DE):</strong> <em style="color: #e9d5ff;">"Ich träum von den Sternen, die dort oben weit entfernt leuchten lernen und seufzen: Ach, warum sind wir nur so weit weg von den Menschen, die uns lieben?"</em>
-              </div>
-              <div style="margin-top: 4px; font-size: 12px; color: #a5b4fc;"><strong style="color: #93c5fd;">🇬🇧 EN Translation:</strong> <em>"I dream of the stars, learning to shine far away up there and sighing: Ah, why are we so far away from the people who love us?"</em></div>
-              <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="copyShotPromptOnly(1, 'de')" title="Visueller Prompt + deutsche Dialoganweisung">📋 Prompt + 🇩🇪 DE</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;" onclick="copyShotPromptOnly(1, 'en')" title="Visueller Prompt + englische Dialoganweisung">📋 Prompt + 🇬🇧 EN</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(107, 114, 128, 0.2); border-color: #6b7280; color: #d1d5db;" onclick="copyShotPromptOnly(1, 'silent')" title="Visueller Prompt + Stumm-Direktive">🔇 Prompt + Stumm</button>
+              <div class="voice-line"><strong>DE:</strong> „Ich träum von den Sternen, die dort oben weit entfernt leuchten lernen und seufzen: Ach, warum sind wir nur so weit weg von den Menschen, die uns lieben?“</div>
+              <div class="voice-line"><strong>EN:</strong> „I dream of the stars, learning to shine far away up there and sighing: Ah, why are we so far away from the people who love us?“</div>
+              <div class="voice-actions">
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(1, 'de')" aria-describedby="shot-title-1" title="Visueller Prompt + deutsche Dialoganweisung">Prompt + DE</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(1, 'en')" aria-describedby="shot-title-1" title="Visueller Prompt + englische Dialoganweisung">Prompt + EN</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(1, 'silent')" aria-describedby="shot-title-1" title="Visueller Prompt + Stumm-Direktive">Prompt + stumm</button>
               </div>
               <div id="voice-player-1"></div>
             </div>
-            <div class="audio-matrix">
-              <span class="audio-pill ">🔇 Spur 1: In-Video (Mute)</span>
-              <button class="audio-toggle-btn" onclick="toggleAudioTrack(1)" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
-              <span class="audio-pill active">Spur 2: Bett</span>
-              <span class="audio-pill active">Spur 3: MIDI</span>
-              <span class="audio-pill active">Spur 4: SFX</span>
-            </div>
-            <div class="shot-footer">
-              <span class="takes-count">1 Take(s) generiert</span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span>Übergang: dissolve_1s</span>
-                <button class="btn-copy-shot" onclick="copyShotDetails(1)" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">⚡ Prompt & Specs</button>
+            <details class="shot-more" open>
+              <summary aria-describedby="shot-title-1">Kamera, Licht &amp; Ton</summary>
+              <div>
+                <div class="grammar-row">
+                  <div><strong>Perspektive</strong><span>Extreme Wide Shot, untersichtig vom Hügelfuß</span></div>
+                  <div><strong>Kameraführung</strong><span>Langsame Kranfahrt aufwärts in Richtung Nachthimmel</span></div>
+                  <div><strong>Licht/Farbe</strong><span>Tiefblaues Mondlicht, samtige Schatten, funkelnder Himmelsglanz</span></div>
+                  <div><strong>Dynamik</strong><span>Stärke 2/10</span></div>
+                </div>
+                <div class="audio-matrix">
+                  <span class="audio-pill ">Spur 1: In-Video stumm</span>
+                  <button class="audio-toggle-btn" onclick="toggleAudioTrack(1)" aria-describedby="shot-title-1" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
+                  <span class="audio-pill active">Spur 2: Bett</span>
+                  <span class="audio-pill active">Spur 3: MIDI</span>
+                  <span class="audio-pill active">Spur 4: SFX</span>
+                </div>
               </div>
+            </details>
+            <div class="shot-footer">
+              <span class="takes-count">1 Take(s) · Übergang: dissolve_1s</span>
+              <button class="btn-copy-shot" onclick="copyShotDetails(1)" aria-describedby="shot-title-1" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">Prompt &amp; Specs kopieren</button>
             </div>
           </div>
         </div>
@@ -990,63 +577,63 @@
 
         <div class="shot-card" id="shot-2">
           <div class="shot-header">
-            <div class="step-tag">Step 02: kosmischer-dialog</div>
-            <div class="time-tag">10s – 20s (10s)</div>
+            <div class="step-tag" id="shot-title-2">02 · kosmischer-dialog</div>
+            <div class="time-tag">10–20 s (10 s)</div>
           </div>
           <div class="shot-preview">
-            <video controls loop src="video/shot02_v01.mp4" poster="frames/shot02_v01_lastframe.png"></video>
-            <div class="preview-badge">Hero Video (v01)</div>
+            <img src="frames/shot02_v01_lastframe.png" alt="Clue Frame" draggable="true" ondragstart="onAssetDragStart(event, this, 'shot02_clueframe')" class="draggable-asset" title="Greifen & in externen Chat ziehen">
+            <div class="preview-badge">Hero Frame (v01)</div>
           </div>
           <div class="shot-body">
+            <button type="button" class="prompt-box" onclick="copyShotPromptOnly(2, 'plain')" title="Visuellen Prompt ohne Dialoganweisung kopieren">
+              <span class="p-title">
+                <span>Prompt v1</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+              <span class="prompt-text">Deep space cinematic shot of two burning, radiant stars hovering close together, intense golden plasma loops and solar flares gently pulsing, surrounding cosmic dust in deep indigo and violet, awe-inspiring, photorealistic sci-fi</span>
+            </button>
             <div class="link-import-bar">
-              <input type="text" id="link-input-2" placeholder="Gemini Sharelink oder Video-URL einfügen...">
-              <button class="btn-fetch-link" onclick="fetchVideoLink(2)">📥 Abholen</button>
-            </div>
-            <div class="grammar-row">
-              <div><strong>Perspektive</strong><span>Medium Shot im Weltall, zwei Himmelskörper im Fokus</span></div>
-              <div><strong>Kameraführung</strong><span>Schwebende Kreisbewegung um die glühenden Sonnen</span></div>
-              <div><strong>Licht/Farbe</strong><span>Intensives warmes Gold und Bernstein gegen samtenes Tiefschwarz</span></div>
-              <div><strong>Dynamik</strong><span>Stärke 3/10</span></div>
-            </div>
-            <div class="prompt-box" onclick="copyShotPromptOnly(2, 'plain')" title="Klicken: Reinen visuellen Prompt in Zwischenablage kopieren (ohne Sprachen-Mix)">
-              <div class="p-title">
-                <span>Visueller Prompt (Version v1)</span>
-                <span class="copy-hint-pill">⚡ Klick = Prompt kopieren</span>
-              </div>
-              <p>"Deep space cinematic shot of two burning, radiant stars hovering close together, intense golden plasma loops and solar flares gently pulsing, surrounding cosmic dust in deep indigo and violet, awe-inspiring, photorealistic sci-fi"</p>
+              <input type="text" id="link-input-2" aria-label="Video-Link für Shot 2" placeholder="Gemini-Sharelink oder Video-URL">
+              <button class="btn-fetch-link" onclick="fetchVideoLink(2)" aria-describedby="shot-title-2">Abholen</button>
             </div>
             <div class="voice-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span>🎙️ <strong>Voice & Dialog (de-DE-ConradNeural):</strong></span>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span class="rec-timer" id="rec-timer-2" style="display:none; color: #ef4444; font-weight: 700; font-size: 11px;">● 00:00</span>
-                  <button class="rec-btn" id="rec-btn-2" onclick="toggleRecord(2)">🎙️ Aufnahme</button>
-                </div>
+              <div class="voice-head">
+                <span><strong>Sprecher:</strong> de-DE-ConradNeural</span>
+                <span>
+                  <span class="rec-timer" id="rec-timer-2" style="display:none;">● 00:00</span>
+                  <button class="rec-btn" id="rec-btn-2" onclick="toggleRecord(2)" aria-describedby="shot-title-2">Aufnehmen</button>
+                </span>
               </div>
-              <div style="font-size: 12.5px; color: #f3f4f6; margin-bottom: 2px;">
-                <strong style="color: #e9d5ff;">🇩🇪 Source (DE):</strong> <em style="color: #e9d5ff;">"Ein schlauer Stern flüstert leise zu: Weil wir sie sonst verbrennen würden! Ganz nah sind wir doch heiße Sonnen."</em>
-              </div>
-              <div style="margin-top: 4px; font-size: 12px; color: #a5b4fc;"><strong style="color: #93c5fd;">🇬🇧 EN Translation:</strong> <em>"A clever star whispers softly: Because otherwise we would burn them! Up close, we are scorching suns."</em></div>
-              <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="copyShotPromptOnly(2, 'de')" title="Visueller Prompt + deutsche Dialoganweisung">📋 Prompt + 🇩🇪 DE</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;" onclick="copyShotPromptOnly(2, 'en')" title="Visueller Prompt + englische Dialoganweisung">📋 Prompt + 🇬🇧 EN</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(107, 114, 128, 0.2); border-color: #6b7280; color: #d1d5db;" onclick="copyShotPromptOnly(2, 'silent')" title="Visueller Prompt + Stumm-Direktive">🔇 Prompt + Stumm</button>
+              <div class="voice-line"><strong>DE:</strong> „Ein schlauer Stern flüstert leise zu: Weil wir sie sonst verbrennen würden! Ganz nah sind wir doch heiße Sonnen.“</div>
+              <div class="voice-line"><strong>EN:</strong> „A clever star whispers softly: Because otherwise we would burn them! Up close, we are scorching suns.“</div>
+              <div class="voice-actions">
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(2, 'de')" aria-describedby="shot-title-2" title="Visueller Prompt + deutsche Dialoganweisung">Prompt + DE</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(2, 'en')" aria-describedby="shot-title-2" title="Visueller Prompt + englische Dialoganweisung">Prompt + EN</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(2, 'silent')" aria-describedby="shot-title-2" title="Visueller Prompt + Stumm-Direktive">Prompt + stumm</button>
               </div>
               <div id="voice-player-2"></div>
             </div>
-            <div class="audio-matrix">
-              <span class="audio-pill ">🔇 Spur 1: In-Video (Mute)</span>
-              <button class="audio-toggle-btn" onclick="toggleAudioTrack(2)" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
-              <span class="audio-pill active">Spur 2: Bett</span>
-              <span class="audio-pill active">Spur 3: MIDI</span>
-              <span class="audio-pill active">Spur 4: SFX</span>
-            </div>
-            <div class="shot-footer">
-              <span class="takes-count">1 Take(s) generiert</span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span>Übergang: morph</span>
-                <button class="btn-copy-shot" onclick="copyShotDetails(2)" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">⚡ Prompt & Specs</button>
+            <details class="shot-more" open>
+              <summary aria-describedby="shot-title-2">Kamera, Licht &amp; Ton</summary>
+              <div>
+                <div class="grammar-row">
+                  <div><strong>Perspektive</strong><span>Medium Shot im Weltall, zwei Himmelskörper im Fokus</span></div>
+                  <div><strong>Kameraführung</strong><span>Schwebende Kreisbewegung um die glühenden Sonnen</span></div>
+                  <div><strong>Licht/Farbe</strong><span>Intensives warmes Gold und Bernstein gegen samtenes Tiefschwarz</span></div>
+                  <div><strong>Dynamik</strong><span>Stärke 3/10</span></div>
+                </div>
+                <div class="audio-matrix">
+                  <span class="audio-pill ">Spur 1: In-Video stumm</span>
+                  <button class="audio-toggle-btn" onclick="toggleAudioTrack(2)" aria-describedby="shot-title-2" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
+                  <span class="audio-pill active">Spur 2: Bett</span>
+                  <span class="audio-pill active">Spur 3: MIDI</span>
+                  <span class="audio-pill active">Spur 4: SFX</span>
+                </div>
               </div>
+            </details>
+            <div class="shot-footer">
+              <span class="takes-count">1 Take(s) · Übergang: morph</span>
+              <button class="btn-copy-shot" onclick="copyShotDetails(2)" aria-describedby="shot-title-2" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">Prompt &amp; Specs kopieren</button>
             </div>
           </div>
         </div>
@@ -1054,63 +641,63 @@
 
         <div class="shot-card" id="shot-3">
           <div class="shot-header">
-            <div class="step-tag">Step 03: ferne-juwelen</div>
-            <div class="time-tag">20s – 30s (10s)</div>
+            <div class="step-tag" id="shot-title-3">03 · ferne-juwelen</div>
+            <div class="time-tag">20–30 s (10 s)</div>
           </div>
           <div class="shot-preview">
-            <video controls loop src="video/shot03_v01.mp4" poster="frames/shot03_v01_lastframe.png"></video>
-            <div class="preview-badge">Hero Video (v01)</div>
+            <img src="frames/shot03_v01_lastframe.png" alt="Clue Frame" draggable="true" ondragstart="onAssetDragStart(event, this, 'shot03_clueframe')" class="draggable-asset" title="Greifen & in externen Chat ziehen">
+            <div class="preview-badge">Hero Frame (v01)</div>
           </div>
           <div class="shot-body">
+            <button type="button" class="prompt-box" onclick="copyShotPromptOnly(3, 'plain')" title="Visuellen Prompt ohne Dialoganweisung kopieren">
+              <span class="p-title">
+                <span>Prompt v1</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+              <span class="prompt-text">Cosmic pull back camera movement, the fiery suns shrink into delicate sparkling diamond stars in a vast velvet nebula, shooting stars streaking across the galaxy, beautiful melancholic cosmic wonder, cinematic 8k</span>
+            </button>
             <div class="link-import-bar">
-              <input type="text" id="link-input-3" placeholder="Gemini Sharelink oder Video-URL einfügen...">
-              <button class="btn-fetch-link" onclick="fetchVideoLink(3)">📥 Abholen</button>
-            </div>
-            <div class="grammar-row">
-              <div><strong>Perspektive</strong><span>Extremer Zoom-Out / Weitwinkel-Kosmos</span></div>
-              <div><strong>Kameraführung</strong><span>Schnelle Rückwärtsfahrt (Dolly Out), Sonnen schrumpfen zu funkelnden Diamanten</span></div>
-              <div><strong>Licht/Farbe</strong><span>Kristallines Sternenfunkeln, weiches diffuses Nebellicht</span></div>
-              <div><strong>Dynamik</strong><span>Stärke 4/10</span></div>
-            </div>
-            <div class="prompt-box" onclick="copyShotPromptOnly(3, 'plain')" title="Klicken: Reinen visuellen Prompt in Zwischenablage kopieren (ohne Sprachen-Mix)">
-              <div class="p-title">
-                <span>Visueller Prompt (Version v1)</span>
-                <span class="copy-hint-pill">⚡ Klick = Prompt kopieren</span>
-              </div>
-              <p>"Cosmic pull back camera movement, the fiery suns shrink into delicate sparkling diamond stars in a vast velvet nebula, shooting stars streaking across the galaxy, beautiful melancholic cosmic wonder, cinematic 8k"</p>
+              <input type="text" id="link-input-3" aria-label="Video-Link für Shot 3" placeholder="Gemini-Sharelink oder Video-URL">
+              <button class="btn-fetch-link" onclick="fetchVideoLink(3)" aria-describedby="shot-title-3">Abholen</button>
             </div>
             <div class="voice-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span>🎙️ <strong>Voice & Dialog (de-DE-ConradNeural):</strong></span>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span class="rec-timer" id="rec-timer-3" style="display:none; color: #ef4444; font-weight: 700; font-size: 11px;">● 00:00</span>
-                  <button class="rec-btn" id="rec-btn-3" onclick="toggleRecord(3)">🎙️ Aufnahme</button>
-                </div>
+              <div class="voice-head">
+                <span><strong>Sprecher:</strong> de-DE-ConradNeural</span>
+                <span>
+                  <span class="rec-timer" id="rec-timer-3" style="display:none;">● 00:00</span>
+                  <button class="rec-btn" id="rec-btn-3" onclick="toggleRecord(3)" aria-describedby="shot-title-3">Aufnehmen</button>
+                </span>
               </div>
-              <div style="font-size: 12.5px; color: #f3f4f6; margin-bottom: 2px;">
-                <strong style="color: #e9d5ff;">🇩🇪 Source (DE):</strong> <em style="color: #e9d5ff;">"Erst in der Ferne werden wir geliebte Sterne, und alle würden uns gern drücken. Nur mit ewiger Sehnsucht wissen wir sie zu verzücken."</em>
-              </div>
-              <div style="margin-top: 4px; font-size: 12px; color: #a5b4fc;"><strong style="color: #93c5fd;">🇬🇧 EN Translation:</strong> <em>"Only in the distance do we become beloved stars, and everyone would love to embrace us. Only with eternal longing can we enchant them."</em></div>
-              <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="copyShotPromptOnly(3, 'de')" title="Visueller Prompt + deutsche Dialoganweisung">📋 Prompt + 🇩🇪 DE</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;" onclick="copyShotPromptOnly(3, 'en')" title="Visueller Prompt + englische Dialoganweisung">📋 Prompt + 🇬🇧 EN</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(107, 114, 128, 0.2); border-color: #6b7280; color: #d1d5db;" onclick="copyShotPromptOnly(3, 'silent')" title="Visueller Prompt + Stumm-Direktive">🔇 Prompt + Stumm</button>
+              <div class="voice-line"><strong>DE:</strong> „Erst in der Ferne werden wir geliebte Sterne, und alle würden uns gern drücken. Nur mit ewiger Sehnsucht wissen wir sie zu verzücken.“</div>
+              <div class="voice-line"><strong>EN:</strong> „Only in the distance do we become beloved stars, and everyone would love to embrace us. Only with eternal longing can we enchant them.“</div>
+              <div class="voice-actions">
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(3, 'de')" aria-describedby="shot-title-3" title="Visueller Prompt + deutsche Dialoganweisung">Prompt + DE</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(3, 'en')" aria-describedby="shot-title-3" title="Visueller Prompt + englische Dialoganweisung">Prompt + EN</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(3, 'silent')" aria-describedby="shot-title-3" title="Visueller Prompt + Stumm-Direktive">Prompt + stumm</button>
               </div>
               <div id="voice-player-3"></div>
             </div>
-            <div class="audio-matrix">
-              <span class="audio-pill active">🔊 Spur 1: In-Video (Aktiv)</span>
-              <button class="audio-toggle-btn" onclick="toggleAudioTrack(3)" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
-              <span class="audio-pill active">Spur 2: Bett</span>
-              <span class="audio-pill active">Spur 3: MIDI</span>
-              <span class="audio-pill active">Spur 4: SFX</span>
-            </div>
-            <div class="shot-footer">
-              <span class="takes-count">1 Take(s) generiert</span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span>Übergang: dissolve_1s</span>
-                <button class="btn-copy-shot" onclick="copyShotDetails(3)" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">⚡ Prompt & Specs</button>
+            <details class="shot-more" open>
+              <summary aria-describedby="shot-title-3">Kamera, Licht &amp; Ton</summary>
+              <div>
+                <div class="grammar-row">
+                  <div><strong>Perspektive</strong><span>Extremer Zoom-Out / Weitwinkel-Kosmos</span></div>
+                  <div><strong>Kameraführung</strong><span>Schnelle Rückwärtsfahrt (Dolly Out), Sonnen schrumpfen zu funkelnden Diamanten</span></div>
+                  <div><strong>Licht/Farbe</strong><span>Kristallines Sternenfunkeln, weiches diffuses Nebellicht</span></div>
+                  <div><strong>Dynamik</strong><span>Stärke 4/10</span></div>
+                </div>
+                <div class="audio-matrix">
+                  <span class="audio-pill active">Spur 1: In-Video an</span>
+                  <button class="audio-toggle-btn" onclick="toggleAudioTrack(3)" aria-describedby="shot-title-3" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
+                  <span class="audio-pill active">Spur 2: Bett</span>
+                  <span class="audio-pill active">Spur 3: MIDI</span>
+                  <span class="audio-pill active">Spur 4: SFX</span>
+                </div>
               </div>
+            </details>
+            <div class="shot-footer">
+              <span class="takes-count">1 Take(s) · Übergang: dissolve_1s</span>
+              <button class="btn-copy-shot" onclick="copyShotDetails(3)" aria-describedby="shot-title-3" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">Prompt &amp; Specs kopieren</button>
             </div>
           </div>
         </div>
@@ -1118,70 +705,74 @@
 
         <div class="shot-card" id="shot-4">
           <div class="shot-header">
-            <div class="step-tag">Step 04: sehnsucht-gute-nacht</div>
-            <div class="time-tag">30s – 40s (10s)</div>
+            <div class="step-tag" id="shot-title-4">04 · sehnsucht-gute-nacht</div>
+            <div class="time-tag">30–40 s (10 s)</div>
           </div>
           <div class="shot-preview">
-            <video controls loop src="video/shot04_v01.mp4" poster="frames/shot04_v01_lastframe.png"></video>
-            <div class="preview-badge">Hero Video (v01)</div>
+            <img src="frames/shot04_v01_lastframe.png" alt="Clue Frame" draggable="true" ondragstart="onAssetDragStart(event, this, 'shot04_clueframe')" class="draggable-asset" title="Greifen & in externen Chat ziehen">
+            <div class="preview-badge">Hero Frame (v01)</div>
           </div>
           <div class="shot-body">
+            <button type="button" class="prompt-box" onclick="copyShotPromptOnly(4, 'plain')" title="Visuellen Prompt ohne Dialoganweisung kopieren">
+              <span class="p-title">
+                <span>Prompt v1</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+              <span class="prompt-text">Close up of a human hand reaching upward into the clear night sky trying to grasp distant sparkling stars, tiny glowing particles of stardust floating around the fingers, soft focus pull to the silhouette of the head against the cosmos, emotional, poetic cinema, fade to black</span>
+            </button>
             <div class="link-import-bar">
-              <input type="text" id="link-input-4" placeholder="Gemini Sharelink oder Video-URL einfügen...">
-              <button class="btn-fetch-link" onclick="fetchVideoLink(4)">📥 Abholen</button>
-            </div>
-            <div class="grammar-row">
-              <div><strong>Perspektive</strong><span>Close-Up Hand gegen den offenen Nachthimmel</span></div>
-              <div><strong>Kameraführung</strong><span>Sanfte Handkamera mit leichtem Focus-Pull auf die Handfläche</span></div>
-              <div><strong>Licht/Farbe</strong><span>Silbriges Gegenlicht, sanft verglimmende Funken</span></div>
-              <div><strong>Dynamik</strong><span>Stärke 2/10</span></div>
-            </div>
-            <div class="prompt-box" onclick="copyShotPromptOnly(4, 'plain')" title="Klicken: Reinen visuellen Prompt in Zwischenablage kopieren (ohne Sprachen-Mix)">
-              <div class="p-title">
-                <span>Visueller Prompt (Version v1)</span>
-                <span class="copy-hint-pill">⚡ Klick = Prompt kopieren</span>
-              </div>
-              <p>"Close up of a human hand reaching upward into the clear night sky trying to grasp distant sparkling stars, tiny glowing particles of stardust floating around the fingers, soft focus pull to the silhouette of the head against the cosmos, emotional, poetic cinema, fade to black"</p>
+              <input type="text" id="link-input-4" aria-label="Video-Link für Shot 4" placeholder="Gemini-Sharelink oder Video-URL">
+              <button class="btn-fetch-link" onclick="fetchVideoLink(4)" aria-describedby="shot-title-4">Abholen</button>
             </div>
             <div class="voice-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span>🎙️ <strong>Voice & Dialog (de-DE-ConradNeural):</strong></span>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span class="rec-timer" id="rec-timer-4" style="display:none; color: #ef4444; font-weight: 700; font-size: 11px;">● 00:00</span>
-                  <button class="rec-btn" id="rec-btn-4" onclick="toggleRecord(4)">🎙️ Aufnahme</button>
-                </div>
+              <div class="voice-head">
+                <span><strong>Sprecher:</strong> de-DE-ConradNeural</span>
+                <span>
+                  <span class="rec-timer" id="rec-timer-4" style="display:none;">● 00:00</span>
+                  <button class="rec-btn" id="rec-btn-4" onclick="toggleRecord(4)" aria-describedby="shot-title-4">Aufnehmen</button>
+                </span>
               </div>
-              <div style="font-size: 12.5px; color: #f3f4f6; margin-bottom: 2px;">
-                <strong style="color: #e9d5ff;">🇩🇪 Source (DE):</strong> <em style="color: #e9d5ff;">"Greif nach den Sternen, doch dabei wirst du dich auch verbrennen lernen... Gute Nacht!"</em>
-              </div>
-              <div style="margin-top: 4px; font-size: 12px; color: #a5b4fc;"><strong style="color: #93c5fd;">🇬🇧 EN Translation:</strong> <em>"Reach for the stars, but in doing so you will also learn how to burn... Good night!"</em></div>
-              <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="copyShotPromptOnly(4, 'de')" title="Visueller Prompt + deutsche Dialoganweisung">📋 Prompt + 🇩🇪 DE</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;" onclick="copyShotPromptOnly(4, 'en')" title="Visueller Prompt + englische Dialoganweisung">📋 Prompt + 🇬🇧 EN</button>
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(107, 114, 128, 0.2); border-color: #6b7280; color: #d1d5db;" onclick="copyShotPromptOnly(4, 'silent')" title="Visueller Prompt + Stumm-Direktive">🔇 Prompt + Stumm</button>
+              <div class="voice-line"><strong>DE:</strong> „Greif nach den Sternen, doch dabei wirst du dich auch verbrennen lernen... Gute Nacht!“</div>
+              <div class="voice-line"><strong>EN:</strong> „Reach for the stars, but in doing so you will also learn how to burn... Good night!“</div>
+              <div class="voice-actions">
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(4, 'de')" aria-describedby="shot-title-4" title="Visueller Prompt + deutsche Dialoganweisung">Prompt + DE</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(4, 'en')" aria-describedby="shot-title-4" title="Visueller Prompt + englische Dialoganweisung">Prompt + EN</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly(4, 'silent')" aria-describedby="shot-title-4" title="Visueller Prompt + Stumm-Direktive">Prompt + stumm</button>
               </div>
               <div id="voice-player-4"></div>
             </div>
-            <div class="audio-matrix">
-              <span class="audio-pill ">🔇 Spur 1: In-Video (Mute)</span>
-              <button class="audio-toggle-btn" onclick="toggleAudioTrack(4)" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
-              <span class="audio-pill active">Spur 2: Bett</span>
-              <span class="audio-pill active">Spur 3: MIDI</span>
-              <span class="audio-pill active">Spur 4: SFX</span>
-            </div>
-            <div class="shot-footer">
-              <span class="takes-count">1 Take(s) generiert</span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span>Übergang: fade_to_black</span>
-                <button class="btn-copy-shot" onclick="copyShotDetails(4)" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">⚡ Prompt & Specs</button>
+            <details class="shot-more" open>
+              <summary aria-describedby="shot-title-4">Kamera, Licht &amp; Ton</summary>
+              <div>
+                <div class="grammar-row">
+                  <div><strong>Perspektive</strong><span>Close-Up Hand gegen den offenen Nachthimmel</span></div>
+                  <div><strong>Kameraführung</strong><span>Sanfte Handkamera mit leichtem Focus-Pull auf die Handfläche</span></div>
+                  <div><strong>Licht/Farbe</strong><span>Silbriges Gegenlicht, sanft verglimmende Funken</span></div>
+                  <div><strong>Dynamik</strong><span>Stärke 2/10</span></div>
+                </div>
+                <div class="audio-matrix">
+                  <span class="audio-pill ">Spur 1: In-Video stumm</span>
+                  <button class="audio-toggle-btn" onclick="toggleAudioTrack(4)" aria-describedby="shot-title-4" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
+                  <span class="audio-pill active">Spur 2: Bett</span>
+                  <span class="audio-pill active">Spur 3: MIDI</span>
+                  <span class="audio-pill active">Spur 4: SFX</span>
+                </div>
               </div>
+            </details>
+            <div class="shot-footer">
+              <span class="takes-count">1 Take(s) · Übergang: fade_to_black</span>
+              <button class="btn-copy-shot" onclick="copyShotDetails(4)" aria-describedby="shot-title-4" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">Prompt &amp; Specs kopieren</button>
             </div>
           </div>
         </div>
         
   </div>
 
-  <div id="toast"></div>
+
+
+
+
+  <div id="toast" role="status" aria-live="polite"></div>
 
   <script>
     const PROJECT_DATA = {"project": {"name": "sternenseufzer", "title": "Sternenseufzer", "author": "Lukas Geiger (Text) / clip-storyboard-director", "source": "Gedicht 'Sternenseufzer' von Lukas Geiger (aus dem Gedichtband 'Schmerz lass nach', BoD 2018/2019)", "created": "2026-09-07", "total_duration_sec": 40, "step_duration_sec": 10, "calculated_steps": 4, "aspect_ratio": "16:9", "fps": 24, "resolution": "1080p", "default_genre": "Poetisch-Philosophischer Sci-Fi / Kosmischer Realismus", "lighting_mood": "Dunkelblaue Nacht, samtiges Sternenlicht, glühendes Sonnen-Gold im tiefen Kosmos"}, "persistence_buffer": {"characters": [{"name": "Der Träumer", "appearance": "Silhouette eines jungen Mannes im wehenden Mantel, windzerzaustes Haar, im Profil gegen das Sternenlicht"}], "locations": [{"name": "Der Sternenhügel", "features": "Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme im Gegenlicht"}, {"name": "Der tiefe Kosmos", "features": "Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und samtigem Tiefenlicht"}], "objects": [{"name": "Die sprechenden Sonnen-Sterne", "features": "Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder und Protuberanzen"}], "props": [{"name": "Die Sternenstaub-Hand", "features": "Menschliche Handfläche, gegen die Sterne geöffnet, zarte Lichtfunken an den Fingerspitzen"}]}, "consistency_bible": [{"id": "char_traeumer", "name": "Der Träumer", "category": "Charakter", "description": "Silhouette eines nachdenklichen Mannes im Mantel, windzerzaustes Haar, im Profil gegen das Sternenlicht.", "reference_image": "assets/refs/ref_traeumer.png"}, {"id": "loc_huegel", "name": "Der Sternenhügel", "category": "Ort / Kulisse", "description": "Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme im Gegenlicht.", "reference_image": "assets/refs/ref_sternenhuegel.png"}, {"id": "obj_sonnenstern", "name": "Die sprechenden Sonnen-Sterne", "category": "Gegenstand", "description": "Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder und Protuberanzen.", "reference_image": "assets/refs/ref_sonnensterne.png"}, {"id": "loc_kosmos", "name": "Der tiefe Kosmos", "category": "Ort / Kulisse", "description": "Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und sanftem Tiefenlicht.", "reference_image": "assets/refs/ref_kosmos.png"}, {"id": "prop_hand", "name": "Die Sternenstaub-Hand", "category": "Requisite", "description": "Menschliche Handfläche, gegen die Sterne geöffnet, zarte Rauch-/Lichtfäden an den Fingerspitzen.", "reference_image": "assets/refs/ref_hand.png"}], "shots": {"1": {"step_nr": 1, "slug": "opening-sternenhuegel", "type": "video", "start_sec": 0, "end_sec": 10, "duration_sec": 10, "genre_style": "Poetisch-Philosophischer Sci-Fi", "lighting_color": "Tiefblaues Mondlicht, samtige Schatten, funkelnder Himmelsglanz", "perspective": "Extreme Wide Shot, untersichtig vom Hügelfuß", "camera_movement": "Langsame Kranfahrt aufwärts in Richtung Nachthimmel", "motion_intensity": 2, "persistence": {"characters": ["Der Träumer"], "locations": ["Der Sternenhügel"], "props": [], "objects": []}, "prompts": [{"version": "v1", "text": "A solitary silhouette of a thoughtful man in a long coat standing on a grassy hilltop next to an ancient gnarled oak tree at night, looking up at an immense breathtaking starry sky filled with luminous constellations, slow upward crane camera movement, cinematic 8k, Terence Malick style, tranquil, philosophical", "diff": "Eröffnungsbild: Mensch in Ehrfurcht vor der Unendlichkeit"}], "active_prompt_version": "v1", "takes": [{"id": "v01", "file": "video/shot01_v01.mp4", "engine": "google-veo-gemini", "notes": "Auto-Ingest aus gemini_shot01_take01.mp4"}], "selected_take": "v01", "clue_frame": "frames/shot01_v01_lastframe.png", "audio": {"track1_invideo": "mute", "track2_bed": "audio/track2_bed/night_ambient_wind.mp3", "track3_midi": "audio/track3_midi/celesta_intro.mid", "track4_sfx": "audio/track4_sfx/night_crickets_gentle.mp3", "transition_video": "dissolve_1s", "transition_audio": "crossfade_1.5s"}, "voice": {"enabled": true, "speaker": "de-DE-ConradNeural", "source_text": "Ich träum von den Sternen, die dort oben weit entfernt leuchten lernen und seufzen: Ach, warum sind wir nur so weit weg von den Menschen, die uns lieben?", "translated_text_en": "I dream of the stars, learning to shine far away up there and sighing: Ah, why are we so far away from the people who love us?", "text": "Ich träum von den Sternen, die dort oben weit entfernt leuchten lernen und seufzen: Ach, warum sind wir nur so weit weg von den Menschen, die uns lieben?", "rendered_file": null, "lip_sync": false, "directives": {"german": "Spoken dialogue in German (clear, emotional voice): \"Ich träum von den Sternen, die dort oben weit entfernt leuchten lernen und seufzen: Ach, warum sind wir nur so weit weg von den Menschen, die uns lieben?\"", "english": "Spoken dialogue in English (clear, emotional voice): \"I dream of the stars, learning to shine far away up there and sighing: Ah, why are we so far away from the people who love us?\"", "silent": "Silent video with ambient night breeze and gentle cosmic shimmer only, strictly no human speech"}}}, "2": {"step_nr": 2, "slug": "kosmischer-dialog", "type": "video", "start_sec": 10, "end_sec": 20, "duration_sec": 10, "genre_style": "Kosmischer Realismus", "lighting_color": "Intensives warmes Gold und Bernstein gegen samtenes Tiefschwarz", "perspective": "Medium Shot im Weltall, zwei Himmelskörper im Fokus", "camera_movement": "Schwebende Kreisbewegung um die glühenden Sonnen", "motion_intensity": 3, "persistence": {"characters": [], "locations": ["Der tiefe Kosmos"], "props": [], "objects": ["Die sprechenden Sonnen-Sterne"]}, "prompts": [{"version": "v1", "text": "Deep space cinematic shot of two burning, radiant stars hovering close together, intense golden plasma loops and solar flares gently pulsing, surrounding cosmic dust in deep indigo and violet, awe-inspiring, photorealistic sci-fi", "diff": "Makro-Perspektive: Die Sterne als heisse, lebendige Sonnen"}], "active_prompt_version": "v1", "takes": [{"id": "v01", "file": "video/shot02_v01.mp4", "engine": "ki-generator", "notes": "Auto-Ingest aus fetched_shot02.mp4"}], "selected_take": "v01", "clue_frame": "frames/shot02_v01_lastframe.png", "audio": {"track1_invideo": "mute", "track2_bed": "audio/track2_bed/space_drone_deep.mp3", "track3_midi": "audio/track3_midi/space_harmony.mid", "track4_sfx": "audio/track4_sfx/solar_flare_rumble.mp3", "transition_video": "morph", "transition_audio": "sound_bridge"}, "voice": {"enabled": true, "speaker": "de-DE-ConradNeural", "source_text": "Ein schlauer Stern flüstert leise zu: Weil wir sie sonst verbrennen würden! Ganz nah sind wir doch heiße Sonnen.", "translated_text_en": "A clever star whispers softly: Because otherwise we would burn them! Up close, we are scorching suns.", "text": "Ein schlauer Stern flüstert leise zu: Weil wir sie sonst verbrennen würden! Ganz nah sind wir doch heiße Sonnen.", "rendered_file": null, "lip_sync": false, "directives": {"german": "Spoken dialogue in German (whispering, warm voice): \"Ein schlauer Stern flüstert leise zu: Weil wir sie sonst verbrennen würden! Ganz nah sind wir doch heiße Sonnen.\"", "english": "Spoken dialogue in English (whispering, warm voice): \"A clever star whispers softly: Because otherwise we would burn them! Up close, we are scorching suns.\"", "silent": "Silent video with deep cosmic hum and solar flare rumble only, strictly no human speech"}}}, "3": {"step_nr": 3, "slug": "ferne-juwelen", "type": "video", "start_sec": 20, "end_sec": 30, "duration_sec": 10, "genre_style": "Kosmischer Realismus", "lighting_color": "Kristallines Sternenfunkeln, weiches diffuses Nebellicht", "perspective": "Extremer Zoom-Out / Weitwinkel-Kosmos", "camera_movement": "Schnelle Rückwärtsfahrt (Dolly Out), Sonnen schrumpfen zu funkelnden Diamanten", "motion_intensity": 4, "persistence": {"characters": [], "locations": ["Der tiefe Kosmos"], "props": [], "objects": ["Die sprechenden Sonnen-Sterne"]}, "prompts": [{"version": "v1", "text": "Cosmic pull back camera movement, the fiery suns shrink into delicate sparkling diamond stars in a vast velvet nebula, shooting stars streaking across the galaxy, beautiful melancholic cosmic wonder, cinematic 8k", "diff": "Distanz schafft Sehnsucht: Von der Hitze zum verträumten Leuchten"}], "active_prompt_version": "v1", "takes": [{"id": "v01", "file": "video/shot03_v01.mp4", "engine": "ki-generator", "notes": "Auto-Ingest aus Cosmic_pull_back_camera_moveme.mp4"}], "selected_take": "v01", "clue_frame": "frames/shot03_v01_lastframe.png", "audio": {"track1_invideo": "keep", "track2_bed": "audio/track2_bed/space_drone_deep.mp3", "track3_midi": "audio/track3_midi/piano_stars.mid", "track4_sfx": "audio/track4_sfx/chimes_shimmer.mp3", "transition_video": "dissolve_1s", "transition_audio": "crossfade_1s"}, "voice": {"enabled": true, "speaker": "de-DE-ConradNeural", "source_text": "Erst in der Ferne werden wir geliebte Sterne, und alle würden uns gern drücken. Nur mit ewiger Sehnsucht wissen wir sie zu verzücken.", "translated_text_en": "Only in the distance do we become beloved stars, and everyone would love to embrace us. Only with eternal longing can we enchant them.", "text": "Erst in der Ferne werden wir geliebte Sterne, und alle würden uns gern drücken. Nur mit ewiger Sehnsucht wissen wir sie zu verzücken.", "rendered_file": null, "lip_sync": false, "directives": {"german": "Spoken dialogue in German (melancholic, poetic voice): \"Erst in der Ferne werden wir geliebte Sterne, und alle würden uns gern drücken. Nur mit ewiger Sehnsucht wissen wir sie zu verzücken.\"", "english": "Spoken dialogue in English (melancholic, poetic voice): \"Only in the distance do we become beloved stars, and everyone would love to embrace us. Only with eternal longing can we enchant them.\"", "silent": "Silent video with ethereal celestial chimes and quiet void reverb only, strictly no human speech"}}}, "4": {"step_nr": 4, "slug": "sehnsucht-gute-nacht", "type": "video", "start_sec": 30, "end_sec": 40, "duration_sec": 10, "genre_style": "Poetischer Realismus", "lighting_color": "Silbriges Gegenlicht, sanft verglimmende Funken", "perspective": "Close-Up Hand gegen den offenen Nachthimmel", "camera_movement": "Sanfte Handkamera mit leichtem Focus-Pull auf die Handfläche", "motion_intensity": 2, "persistence": {"characters": ["Der Träumer"], "locations": ["Der Sternenhügel"], "props": ["Die Sternenstaub-Hand"], "objects": []}, "prompts": [{"version": "v1", "text": "Close up of a human hand reaching upward into the clear night sky trying to grasp distant sparkling stars, tiny glowing particles of stardust floating around the fingers, soft focus pull to the silhouette of the head against the cosmos, emotional, poetic cinema, fade to black", "diff": "Abschluss: Berührungsversuch, Wärme und Ausklang in die Nacht"}], "active_prompt_version": "v1", "takes": [{"id": "v01", "file": "video/shot04_v01.mp4", "engine": "ki-generator", "notes": "Auto-Ingest aus Close_up_of_a_human_hand_reach.mp4"}], "selected_take": "v01", "clue_frame": "frames/shot04_v01_lastframe.png", "audio": {"track1_invideo": "mute", "track2_bed": "audio/track2_bed/night_ambient_wind.mp3", "track3_midi": "audio/track3_midi/celesta_outro.mid", "track4_sfx": "audio/track4_sfx/whisper_decay.mp3", "transition_video": "fade_to_black", "transition_audio": "fade_out_3s"}, "voice": {"enabled": true, "speaker": "de-DE-ConradNeural", "source_text": "Greif nach den Sternen, doch dabei wirst du dich auch verbrennen lernen... Gute Nacht!", "translated_text_en": "Reach for the stars, but in doing so you will also learn how to burn... Good night!", "text": "Greif nach den Sternen, doch dabei wirst du dich auch verbrennen lernen... Gute Nacht!", "rendered_file": null, "lip_sync": false, "directives": {"german": "Spoken dialogue in German (gentle, warm whisper): \"Greif nach den Sternen, doch dabei wirst du dich auch verbrennen lernen... Gute Nacht!\"", "english": "Spoken dialogue in English (gentle, warm whisper): \"Reach for the stars, but in doing so you will also learn how to burn... Good night!\"", "silent": "Silent video with gentle wind rustling through grass and distant bell chiming only, strictly no human speech"}}}}, "bible": {"char_traeumer": {"id": "char_traeumer", "name": "Der Träumer", "category": "Charakter", "description": "Silhouette eines nachdenklichen Mannes im Mantel, windzerzaustes Haar, im Profil gegen das Sternenlicht.", "reference_image": "assets/refs/ref_traeumer.png"}, "loc_huegel": {"id": "loc_huegel", "name": "Der Sternenhügel", "category": "Ort / Kulisse", "description": "Sanfte Hügelkuppe mit uralter Eiche, weite Aussicht, nächtliche Grashalme im Gegenlicht.", "reference_image": "assets/refs/ref_sternenhuegel.png"}, "obj_sonnenstern": {"id": "obj_sonnenstern", "name": "Die sprechenden Sonnen-Sterne", "category": "Gegenstand", "description": "Zwei majestätische, goldene Sonnen im interstellaren Raum, feine Energiebänder und Protuberanzen.", "reference_image": "assets/refs/ref_sonnensterne.png"}, "loc_kosmos": {"id": "loc_kosmos", "name": "Der tiefe Kosmos", "category": "Ort / Kulisse", "description": "Indigoblauer Nebelraum mit Millionen funkelnder Lichtpunkte und sanftem Tiefenlicht.", "reference_image": "assets/refs/ref_kosmos.png"}, "prop_hand": {"id": "prop_hand", "name": "Die Sternenstaub-Hand", "category": "Requisite", "description": "Menschliche Handfläche, gegen die Sterne geöffnet, zarte Rauch-/Lichtfäden an den Fingerspitzen.", "reference_image": "assets/refs/ref_hand.png"}}};
@@ -1518,25 +1109,52 @@ PERSISTENZ-PUFFER (Elemente im Bild):
       }
     }
 
+    // Ehrlicher Watcher-Status statt statischem "Aktiv"
+    function renderWatcherState(active, paused, directory) {
+      const dot = document.getElementById('watcher-dot');
+      const label = document.getElementById('watcher-label');
+      const btn = document.getElementById('watcher-toggle-btn');
+      dot.classList.remove('paused', 'off');
+      if (!active) {
+        dot.classList.add('off');
+        label.innerText = 'aus';
+        btn.hidden = true;
+        return;
+      }
+      if (paused) dot.classList.add('paused');
+      label.innerText = paused ? 'pausiert' : 'aktiv';
+      document.getElementById('watcher-folder').innerText = directory || '';
+      btn.innerText = paused ? 'Überwachung fortsetzen' : 'Überwachung pausieren';
+      btn.hidden = false;
+    }
+    async function loadWatcherStatus() {
+      try {
+        const res = await fetch('/api/watcher/status');
+        const d = await res.json();
+        renderWatcherState(d.active, d.paused, d.directory);
+      } catch (e) {
+        renderWatcherState(false);
+      }
+    }
+    loadWatcherStatus();
+
+    // Auf-/Zu-Zustand der Nebenbereiche merken (ueberlebt die Reloads nach Aktionen)
+    document.querySelectorAll('details[data-panel]').forEach(d => {
+      const key = 'csd-panel-' + d.dataset.panel;
+      try { const s = localStorage.getItem(key); if (s === 'closed') d.open = false; else if (s === 'open') d.open = true; } catch (e) {}
+      d.addEventListener('toggle', () => {
+        try { localStorage.setItem(key, d.open ? 'open' : 'closed'); } catch (e) {}
+      });
+    });
+
     // Download Watcher Toggle
     async function toggleWatcher() {
       try {
         const res = await fetch('/api/watcher/toggle', { method: 'POST' });
         const data = await res.json();
         if (res.ok) {
-          const isRunning = data.running;
-          document.getElementById('watcher-label').innerText = data.state;
-          const dot = document.getElementById('watcher-dot');
-          const btn = document.getElementById('watcher-toggle-btn');
-          if (isRunning) {
-            dot.classList.remove('paused');
-            btn.innerText = '⏸️ Überwachung pausieren';
-            showToast('🟢 Download-Ordner Überwachung aktiviert!', 'success');
-          } else {
-            dot.classList.add('paused');
-            btn.innerText = '▶️ Überwachung fortsetzen';
-            showToast('⏸️ Download-Ordner Überwachung pausiert.', 'info');
-          }
+          renderWatcherState(true, !data.running, document.getElementById('watcher-folder').innerText);
+          showToast(data.running ? 'Download-Überwachung aktiv' : 'Download-Überwachung pausiert', data.running ? 'success' : 'info');
         }
       } catch (e) {
         console.warn('Watcher toggle call failed:', e);
@@ -1575,7 +1193,7 @@ PERSISTENZ-PUFFER (Elemente im Bild):
           playerDiv.innerHTML = `
             <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <audio controls src="${audioUrl}" style="height: 30px; max-width: 220px;"></audio>
-              <button class="save-voice-btn" onclick="saveVoice(${stepNr})">💾 Stimme speichern</button>
+              <button class="save-voice-btn" onclick="saveVoice(${stepNr})">Stimme speichern</button>
             </div>
           `;
           window['recordedBlob_' + stepNr] = blob;
@@ -1717,7 +1335,6 @@ PERSISTENZ-PUFFER (Elemente im Bild):
         if (!banner) {
           banner = document.createElement('div');
           banner.className = 'cowork-offer-banner';
-          banner.style.cssText = 'background: rgba(139, 92, 246, 0.15); border: 1px solid #8b5cf6; border-radius: 8px; padding: 10px 12px; margin: 10px 0; font-size: 12px; color: #ede9fe;';
           const body = card.querySelector('.shot-body');
           body.insertBefore(banner, body.firstChild);
         }
@@ -1725,18 +1342,18 @@ PERSISTENZ-PUFFER (Elemente im Bild):
         const summaryText = offer.summary || offer.prompt || offer.url || JSON.stringify(offer);
         const encoded = encodeURIComponent(JSON.stringify(offer));
         banner.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+          <div class="cowork-offer-row">
             <div>
-              <strong style="color: #c4b5fd;">💡 Cowork Offer (${offer.action || 'Vorschlag'}):</strong>
-              <div style="margin-top: 4px; font-style: italic; color: #f5f3ff;">"${summaryText}"</div>
+              <strong>Cowork-Vorschlag (${offer.action || 'Vorschlag'}):</strong>
+              <div class="cowork-offer-summary">"${summaryText}"</div>
             </div>
-            <div style="display: flex; gap: 6px; flex-shrink: 0;">
-              <button class="btn-action" style="background: #10b981; color: white; padding: 4px 10px; font-size: 11px; border-radius: 4px; border:none; cursor:pointer;" onclick="CoworkProtocol.applyOffer(${stepNr}, '${encoded}')">✅ Annehmen</button>
-              <button class="btn-action" style="background: rgba(107, 114, 128, 0.3); color: #d1d5db; padding: 4px 8px; font-size: 11px; border-radius: 4px; border:none; cursor:pointer;" onclick="this.closest('.cowork-offer-banner').remove()">✕</button>
+            <div class="cowork-offer-actions">
+              <button class="btn-copy-card cowork-offer-accept" aria-describedby="shot-title-${stepNr}" onclick="CoworkProtocol.applyOffer(${stepNr}, '${encoded}')">Annehmen</button>
+              <button class="btn-copy-card" aria-label="Vorschlag für Shot ${stepNr} schließen" onclick="this.closest('.cowork-offer-banner').remove()">Schließen</button>
             </div>
           </div>
         `;
-        showToast('💡 Neues Cowork-Angebot für Step ' + stepNr + ' erhalten!', true);
+        showToast('Neuer Cowork-Vorschlag für Shot ' + stepNr + ' erhalten!', true);
         return { status: 'ok', message: 'Offer im Dashboard platziert', offerId: 'off_' + Date.now() };
       },
 

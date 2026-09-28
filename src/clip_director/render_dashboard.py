@@ -54,6 +54,8 @@ def render_project(project_dir):
 
     segments_html = []
     cards_html = []
+    # Der aktuelle Shot = erster ohne Hero-Take (dieselbe Regel wie /api/cowork/focus)
+    current_step = next((s.get("step_nr") for s in shots if not s.get("selected_take")), None)
 
     for s in shots:
         step_nr = s.get("step_nr")
@@ -62,9 +64,11 @@ def render_project(project_dir):
         end = s.get("end_sec", 10)
         takes = s.get("takes", [])
         has_hero = bool(s.get("selected_take"))
-        status_cls = "done" if has_hero else ""
+        is_current = step_nr == current_step
+        status_cls = "done" if has_hero else ("active" if is_current else "")
+        aria_current = ' aria-current="step"' if is_current else ""
 
-        seg = f'<a href="#shot-{step_nr}" class="timeline-segment {status_cls}">#{step_nr} ({start}-{end}s)</a>'
+        seg = f'<a href="#shot-{step_nr}" class="timeline-segment {status_cls}"{aria_current}>#{step_nr} · {start}–{end} s</a>'
         segments_html.append(seg)
 
         hero_take_obj = next((t for t in takes if t.get("id") == s.get("selected_take")), None) if has_hero else None
@@ -91,7 +95,7 @@ def render_project(project_dir):
         audio = s.get("audio", {})
         track1_invideo = audio.get("track1_invideo", "mute")
         track1_active = "active" if track1_invideo == "keep" else ""
-        track1_label = "🔊 Spur 1: In-Video (Aktiv)" if track1_invideo == "keep" else "🔇 Spur 1: In-Video (Mute)"
+        track1_label = "Spur 1: In-Video an" if track1_invideo == "keep" else "Spur 1: In-Video stumm"
         track2_active = "active" if audio.get("track2_bed") else ""
         track3_active = "active" if audio.get("track3_midi") else ""
         track4_active = "active" if audio.get("track4_sfx") else ""
@@ -102,7 +106,7 @@ def render_project(project_dir):
             rendered_audio = voice.get("rendered_file")
             audio_player_html = ""
             if rendered_audio and (project_path / rendered_audio).exists():
-                audio_player_html = f'<div style="margin-top: 8px;"><audio controls src="{html.escape(rendered_audio)}" style="height: 30px; width: 100%;"></audio></div>'
+                audio_player_html = f'<audio controls src="{html.escape(rendered_audio)}" style="height: 30px; width: 100%; margin-top: 6px;"></audio>'
 
             src_text = voice.get("source_text") or voice.get("text") or ""
             trans_en = voice.get("translated_text_en") or ""
@@ -110,71 +114,73 @@ def render_project(project_dir):
             en_block = ""
             en_prompt_btn = ""
             if trans_en:
-                en_block = f'<div style="margin-top: 4px; font-size: 12px; color: #a5b4fc;"><strong style="color: #93c5fd;">🇬🇧 EN Translation:</strong> <em>"{html.escape(trans_en)}"</em></div>'
-                en_prompt_btn = f'''<button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;" onclick="copyShotPromptOnly({step_nr}, 'en')" title="Visueller Prompt + englische Dialoganweisung">📋 Prompt + 🇬🇧 EN</button>'''
+                en_block = f'<div class="voice-line"><strong>EN:</strong> „{html.escape(trans_en)}“</div>'
+                en_prompt_btn = f'''<button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'en')" aria-describedby="shot-title-{step_nr}" title="Visueller Prompt + englische Dialoganweisung">Prompt + EN</button>'''
 
             voice_html = f"""<div class="voice-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span>🎙️ <strong>Voice & Dialog ({html.escape(voice.get("speaker") or "TTS")}):</strong></span>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span class="rec-timer" id="rec-timer-{step_nr}" style="display:none; color: #ef4444; font-weight: 700; font-size: 11px;">● 00:00</span>
-                  <button class="rec-btn" id="rec-btn-{step_nr}" onclick="toggleRecord({step_nr})">🎙️ Aufnahme</button>
-                </div>
+              <div class="voice-head">
+                <span><strong>Sprecher:</strong> {html.escape(voice.get("speaker") or "TTS")}</span>
+                <span>
+                  <span class="rec-timer" id="rec-timer-{step_nr}" style="display:none;">● 00:00</span>
+                  <button class="rec-btn" id="rec-btn-{step_nr}" onclick="toggleRecord({step_nr})" aria-describedby="shot-title-{step_nr}">Aufnehmen</button>
+                </span>
               </div>
-              <div style="font-size: 12.5px; color: #f3f4f6; margin-bottom: 2px;">
-                <strong style="color: #e9d5ff;">🇩🇪 Source (DE):</strong> <em style="color: #e9d5ff;">"{html.escape(src_text)}"</em>
-              </div>
+              <div class="voice-line"><strong>DE:</strong> „{html.escape(src_text)}“</div>
               {en_block}
-              <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="copyShotPromptOnly({step_nr}, 'de')" title="Visueller Prompt + deutsche Dialoganweisung">📋 Prompt + 🇩🇪 DE</button>
+              <div class="voice-actions">
+                <button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'de')" aria-describedby="shot-title-{step_nr}" title="Visueller Prompt + deutsche Dialoganweisung">Prompt + DE</button>
                 {en_prompt_btn}
-                <button class="btn-copy-card" style="font-size: 11px; padding: 2px 7px; background: rgba(107, 114, 128, 0.2); border-color: #6b7280; color: #d1d5db;" onclick="copyShotPromptOnly({step_nr}, 'silent')" title="Visueller Prompt + Stumm-Direktive">🔇 Prompt + Stumm</button>
+                <button class="btn-copy-card" onclick="copyShotPromptOnly({step_nr}, 'silent')" aria-describedby="shot-title-{step_nr}" title="Visueller Prompt + Stumm-Direktive">Prompt + stumm</button>
               </div>
               <div id="voice-player-{step_nr}">{audio_player_html}</div>
             </div>"""
 
+        current_cls = " is-current" if is_current else ""
+        current_pill = '<span class="current-pill">aktuell</span>' if is_current else ""
         card = f"""
-        <div class="shot-card" id="shot-{step_nr}">
+        <div class="shot-card{current_cls}" id="shot-{step_nr}">
           <div class="shot-header">
-            <div class="step-tag">Step {step_nr:02d}: {html.escape(slug)}</div>
-            <div class="time-tag">{start:02d}s – {end:02d}s ({s.get("duration_sec")}s)</div>
+            <div class="step-tag" id="shot-title-{step_nr}">{step_nr:02d} · {html.escape(slug)}{current_pill}</div>
+            <div class="time-tag">{start:02d}–{end:02d} s ({html.escape(str(s.get("duration_sec", end - start)))} s)</div>
           </div>
           <div class="shot-preview">
             {preview_inner}
             <div class="preview-badge">{badge_text}</div>
           </div>
           <div class="shot-body">
+            <button type="button" class="prompt-box" onclick="copyShotPromptOnly({step_nr}, \'plain\')" title="Visuellen Prompt ohne Dialoganweisung kopieren">
+              <span class="p-title">
+                <span>Prompt {active_v}</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+              <span class="prompt-text">{html.escape(prompt_text)}</span>
+            </button>
             <div class="link-import-bar">
-              <input type="text" id="link-input-{step_nr}" placeholder="Gemini Sharelink oder Video-URL einfügen...">
-              <button class="btn-fetch-link" onclick="fetchVideoLink({step_nr})">📥 Abholen</button>
-            </div>
-            <div class="grammar-row">
-              <div><strong>Perspektive</strong><span>{html.escape(s.get("perspective") or "-")}</span></div>
-              <div><strong>Kameraführung</strong><span>{html.escape(s.get("camera_movement") or "-")}</span></div>
-              <div><strong>Licht/Farbe</strong><span>{html.escape(s.get("lighting_color") or "-")}</span></div>
-              <div><strong>Dynamik</strong><span>Stärke {s.get("motion_intensity", 3)}/10</span></div>
-            </div>
-            <div class="prompt-box" onclick="copyShotPromptOnly({step_nr}, \'plain\')" title="Klicken: Reinen visuellen Prompt in Zwischenablage kopieren (ohne Sprachen-Mix)">
-              <div class="p-title">
-                <span>Visueller Prompt (Version {active_v})</span>
-                <span class="copy-hint-pill">⚡ Klick = Prompt kopieren</span>
-              </div>
-              <p>"{html.escape(prompt_text)}"</p>
+              <input type="text" id="link-input-{step_nr}" aria-label="Video-Link für Shot {step_nr}" placeholder="Gemini-Sharelink oder Video-URL">
+              <button class="btn-fetch-link" onclick="fetchVideoLink({step_nr})" aria-describedby="shot-title-{step_nr}">Abholen</button>
             </div>
             {voice_html}
-            <div class="audio-matrix">
-              <span class="audio-pill {track1_active}">{track1_label}</span>
-              <button class="audio-toggle-btn" onclick="toggleAudioTrack({step_nr})" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
-              <span class="audio-pill {track2_active}">Spur 2: Bett</span>
-              <span class="audio-pill {track3_active}">Spur 3: MIDI</span>
-              <span class="audio-pill {track4_active}">Spur 4: SFX</span>
-            </div>
-            <div class="shot-footer">
-              <span class="takes-count">{len(takes)} Take(s) generiert</span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span>Übergang: {html.escape(audio.get("transition_video") or "cut")}</span>
-                <button class="btn-copy-shot" onclick="copyShotDetails({step_nr})" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">⚡ Prompt & Specs</button>
+            <details class="shot-more" open>
+              <summary aria-describedby="shot-title-{step_nr}">Kamera, Licht &amp; Ton</summary>
+              <div>
+                <div class="grammar-row">
+                  <div><strong>Perspektive</strong><span>{html.escape(s.get("perspective") or "-")}</span></div>
+                  <div><strong>Kameraführung</strong><span>{html.escape(s.get("camera_movement") or "-")}</span></div>
+                  <div><strong>Licht/Farbe</strong><span>{html.escape(s.get("lighting_color") or "-")}</span></div>
+                  <div><strong>Dynamik</strong><span>Stärke {s.get("motion_intensity", 3)}/10</span></div>
+                </div>
+                <div class="audio-matrix">
+                  <span class="audio-pill {track1_active}">{track1_label}</span>
+                  <button class="audio-toggle-btn" onclick="toggleAudioTrack({step_nr})" aria-describedby="shot-title-{step_nr}" title="Zwischen Beibehalten und Stummschalten wechseln">Ton umschalten</button>
+                  <span class="audio-pill {track2_active}">Spur 2: Bett</span>
+                  <span class="audio-pill {track3_active}">Spur 3: MIDI</span>
+                  <span class="audio-pill {track4_active}">Spur 4: SFX</span>
+                </div>
               </div>
+            </details>
+            <div class="shot-footer">
+              <span class="takes-count">{len(takes)} Take(s) · Übergang: {html.escape(audio.get("transition_video") or "cut")}</span>
+              <button class="btn-copy-shot" onclick="copyShotDetails({step_nr})" aria-describedby="shot-title-{step_nr}" title="Kopiert vollständige Spezifikation + Prompt + Clueframe">Prompt &amp; Specs kopieren</button>
             </div>
           </div>
         </div>
@@ -209,35 +215,35 @@ def render_project(project_dir):
         shots_label = f"Shots: {', '.join(appearing_shots)}" if appearing_shots else "Projektweit relevant"
 
         if i_ref and (project_path / i_ref).exists():
-            thumb_html = f'<img src="{html.escape(i_ref)}" alt="{html.escape(i_name)}" draggable="true" ondragstart="onAssetDragStart(event, this, \'{html.escape(i_name)}\')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><div class="drag-badge">🤏 Drag</div>'
-            status_badge = '<span style="color: var(--accent-green);">✅ Bereit</span>'
+            thumb_html = f'<img src="{html.escape(i_ref)}" alt="{html.escape(i_name)}" draggable="true" ondragstart="onAssetDragStart(event, this, \'{html.escape(i_name)}\')" class="draggable-asset" title="Greifen & in externen Chat (z.B. Gemini) ziehen"><span class="drag-badge">Drag</span>'
+            status_badge = '<span class="status-ok">bereit</span>'
         else:
             thumb_html = '<span>Offen</span>'
-            status_badge = '<span style="color: var(--accent-amber);">⚠️ Vorlage erzeugen</span>'
+            status_badge = '<span class="status-warn">Vorlage fehlt</span>'
 
         b_card = f"""
-        <div class="bible-card" onclick="copyBibleItem('{i_id}')" title="Klicken: Bild & Prompt in Zwischenablage kopieren">
-          <div class="bible-thumb">{thumb_html}</div>
-          <div class="bible-info">
-            <div class="bible-title">
+        <button type="button" class="bible-card" onclick="copyBibleItem('{i_id}')" aria-label="Konsistenz-Element {html.escape(i_name)} kopieren" aria-describedby="bible-cat-{idx} bible-desc-{idx} bible-meta-{idx}" title="Bild und Prompt kopieren">
+          <span class="bible-thumb">{thumb_html}</span>
+          <span class="bible-info">
+            <span class="bible-title">
               <span>{html.escape(i_name)}</span>
-              <div style="display: flex; gap: 6px; align-items: center;">
-                <span class="bible-cat">{html.escape(i_cat)}</span>
-                <button class="btn-copy-card" onclick="event.stopPropagation(); copyBibleItem('{i_id}')" title="Kopiert Bild + Konsistenz-Prompt für Image-Generatoren">⚡ Kopieren</button>
-              </div>
-            </div>
-            <p class="bible-desc">{html.escape(i_desc)}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="bible-card-meta">
+                <span class="bible-cat" id="bible-cat-{idx}">{html.escape(i_cat)}</span>
+                <span class="copy-hint-pill">Kopieren</span>
+              </span>
+            </span>
+            <span class="bible-desc" id="bible-desc-{idx}">{html.escape(i_desc)}</span>
+            <span class="bible-meta" id="bible-meta-{idx}">
               <span class="bible-shots">{shots_label}</span>
-              <span style="font-size: 11px;">{status_badge}</span>
-            </div>
-          </div>
-        </div>
+              <span>{status_badge}</span>
+            </span>
+          </span>
+        </button>
         """
         bible_cards_html.append(b_card)
 
     if not bible_cards_html:
-        bible_cards_html.append('<div style="color: var(--text-muted); font-size: 13px;">Keine Konsistenz-Elemente im Puffer definiert.</div>')
+        bible_cards_html.append('<div class="bible-desc">Keine Konsistenz-Elemente im Puffer definiert.</div>')
 
     project_client_data = {
         "project": proj,
@@ -263,7 +269,7 @@ def render_project(project_dir):
             s_num = s.get("step_nr", 1)
             s_start = s.get("start_sec", 0)
             s_slug = s.get("slug", f"Shot {s_num}")
-            jumpers.append(f'<button class="btn-jumper" onclick="jumpMasterVideo({s_start})" title="Sprung zu Shot {s_num} ({s_start}s)">▶️ Shot {s_num} ({s_start}s) • {html.escape(s_slug)}</button>')
+            jumpers.append(f'<button class="btn-jumper" onclick="jumpMasterVideo({s_start})" title="Sprung zu Shot {s_num} ({s_start}s)">{s_num} · {html.escape(s_slug)}</button>')
         jumpers_html = "\n      ".join(jumpers)
 
         master_section = f"""
@@ -271,15 +277,15 @@ def render_project(project_dir):
   <section class="master-player-card" id="master-player">
     <div class="master-header">
       <div class="master-title-group">
-        <span class="premiere-badge">🎉 MASTER CLIP BEREIT</span>
-        <h2>🎬 {html.escape(proj.get("title") or proj_name)} — Masterfilm</h2>
-        <span class="master-specs-tag">⏱️ {proj.get("total_duration_sec", 40)}s Cut • {proj.get("aspect_ratio", "16:9")} • {proj.get("fps", 24)} FPS • de-DE-ConradNeural Voiceover & Veo Raumklang</span>
+        <span class="premiere-badge">Masterfilm fertig</span>
+        <h2>{html.escape(proj.get("title") or proj_name)}</h2>
+        <span class="master-specs-tag">{proj.get("total_duration_sec", 40)} s · {proj.get("aspect_ratio", "16:9")} · {proj.get("fps", 24)} fps</span>
       </div>
       <div class="master-actions">
-        <button class="btn-master-action btn-explorer" onclick="openProjectFolder()" title="Öffnet den Projektordner im Windows Explorer und markiert das Master-Video">📁 Ordner im Explorer öffnen</button>
-        <a href="{html.escape(master_rel)}" download="{html.escape(master_rel)}" class="btn-master-action btn-download" title="Master-Video lokal speichern">📥 Video herunterladen ({size_mb:.2f} MB)</a>
-        <button class="btn-master-action btn-handoff" onclick="handoffToMediaEditor()" title="Übergibt das Master-Video an ai-media-editor zur Whisper-Transkription & Nachbearbeitung">✂️ An ai-media-editor übergeben</button>
-        <button class="btn-master-action btn-assemble" onclick="triggerReassemble()" title="Führt FFmpeg-Assembly erneut aus">🔄 Neu schneiden</button>
+        <button class="btn-master-action btn-explorer" onclick="openProjectFolder()" title="Öffnet den Projektordner im Windows Explorer und markiert das Master-Video">Im Explorer zeigen</button>
+        <a href="{html.escape(master_rel)}" download="{html.escape(master_rel)}" class="btn-master-action btn-download" title="Master-Video lokal speichern">Herunterladen ({size_mb:.1f} MB)</a>
+        <button class="btn-master-action btn-handoff" onclick="handoffToMediaEditor()" title="Übergibt das Master-Video an ai-media-editor zur Whisper-Transkription & Nachbearbeitung">An ai-media-editor</button>
+        <button class="btn-master-action btn-assemble" onclick="triggerReassemble()" title="Führt FFmpeg-Assembly erneut aus">Neu schneiden</button>
       </div>
     </div>
     <div class="master-video-wrapper">
@@ -289,7 +295,7 @@ def render_project(project_dir):
       </video>
     </div>
     <div class="master-timeline-jumpers">
-      <span class="jumper-label">Kapitel / Direktsprung:</span>
+      <span class="jumper-label">Kapitel:</span>
       {jumpers_html}
     </div>
   </section>
@@ -314,7 +320,10 @@ def render_project(project_dir):
         timeline_segments="\n".join(segments_html),
         shot_cards="\n".join(cards_html),
         project_data_json=project_data_json,
-        master_section=master_section
+        persistence_count=f"({sum(len(p_buf.get(k, []) or []) for k in ('characters', 'props', 'locations', 'objects'))})",
+        bible_count=f"({len(bible_entries)} Karten, {sum(1 for i in bible_entries if i.get('reference_image') and (project_path / i['reference_image']).exists())} mit Bild)",
+        master_section_before=master_section if current_step is None else "",
+        master_section_after=master_section if current_step is not None else ""
     )
 
     out_file = project_path / "storyboard.html"

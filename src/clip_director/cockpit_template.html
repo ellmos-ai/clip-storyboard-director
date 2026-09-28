@@ -3,417 +3,224 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storyboard Cockpit (Edge Edition) — {project_title}</title>
+  <title>Storyboard Cockpit — {project_title}</title>
   <style>
+    /* Ruhige Palette wie storyboard.html: eine Akzentfarbe, Statusfarben nur fuer Status. */
     :root {
-      --bg-dark: #090c15;
-      --bar-bg: #111524;
-      --card-bg: #151a2b;
-      --border-color: #232a42;
-      --accent-blue: #3b82f6;
-      --accent-cyan: #06b6d4;
-      --accent-green: #10b981;
-      --accent-amber: #f59e0b;
-      --accent-red: #ef4444;
-      --accent-purple: #8b5cf6;
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
+      --bg: #0f1115;
+      --surface: #171a21;
+      --surface-2: #1d2129;
+      --border: #2a2f3a;
+      --text: #e6e8ec;
+      --muted: #a0a6b2;
+      --accent: #6ea8f7;
+      --accent-strong: #2f6fd6;
+      --ok: #5cc29a;
+      --warn: #e0b060;
+      --danger: #f08080;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-main);
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      font-size: 14px;
     }
+    button, select { font: inherit; }
+    code { font-family: Consolas, ui-monospace, monospace; font-size: 0.92em; color: var(--muted); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    /* Top Control Bar */
     header.cockpit-header {
-      height: 54px;
-      background: var(--bar-bg);
-      border-bottom: 1px solid var(--border-color);
+      min-height: 48px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
-      z-index: 100;
-      gap: 12px;
+      flex-wrap: wrap;
+      padding: 6px 14px;
+      gap: 8px 12px;
       flex-shrink: 0;
     }
+    .brand-section { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+    .brand-title { font-size: 14px; font-weight: 700; }
+    .project-pill { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .brand-title {
-      font-size: 14.5px;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      background: linear-gradient(135deg, #67e8f9, #3b82f6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .project-pill {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #93c5fd;
-      font-weight: 600;
-    }
+    .cdp-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex-shrink: 0; }
+    .status-dot.disconnected { background: var(--muted); }
+    .status-dot.paused { background: var(--warn); }
 
-    /* Center: Status */
-    .header-status-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .cdp-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11.5px;
-      background: rgba(17, 24, 39, 0.8);
-      padding: 4px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 8px var(--accent-green);
-    }
-    .status-dot.disconnected {
-      background: var(--accent-amber);
-      box-shadow: 0 0 8px var(--accent-amber);
-    }
-
-    /* Controls Section */
-    .controls-section {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .provider-select-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
+    .controls-section { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .provider-select-box { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
     select.provider-dropdown {
-      background: #1e2438;
-      color: #f3f4f6;
-      border: 1px solid var(--border-color);
-      padding: 5px 10px;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 5px 8px;
       border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      outline: none;
+      font-size: 12.5px;
       cursor: pointer;
     }
 
-    .btn-action {
+    /* Ein Button-Stil; nur .primary traegt Akzentfarbe */
+    .btn-action, .btn-copy, .btn-large-open {
       padding: 6px 12px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
-      border: none;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      transition: all 0.15s;
+      text-decoration: none;
+      white-space: nowrap;
     }
-    .btn-inject {
-      background: linear-gradient(135deg, #2563eb, #0891b2);
-      color: white;
-      box-shadow: 0 2px 10px rgba(6, 182, 212, 0.25);
+    .btn-action:hover, .btn-copy:hover, .btn-large-open:hover { border-color: var(--accent); }
+    .btn-action.primary, .btn-copy.primary {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+      color: #fff;
     }
-    .btn-inject:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .btn-action.primary:hover, .btn-copy.primary:hover { border-color: var(--accent); }
+    .btn-quiet { background: transparent; }
 
-    .btn-secondary {
-      background: #1f293d;
-      border: 1px solid var(--border-color);
-      color: #e5e7eb;
-    }
-    .btn-secondary:hover { background: #2b354f; }
-
-    /* Split Container */
-    .split-container {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .pane {
-      height: 100%;
-      overflow: hidden;
-      position: relative;
-    }
-    .pane-left {
-      width: 50%;
-      min-width: 320px;
-      border-right: 1px solid var(--border-color);
-    }
+    /* Split */
+    .split-container { flex: 1; display: flex; overflow: hidden; position: relative; }
+    .pane { height: 100%; overflow: hidden; position: relative; }
+    .pane-left { width: 55%; min-width: 320px; }
     .pane-right {
       flex: 1;
       min-width: 340px;
-      background: #0b0f1a;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
     }
+    .pane-iframe { width: 100%; height: 100%; border: none; background: var(--bg); }
 
-    .pane-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: var(--bg-dark);
-    }
-
-    /* Splitter */
     .gutter-col {
-      width: 6px;
+      width: 8px;
       cursor: col-resize;
-      background: var(--border-color);
-      transition: background 0.2s;
-      z-index: 10;
+      background: var(--border);
+      flex-shrink: 0;
     }
-    .gutter-col:hover, .gutter-col.dragging {
-      background: var(--accent-cyan);
-    }
+    .gutter-col:hover, .gutter-col.dragging { background: var(--accent); }
+    .gutter-col:focus-visible { background: var(--accent); outline-offset: -2px; }
 
-    /* Generator Toolbar in Right Pane */
     .gen-toolbar {
-      height: 40px;
-      background: #131828;
-      border-bottom: 1px solid var(--border-color);
+      min-height: 36px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       padding: 0 14px;
-      font-size: 11.5px;
-      color: var(--text-muted);
+      font-size: 12px;
+      color: var(--muted);
       flex-shrink: 0;
     }
-    .gen-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .external-badge {
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      color: #c4b5fd;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 10.5px;
-      font-weight: 600;
-    }
+    .gen-info { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .external-badge { color: var(--text); font-weight: 600; }
+    #current-url-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    /* Bridge View Layout */
     .bridge-content {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      max-width: 780px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .bridge-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      max-width: 760px;
+      margin: 0 auto;
+      width: 100%;
     }
-
-    .bridge-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      padding-bottom: 10px;
-    }
-    .card-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .step-badge {
-      font-size: 11px;
-      background: rgba(6, 182, 212, 0.2);
-      border: 1px solid rgba(6, 182, 212, 0.4);
-      color: #67e8f9;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    /* Notice Box */
-    .notice-box {
-      background: rgba(30, 41, 59, 0.6);
-      border-left: 3px solid var(--accent-cyan);
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-size: 12px;
-      color: #cbd5e1;
-      line-height: 1.5;
-    }
-
-    /* Prompt Box */
-    .prompt-container {
-      background: #0b0e17;
-      border: 1px solid rgba(245, 158, 11, 0.3);
+    .bridge-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 14px;
-      position: relative;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .bridge-card.focus { border-color: var(--accent); }
+    .bridge-card-header { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+    .card-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .step-badge { display: block; font-size: 17px; font-weight: 700; color: var(--text); text-transform: none; letter-spacing: 0; margin-top: 2px; }
+    #bridge-step-time { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    .prompt-container {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
     }
     .prompt-label {
       font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-amber);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .prompt-text {
-      font-size: 13.5px;
-      line-height: 1.6;
-      color: #f3f4f6;
-      font-style: italic;
-    }
-
-    /* Button Bar */
-    .button-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .btn-copy {
-      padding: 7px 12px;
-      border-radius: 6px;
-      font-size: 12px;
       font-weight: 600;
-      border: 1px solid var(--border-color);
-      background: #1e2538;
-      color: #e5e7eb;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
     }
-    .btn-copy:hover {
-      background: #2b354f;
-      border-color: var(--accent-blue);
-      transform: translateY(-1px);
-    }
-    .btn-copy.primary {
-      background: rgba(245, 158, 11, 0.15);
-      border-color: var(--accent-amber);
-      color: #fde68a;
-    }
-    .btn-copy.primary:hover {
-      background: rgba(245, 158, 11, 0.25);
-    }
-    .btn-copy.accent-de {
-      background: rgba(59, 130, 246, 0.15);
-      border-color: rgba(59, 130, 246, 0.4);
-      color: #93c5fd;
-    }
-    .btn-copy.accent-silent {
-      background: rgba(107, 114, 128, 0.2);
-      border-color: #6b7280;
-      color: #d1d5db;
-    }
+    .prompt-text { font-size: 14px; line-height: 1.6; color: var(--text); }
 
-    .btn-large-open {
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      color: white;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
-      transition: all 0.2s;
-      text-decoration: none;
-    }
-    .btn-large-open:hover {
-      filter: brightness(1.15);
-      transform: translateY(-1px);
-    }
+    .section-label { font-size: 12px; color: var(--muted); font-weight: 600; display: block; margin-bottom: 6px; }
+    .button-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 
-    /* Auto Ingest Box */
-    .ingest-status-box {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      border-radius: 8px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 12px;
-      color: #d1fae5;
+    .clue-thumb {
+      height: 120px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      display: inline-block;
     }
-    .ingest-pulse {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 10px var(--accent-green);
-      flex-shrink: 0;
-    }
+    .clue-thumb img { height: 100%; object-fit: cover; cursor: grab; display: block; }
 
-    /* Toast Notifications */
+    .ingest-status-box { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+
+    details.note { font-size: 12.5px; color: var(--muted); }
+    details.note > summary { cursor: pointer; font-weight: 600; }
+    details.note > summary:hover { color: var(--text); }
+    details.note > p { margin-top: 6px; line-height: 1.5; }
+
+    .master-video { border-radius: 6px; overflow: hidden; background: #000; }
+    .master-video video { width: 100%; max-height: 240px; display: block; }
+
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #1f2937;
-      color: white;
-      padding: 10px 18px;
-      border-radius: 8px;
+      bottom: 20px;
+      right: 20px;
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 6px;
       font-size: 13px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      border-left: 4px solid var(--accent-cyan);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
       opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.3s;
+      transition: opacity 0.2s;
       z-index: 1000;
       pointer-events: none;
     }
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 700px) {
+      .split-container { flex-direction: column; }
+      .pane-left { width: 100% !important; min-width: 0; height: 50%; flex: none; }
+      .pane-right { width: 100%; min-width: 0; height: auto; flex: 1; }
+      .gutter-col { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
     }
   </style>
 </head>
@@ -421,173 +228,124 @@
 
   <header class="cockpit-header">
     <div class="brand-section">
-      <span style="font-size: 18px;">🎬</span>
-      <span class="brand-title">STORYBOARD COCKPIT</span>
+      <span class="brand-title">Storyboard Cockpit</span>
       <span class="project-pill">{project_title}</span>
     </div>
 
-    <div class="header-status-group">
-      <div class="cdp-status" id="cdp-status-box" title="Verbindungsstatus zu Microsoft Edge CDP">
-        <div class="status-dot" id="cdp-dot"></div>
-        <span id="cdp-text">Edge CDP prüfen...</span>
-      </div>
+    <div class="cdp-status" id="cdp-status-box" title="Verbindungsstatus zu Microsoft Edge CDP">
+      <div class="status-dot disconnected" id="cdp-dot"></div>
+      <span id="cdp-text">Edge CDP wird geprüft …</span>
     </div>
 
     <div class="controls-section">
-      <div class="provider-select-box">
-        <span>Generator:</span>
+      <label class="provider-select-box">
+        <span>Generator</span>
         <select class="provider-dropdown" id="provider-select" onchange="changeProvider(this.value)">
-          <option value="https://gemini.google.com" selected>✨ Google Gemini (Veo Video)</option>
-          <option value="https://app.runwayml.com">🎞️ Runway Gen-3</option>
-          <option value="https://klingai.com">⚡ Kling AI</option>
-          <option value="https://lumalabs.ai/dream-machine">🌀 Luma Dream Machine</option>
-          <option value="https://pika.art">🪄 Pika Labs</option>
+          <option value="https://gemini.google.com" selected>Google Gemini (Veo)</option>
+          <option value="https://app.runwayml.com">Runway Gen-3</option>
+          <option value="https://klingai.com">Kling AI</option>
+          <option value="https://lumalabs.ai/dream-machine">Luma Dream Machine</option>
+          <option value="https://pika.art">Pika Labs</option>
         </select>
-      </div>
+      </label>
 
-      <button class="btn-action btn-inject" onclick="injectActivePrompt()" title="Injiziert den aktiven Prompt per CDP direkt in das Gemini-Eingabefeld">
-        <span>🚀 Prompt an Gemini senden</span>
-      </button>
-
-      <button class="btn-action btn-secondary" onclick="toggleViewMode()" id="toggle-view-btn" title="Zwischen Bridge-Cockpit und Iframe-Vorschau umschalten">
-        <span>🖼️ Iframe erzwingen</span>
-      </button>
-
-      <button class="btn-action btn-secondary" onclick="openGeneratorInNewTab()" title="Generator in separatem Edge-Tab öffnen (ohne Login-Sperre)">
-        <span>↗️ Im Tab öffnen</span>
-      </button>
-
-      <button class="btn-action btn-secondary" onclick="openFolderInExplorer()" title="Öffnet den Projektordner mit dem fertigen Video im Windows Explorer">
-        <span>📁 Ordner öffnen</span>
-      </button>
+      <button class="btn-action" onclick="injectActivePrompt()" title="Injiziert den aktiven Prompt per CDP direkt in das Gemini-Eingabefeld">An Gemini senden</button>
+      <button class="btn-action btn-quiet" onclick="openGeneratorInNewTab()" title="Generator in separatem Edge-Tab öffnen (ohne Login-Sperre)">Im Tab öffnen</button>
+      <button class="btn-action btn-quiet" onclick="toggleViewMode()" id="toggle-view-btn" title="Zwischen Bridge-Cockpit und Iframe-Vorschau umschalten">Iframe-Ansicht</button>
+      <button class="btn-action btn-quiet" onclick="openFolderInExplorer()" title="Öffnet den Projektordner mit dem fertigen Video im Windows Explorer">Ordner</button>
     </div>
   </header>
 
   <div class="split-container" id="splitContainer">
-    <!-- Linke Spalte: Storyboard Dashboard -->
     <div class="pane pane-left" id="paneLeft">
-      <iframe class="pane-iframe" id="storyboard-frame" src="/storyboard.html"></iframe>
+      <iframe class="pane-iframe" id="storyboard-frame" src="/storyboard.html" title="Storyboard"></iframe>
     </div>
 
-    <!-- Trennbalken (Resizer) -->
-    <div class="gutter-col" id="gutter"></div>
+    <div class="gutter-col" id="gutter" role="separator" aria-orientation="vertical" aria-label="Breite von Storyboard und Generator anpassen" aria-controls="paneLeft" aria-valuemin="320" aria-valuemax="1000" aria-valuenow="0" tabindex="0" title="Mit Pfeiltasten oder Maus Breite anpassen"></div>
 
-    <!-- Rechte Spalte: KI-Generator -->
     <div class="pane pane-right" id="paneRight">
       <div class="gen-toolbar">
         <div class="gen-info">
           <span class="external-badge" id="current-provider-badge">Google Gemini</span>
           <span id="current-url-text">https://gemini.google.com</span>
         </div>
-        <div>
-          <span id="view-mode-label" style="font-size: 11px; color: #94a3b8;">Modus: <strong>Bridge-Director</strong></span>
-        </div>
+        <span id="view-mode-label">Bridge</span>
       </div>
 
-      <!-- 1. Native Bridge View (Default for Gemini / External) -->
       <div id="bridge-view" class="bridge-content">
 
-        <!-- Master Completion Card (if master exists) -->
-        <div class="bridge-card" id="cockpit-master-card" style="border: 2px solid rgba(16, 185, 129, 0.6); background: linear-gradient(135deg, rgba(6, 40, 30, 0.8), rgba(15, 23, 42, 0.9)); {master_card_style}">
+        <div class="bridge-card focus">
           <div class="bridge-card-header">
             <div class="card-title">
-              <span>🎉 Masterfilm Komplettiert</span>
-              <span class="step-badge" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #6ee7b7;">40s Master</span>
+              <span id="focus-title">Aktueller Shot</span>
+              <span class="step-badge" id="bridge-step-badge">…</span>
             </div>
-            <button class="btn-copy" onclick="openFolderInExplorer()" style="font-size: 11px; padding: 3px 8px;">📁 Explorer</button>
+            <span id="bridge-step-time"></span>
           </div>
-          <div style="border-radius: 6px; overflow: hidden; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
-            <video id="cockpit-master-video" controls playsinline style="width: 100%; max-height: 240px; display: block;">
+
+          <div class="prompt-container">
+            <div class="prompt-label">Visueller Prompt (Englisch)</div>
+            <div class="prompt-text" id="bridge-prompt-text">Lade aktuellen Shot …</div>
+          </div>
+
+          <div>
+            <span class="section-label">Prompt kopieren</span>
+            <div class="button-bar">
+              <button class="btn-copy primary" onclick="copyBridgePrompt('plain')">Nur Prompt</button>
+              <button class="btn-copy" onclick="copyBridgePrompt('de')">+ DE-Dialog</button>
+              <button class="btn-copy" onclick="copyBridgePrompt('en')">+ EN-Dialog</button>
+              <button class="btn-copy" onclick="copyBridgePrompt('silent')">+ stumm</button>
+            </div>
+          </div>
+
+          <div class="button-bar">
+            <button class="btn-copy" onclick="injectActivePrompt()" title="Injiziert den aktiven Prompt per CDP direkt in das Gemini-Eingabefeld">Per CDP an Gemini senden</button>
+            <a href="https://gemini.google.com" target="_blank" rel="noopener" class="btn-large-open" onclick="openGeneratorInNewTab(); return false;">Generator öffnen ↗</a>
+          </div>
+
+          <div id="bridge-clue-container" style="display: none;">
+            <span class="section-label">Anschlussbild aus dem vorigen Shot</span>
+            <div class="clue-thumb">
+              <img id="bridge-clue-img" src="" alt="Clue-Frame des vorigen Shots" draggable="true" title="In den Generator-Chat ziehen für visuelle Kontinuität">
+            </div>
+          </div>
+
+          <div class="ingest-status-box">
+            <div class="status-dot disconnected" id="ingest-dot"></div>
+            <span id="ingest-text">Download-Überwachung wird geprüft …</span>
+          </div>
+
+          <details class="note">
+            <summary>Warum läuft der Generator nicht im Fenster?</summary>
+            <p>Google verbietet die Einbettung von <code>gemini.google.com</code> in Iframes (daher „zu oft umgeleitet“). Öffne den Generator in einem eigenen Tab; ist die Download-Überwachung aktiv, wird das heruntergeladene Video automatisch dem Shot zugeordnet.</p>
+          </details>
+        </div>
+
+        <div class="bridge-card" id="cockpit-master-card" style="{master_card_style}">
+          <div class="bridge-card-header">
+            <div class="card-title">Masterfilm fertig</div>
+          </div>
+          <div class="master-video">
+            <video id="cockpit-master-video" controls playsinline preload="metadata">
               <source src="/{master_video_file}" type="video/mp4">
             </video>
           </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <a href="/{master_video_file}" download="{master_video_file}" class="btn-copy primary" style="text-decoration: none; font-size: 11.5px;">
-              <span>📥 MP4 Herunterladen</span>
-            </a>
-            <button class="btn-copy" onclick="openFolderInExplorer()" style="font-size: 11.5px;">
-              <span>📁 Ordner im Explorer öffnen</span>
-            </button>
-          </div>
-        </div>
-        
-        <!-- Action Card -->
-        <div class="bridge-card">
-          <div class="bridge-card-header">
-            <div class="card-title">
-              <span>🎯 Aktiver Video-Shot</span>
-              <span class="step-badge" id="bridge-step-badge">Step 03</span>
-            </div>
-            <span id="bridge-step-time" style="font-size: 12px; color: var(--accent-cyan); font-family: monospace;">20s – 30s</span>
-          </div>
-
-          <div class="notice-box">
-            <strong>💡 Hinweis zum Google-Webzugriff:</strong> Google schützt <code>gemini.google.com</code> vor Klickdiebstahl und verbietet die Einbettung in Iframes (deshalb erschien die Meldung <em>„zu oft umgeleitet“</em>). Öffne Gemini einfach in einem separaten Tab. Das Storyboard überwacht den Download und schneidet das Video danach vollautomatisch ein!
-          </div>
-
-          <a href="https://gemini.google.com" target="_blank" class="btn-large-open" onclick="openGeneratorInNewTab(); return false;">
-            <span>🌐 Google Gemini im Browser öffnen ↗️</span>
-          </a>
-
-          <!-- Prompt Box -->
-          <div class="prompt-container">
-            <div class="prompt-label">
-              <span>Visueller Prompt (Clean English)</span>
-              <span style="font-size: 10px; color: var(--accent-amber);">⚡ Keine Fremdsprachen</span>
-            </div>
-            <div class="prompt-text" id="bridge-prompt-text">Lade aktiven Shot...</div>
-          </div>
-
-          <!-- One-Click Copy Actions -->
-          <div>
-            <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px; font-weight: 600;">1-KLICK PROMPT KOPIEREN:</span>
-            <div class="button-bar">
-              <button class="btn-copy primary" onclick="copyBridgePrompt('plain')">
-                <span>📋 Nur Prompt</span>
-              </button>
-              <button class="btn-copy accent-de" onclick="copyBridgePrompt('de')">
-                <span>📋 Prompt + 🇩🇪 DE-Dialog</span>
-              </button>
-              <button class="btn-copy" onclick="copyBridgePrompt('en')">
-                <span>📋 Prompt + 🇬🇧 EN-Dialog</span>
-              </button>
-              <button class="btn-copy accent-silent" onclick="copyBridgePrompt('silent')">
-                <span>🔇 Prompt + Stumm/Ambient</span>
-              </button>
-              <button class="btn-copy" style="background: rgba(6, 182, 212, 0.15); border-color: var(--accent-cyan); color: #67e8f9;" onclick="injectActivePrompt()">
-                <span>🚀 Per CDP senden</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Clue Frame Reference -->
-          <div id="bridge-clue-container" style="display: none; margin-top: 6px;">
-            <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px; font-weight: 600;">OPTISCHER ANSCHLUSS (CLUE-FRAME AUS VORIGEM SHOT):</span>
-            <div style="height: 140px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); background: #000; display: inline-block;">
-              <img id="bridge-clue-img" src="" alt="Clue Frame" style="height: 100%; object-fit: cover; cursor: grab;" draggable="true" title="In den Gemini-Chat ziehen für visuelle Kontinuität">
-            </div>
-          </div>
-
-          <!-- Watcher Status Box -->
-          <div class="ingest-status-box">
-            <div class="ingest-pulse"></div>
-            <div>
-              <strong>Autopilot aktiv:</strong> Ordner <code>Downloads/</code> wird überwacht. Sobald du das generierte Video herunterlädst, importiert die Pipeline den Clip vollautomatisch!
-            </div>
+          <div class="button-bar">
+            <a href="/{master_video_file}" download="{master_video_file}" class="btn-copy">Herunterladen</a>
+            <button class="btn-copy" onclick="openFolderInExplorer()">Im Explorer zeigen</button>
           </div>
         </div>
 
       </div>
 
-      <!-- 2. Iframe View (Optional fallback for services allowing embeds) -->
       <div id="frame-view" style="display: none; width: 100%; height: 100%;">
-        <iframe class="pane-iframe" id="generator-frame" src="about:blank"></iframe>
+        <iframe class="pane-iframe" id="generator-frame" src="about:blank" title="Generator"></iframe>
       </div>
 
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     let currentProviderUrl = 'https://gemini.google.com';
@@ -597,7 +355,7 @@
     function showToast(msg, isSuccess = true) {
       const t = document.getElementById('toast');
       t.innerText = msg;
-      t.style.borderLeftColor = isSuccess ? '#06b6d4' : '#ef4444';
+      t.style.borderLeftColor = isSuccess ? 'var(--ok)' : 'var(--danger)';
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3000);
     }
@@ -616,14 +374,14 @@
         if (frame.src === 'about:blank' || !frame.src) {
           frame.src = currentProviderUrl;
         }
-        btn.innerHTML = '<span>🎛️ Bridge-Modus</span>';
-        lbl.innerHTML = 'Modus: <strong>Iframe-Ansicht</strong>';
+        btn.innerText = 'Bridge-Ansicht';
+        lbl.innerText = 'Iframe';
         showToast('Iframe-Modus aktiviert');
       } else {
         fView.style.display = 'none';
         bView.style.display = 'flex';
-        btn.innerHTML = '<span>🖼️ Iframe erzwingen</span>';
-        lbl.innerHTML = 'Modus: <strong>Bridge-Director</strong>';
+        btn.innerText = 'Iframe-Ansicht';
+        lbl.innerText = 'Bridge';
         showToast('Bridge-Director aktiviert');
       }
     }
@@ -638,7 +396,7 @@
       
       const sel = document.getElementById('provider-select');
       const text = sel.options[sel.selectedIndex].text;
-      document.getElementById('current-provider-badge').innerText = text.split(' ')[1] || 'Generator';
+      document.getElementById('current-provider-badge').innerText = text.replace(/\s*\(.*\)$/, '') || 'Generator';
       showToast('Generator gewechselt: ' + text);
     }
 
@@ -681,11 +439,11 @@
           text.innerText = 'Edge CDP verbunden (Port ' + data.port + ')';
         } else {
           dot.classList.add('disconnected');
-          text.innerText = 'Edge CDP bereit (Normaler Modus)';
+          text.innerText = 'Edge CDP nicht verbunden';
         }
       } catch(e) {
         document.getElementById('cdp-dot').classList.add('disconnected');
-        document.getElementById('cdp-text').innerText = 'Bridge aktiv';
+        document.getElementById('cdp-text').innerText = 'Edge CDP unbekannt';
       }
     }
     setInterval(checkCdpStatus, 5000);
@@ -699,8 +457,9 @@
         const data = await res.json();
         currentFocusData = data;
 
-        document.getElementById('bridge-step-badge').innerText = 'Step ' + String(data.step_nr || 1).padStart(2, '0') + ': ' + (data.slug || '');
+        document.getElementById('bridge-step-badge').innerText = String(data.step_nr || 1).padStart(2, '0') + ' · ' + (data.slug || '');
         document.getElementById('bridge-step-time').innerText = data.timeframe || '';
+        document.getElementById('focus-title').innerText = data.has_hero ? 'Alle Shots haben einen Hero-Take' : 'Aktueller Shot';
         document.getElementById('bridge-prompt-text').innerText = data.active_prompt || 'Kein Prompt';
 
         const clueContainer = document.getElementById('bridge-clue-container');
@@ -717,6 +476,30 @@
     }
     setInterval(fetchFocusData, 3000);
     fetchFocusData();
+
+    // Ehrlicher Download-Watcher-Status statt statischem "Autopilot aktiv"
+    async function checkWatcherStatus() {
+      const dot = document.getElementById('ingest-dot');
+      const text = document.getElementById('ingest-text');
+      try {
+        const d = await (await fetch('/api/watcher/status')).json();
+        dot.classList.remove('disconnected', 'paused');
+        if (!d.active) {
+          dot.classList.add('disconnected');
+          text.innerText = 'Download-Überwachung aus: heruntergeladene Videos per Link oder Drag & Drop importieren.';
+        } else if (d.paused) {
+          dot.classList.add('paused');
+          text.innerText = 'Download-Überwachung pausiert.';
+        } else {
+          text.innerText = 'Download-Überwachung aktiv: neue Videos in ' + (d.directory || 'Downloads') + ' werden automatisch importiert.';
+        }
+      } catch (e) {
+        dot.classList.add('disconnected');
+        text.innerText = 'Download-Überwachung: Status unbekannt.';
+      }
+    }
+    setInterval(checkWatcherStatus, 5000);
+    checkWatcherStatus();
 
     // Copy Prompt with Language Directives
     function copyBridgePrompt(mode = 'plain') {
@@ -768,6 +551,34 @@
     const leftPane = document.getElementById('paneLeft');
     let isDragging = false;
 
+    function updateGutterValue(width) {
+      const maxWidth = Math.max(320, window.innerWidth - 348);
+      gutter.setAttribute('aria-valuemax', String(maxWidth));
+      gutter.setAttribute('aria-valuenow', String(Math.round(width)));
+      gutter.setAttribute('aria-valuetext', Math.round(width / window.innerWidth * 100) + ' Prozent Storyboard-Breite');
+    }
+
+    function setLeftPaneWidth(width) {
+      const maxWidth = Math.max(320, window.innerWidth - 348);
+      const nextWidth = Math.max(320, Math.min(maxWidth, width));
+      leftPane.style.width = nextWidth + 'px';
+      updateGutterValue(nextWidth);
+    }
+
+    updateGutterValue(leftPane.getBoundingClientRect().width);
+    gutter.addEventListener('keydown', (e) => {
+      const currentWidth = leftPane.getBoundingClientRect().width;
+      const maxWidth = Math.max(320, window.innerWidth - 348);
+      let nextWidth;
+      if (e.key === 'ArrowLeft') nextWidth = currentWidth - 24;
+      else if (e.key === 'ArrowRight') nextWidth = currentWidth + 24;
+      else if (e.key === 'Home') nextWidth = 320;
+      else if (e.key === 'End') nextWidth = maxWidth;
+      else return;
+      e.preventDefault();
+      setLeftPaneWidth(nextWidth);
+    });
+
     gutter.addEventListener('mousedown', (e) => {
       isDragging = true;
       gutter.classList.add('dragging');
@@ -777,9 +588,7 @@
 
     window.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      const totalWidth = window.innerWidth;
-      const leftWidth = Math.max(300, Math.min(totalWidth - 300, e.clientX));
-      leftPane.style.width = leftWidth + 'px';
+      setLeftPaneWidth(e.clientX);
     });
 
     window.addEventListener('mouseup', () => {
@@ -789,6 +598,11 @@
         document.body.style.cursor = '';
         document.body.style.userSelect = '';
       }
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 700) return;
+      if (leftPane.style.width) setLeftPaneWidth(leftPane.getBoundingClientRect().width);
+      else updateGutterValue(leftPane.getBoundingClientRect().width);
     });
   </script>
 </body>
