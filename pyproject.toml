@@ -9,26 +9,28 @@ description = "Local-first AI storyboard director and video pipeline orchestrato
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md"]
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md", "THIRD_PARTY_LICENSES.txt"]
 keywords = [
-    "ai",
-    "video-director",
-    "storyboard",
-    "video-generation",
-    "veo",
-    "kling",
-    "runway",
+    "4d-persistence",
+    "agent-workflow",
+    "ai-video",
+    "audio-ducking",
     "cdp-automation",
     "clue-frame",
-    "continuity",
-    "agent-workflow",
+    "director",
+    "edge-cdp",
+    "ellmos-ai",
     "generative-ui",
     "llm-ready",
-    "zero-egress",
-    "ellmos-ai",
+    "local-first",
+    "multitrack-audio",
     "open-bricks",
-    "edge-cdp",
-    "browser-automation"
+    "python",
+    "scene-continuity",
+    "storyboard",
+    "video-pipeline",
+    "video-production",
+    "zero-egress",
 ]
 authors = [
     { name = "ellmos-ai" },
@@ -77,6 +79,9 @@ Notice = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/NOTICE
 "Parent Organization" = "https://github.com/ellmos-ai"
 "Umbrella Ecosystem" = "https://github.com/open-bricks"
 "Third-Party Licenses" = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/THIRD_PARTY_LICENSES.md"
+"Third-Party Licenses (Text)" = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/THIRD_PARTY_LICENSES.txt"
+"Level 1 SBOM" = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/THIRD_PARTY_LICENSES.txt"
+"Plain-Text License" = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/LICENSE"
 "Marketing-Log" = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/MARKETING-LOG.txt"
 "LLM-Ready" = "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/llms.txt"
 
@@ -94,10 +99,14 @@ addopts = "-ra -v"
 norecursedirs = [
     ".git",
     ".pytest_cache",
+    ".pytest_temp",
+    ".pytest_tmp*",
     "__pycache__",
     "build",
     "dist",
     ".venv",
+    ".tox",
+    "wheelhouse",
 ]
 
 [tool.ruff]

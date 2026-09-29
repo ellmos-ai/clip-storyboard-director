@@ -303,3 +303,52 @@ Multi-Host-Sync- und Lock-Resilienz) wurden folgende Maßnahmen umgesetzt:
 6. Automatisierte Vertragstest-Suite (tests/test_metadata.py):
    - Neue Contract-Tests für stale.yml Workflow-Konfiguration, erweiterte .gitignore Lock-Defense,
      NOTICE-Attributierungsinhalt, PEP 621 Notice/Bug Tracker URLs und SBOM Re-Audit-Datum.
+
+================================================================================
+9. MARKETING-, DISCOVERABILITY- & SBOM-COMPANION-AUDIT (2026-09-29 — Pfad B v0.1.6)
+================================================================================
+Im Rahmen des planmäßigen Pfad-B-Laufs (Discoverability, Visual Architecture,
+Navigation Parity, Plain-Text SBOM Companion & PEP 621 Saturation) wurden
+folgende Maßnahmen umgesetzt:
+
+1. Bilinguale 18-Punkte-Navigationsparität & bilaterale HTML-Anker:
+   - README.md und README_de.md mit bilateralen HTML-Ankern (<a id="sec-01"></a> bis
+     <a id="sec-18"></a>) ausgestattet, um sprachübergreifende Querverweise und
+     externe Tiefenverlinkungen stabil zu gewährleisten.
+   - Shields.io-Badges für Level 1 SBOM auf [Level 1 SBOM: Audited | Plain Text]
+     mit Ziel THIRD_PARTY_LICENSES.txt aktualisiert und Prüfzeitstempel auf 2026-09-29
+     harmonisiert.
+
+2. ASCII Vier-Ansichten-Architekturprojektion:
+   - Abschnitt 2 in beiden READMEs um ein vierstufiges ASCII-Topologiediagramm erweitert:
+     * Sicht 1: Benutzer-Interaktion, CLI-Cockpit & Agentische Orchestrierung
+     * Sicht 2: Regieführung & Edge CDP-Browser-Automatisierungs-Engine (:9222)
+     * Sicht 3: 4D-Persistenzpuffer, Clue-Frame-Extraktion & Medien-Montage
+     * Sicht 4: Sicherheitsperimeter, Isolierung & RunAsInvoker Zero-Egress
+
+3. Level 1 SBOM Plain-Text Companion (THIRD_PARTY_LICENSES.txt):
+   - Vollständige Plain-Text-Begleitdatei THIRD_PARTY_LICENSES.txt im Repository-Root
+     erstellt mit Compliance-Garantien, Invarianten INV-LOCAL-01 bis INV-SLA-10,
+     SPDX-Lizenztexten (MIT, Apache-2.0, PSFL, GPL-3.0 Subprocess-Boundary,
+     LGPL-2.1+ System-Utility) und RunAsInvoker Non-Elevation Zertifizierung.
+   - NOTICE und THIRD_PARTY_LICENSES.md um wechselseitige Querverweise ergänzt.
+
+4. PEP 621 Metadaten- & Topics-Sättigung (pyproject.toml):
+   - 20 GitHub-Repository-Topics vollständig in keywords synchronisiert:
+     "4d-persistence", "agent-workflow", "ai-video", "audio-ducking", "cdp-automation",
+     "clue-frame", "director", "edge-cdp", "ellmos-ai", "generative-ui", "llm-ready",
+     "local-first", "multitrack-audio", "open-bricks", "python", "scene-continuity",
+     "storyboard", "video-pipeline", "video-production", "zero-egress".
+   - license-files um THIRD_PARTY_LICENSES.txt erweitert.
+   - [project.urls] um "Level 1 SBOM", "Third-Party Licenses (Text)" und "Plain-Text License"
+     ergänzt.
+   - [tool.pytest.ini_options] norecursedirs um .pytest_temp, .pytest_tmp*, .tox, wheelhouse
+     gehärtet.
+
+5. Dokumentation & KI-Kontext:
+   - llms.txt, TODO.md und CHANGELOG.md auf Stand 2026-09-29 synchronisiert.
+   - Version 0.1.6 strikt eingefroren gemäß T-20260920-167562623.
+
+6. Vertragstest-Erweiterung (tests/test_metadata.py):
+   - Neue Contract-Tests für bilaterale Navigationsanker sec-01..sec-18, ASCII 4-View
+     Projektion, Level 1 SBOM Text-Companion, PEP 621 Topics/URLs und Prüfzeitstempel.

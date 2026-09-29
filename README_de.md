@@ -23,10 +23,10 @@
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/privacy-100%25%20Local--First%20%7C%20Zero--Egress-brightgreen" alt="Datenschutz"></a>
   <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/security-RunAsInvoker%20%7C%20Localhost%20Isolated-blue" alt="Sicherheit"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/security%20SLA-48h%20response%20%7C%205d%20triage-blue" alt="Sicherheits-SLA"></a>
-  <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/Level%201%20SBOM-Audited-brightgreen.svg" alt="Level 1 SBOM"></a>
+  <a href="THIRD_PARTY_LICENSES.txt"><img src="https://img.shields.io/badge/Level%201%20SBOM-Audited%20%7C%20Plain%20Text-brightgreen.svg" alt="Level 1 SBOM"></a>
   <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/RunAsInvoker-Certified-success.svg" alt="RunAsInvoker"></a>
   <a href="NOTICE"><img src="https://img.shields.io/badge/Attribution-NOTICE-blue.svg" alt="Attribution NOTICE"></a>
-  <a href="THIRD_PARTY_LICENSES.md"><img src="https://img.shields.io/badge/Third--Party-Audited%20%7C%20Permissive%20Core-success.svg" alt="Third-Party Audited"></a>
+  <a href="THIRD_PARTY_LICENSES.txt"><img src="https://img.shields.io/badge/Third--Party-Audited%20%7C%20Permissive%20Core-success.svg" alt="Third-Party Audited"></a>
   <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/marketing%20log-active-blue.svg" alt="Marketing Log"></a>
   <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/badge/code%20style-ruff-000000.svg" alt="Code Style: Ruff"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="Lizenz: MIT"></a>
@@ -34,7 +34,7 @@
   <a href="https://github.com/open-bricks"><img src="https://img.shields.io/badge/umbrella-open--bricks-blueviolet.svg" alt="Dachorganisation"></a>
   <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.6-blue.svg" alt="Version 0.1.6"></a>
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-Discovery%20Context-informational" alt="llms.txt"></a>
-  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--24-informational" alt="Zuletzt geprüft"></a>
+  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--09--29-informational" alt="Zuletzt geprüft"></a>
 </p>
 
 ---
@@ -63,7 +63,7 @@
 
 ---
 
-<a id="1-executive-summary--why-this-exists"></a><a id="1-executive-summary--warum-dieses-projekt-existiert"></a><a id="why-this-exists"></a><a id="warum-dieses-projekt-existiert"></a>
+<a id="sec-01"></a><a id="1-executive-summary--why-this-exists"></a><a id="1-executive-summary--warum-dieses-projekt-existiert"></a><a id="why-this-exists"></a><a id="warum-dieses-projekt-existiert"></a>
 ## 1. Executive Summary & Warum dieses Projekt existiert
 
 Einzelne KI-Videoclips über Modelle wie Veo, Kling, Sora oder Runway zu generieren, ist heute unkompliziert. Aus isolierten Kurzclips jedoch einen **zusammenhängenden narrativen Film** zu erstellen, scheitert in der Praxis an grundlegenden Hürden:
@@ -77,7 +77,7 @@ Einzelne KI-Videoclips über Modelle wie Veo, Kling, Sora oder Runway zu generie
 
 ---
 
-<a id="2-architecture--system-flow"></a><a id="2-systemarchitektur--workflow"></a><a id="architecture--system-flow"></a><a id="systemarchitektur--workflow"></a>
+<a id="sec-02"></a><a id="2-architecture--system-flow"></a><a id="2-systemarchitektur--workflow"></a><a id="architecture--system-flow"></a><a id="systemarchitektur--workflow"></a>
 ## 2. Systemarchitektur & Workflow
 
 ```mermaid
@@ -117,9 +117,82 @@ flowchart TD
     class Cockpit,Gen,DL,Voice io
 ```
 
+### ASCII-Architekturprojektion in vier Sichten
+
+```text
++====================================================================================================+
+|                     CLIP-STORYBOARD-DIRECTOR: ARCHITEKTUR-TOPOLOGIE & SUBSYSTEME                   |
++====================================================================================================+
+
+ [SICHT 1: BENUTZER-INTERAKTION, CLI-COCKPIT & AGENTISCHE ORCHESTRIERUNG]
+  +-------------------------+    +--------------------------+    +--------------------------------+
+  | Menschlicher Regisseur  |    | Autonome Coding-Agenten  |    | Pipeline- & Studio-Automation  |
+  | (Narratives Storyboard) |    | (Gemini / Claude / Codex)|    | (Skripte / CI-Integrationen)   |
+  +------------+------------+    +------------+-------------+    +---------------+----------------+
+               |                              |                                  |
+               v                              v                                  v
+  +-----------------------------------------------------------------------------------------------+
+  | CLI-Einstiegspunkt (clip-director) / Modul-Aufruf (python -m clip_director)                  |
+  |  * init: Initialisiert project.yaml mit deklarativem 4D-Persistenzpuffer                     |
+  |  * doctor: Prüft FFmpeg, Edge CDP-Port 9222, edge-tts und Python-Laufzeitumgebung            |
+  |  * serve: Lokaler HTTP-Dashboard-Server (127.0.0.1:8765)                                     |
+  |  * cockpit: Öffnet synchronisiertes Dual-Pane Cockpit in Microsoft Edge                      |
+  |  * autopilot: Automatisierte CDP-Prompt-Injektion und Downloads-Watcher-Schleife             |
+  |  * assemble: Finaler Mehrspur-Videoschnitt mit dynamischem Audio-Ducking                     |
+  +-----------------------------------------------------------------------------------------------+
+
+ [SICHT 2: REGIEFÜHRUNG & EDGE CDP-BROWSER-AUTOMATISIERUNGS-ENGINE]
+  +-------------------------------------+                +----------------------------------------+
+  | board_server.py (Lokales HTTP :8765)|                | edge_bridge.py (CDP-Engine :9222)      |
+  |  - Liefert storyboard.html & Cockpit|    JSON IPC    |  - Fragt http://127.0.0.1:9222/json ab |
+  |  - Shot-Status & Take-Auswahl       |<-------------->|  - WebSocket CDP-Target-Bindung        |
+  |  - Audio-Ebenen-Abmischung          |   (Loopback)   |  - Automatisierte Prompt-Eingabe       |
+  |  - Echtzeit-Regie-Dashboard         |                |  - Multi-Tab-Steuerung (Veo/Kling)     |
+  +-------------------------------------+                +-------------------+--------------------+
+                                                                             | DevTools-Protokoll
+                                                                             v
+                                                         +----------------------------------------+
+                                                         | Microsoft Edge Browser im App-Modus    |
+                                                         | [Tab 1: Cockpit-UI] [Tab 2: KI-Studio] |
+                                                         +-------------------+--------------------+
+                                                                             | Video-Download
+                                                                             v
+ [SICHT 3: 4D-PERSISTENZPUFFER, CLUE-FRAME-EXTRAKTION & MEDIEN-MONTAGE]      |
+  +-------------------------------------+                +-------------------v--------------------+
+  | 4D-Persistenzpuffer (project.yaml)  |                | Ingest & Watcher-Engine (ingest.py)    |
+  |  * Figuren: Kleidung, Aussehen, Bau |  Kontinuitäts- |  - Überwacht ~/Downloads auf Takes     |
+  |  * Schauplätze: Licht, Architektur  |  Restriktionen |  - Sortiert & hasht Videodateien       |
+  |  * Requisiten: Objekt-Zustände      |--------------->|  - Extrahiert Shot N End-Clue-Frame    |
+  |  * Atmosphäre: Farbstimmung, Audio  |                |  - Übergibt optische Referenz an N+1   |
+  +-------------------------------------+                +-------------------+--------------------+
+                                                                             |
+                                                                             v
+  +--------------------------------------------------------------------------+--------------------+
+  | Mehrspur-Audio-Staging & Endschnitt-Montage (assemble.py + FFmpeg)                            |
+  |  - Spur 1: Generierter Video-O-Ton / Veo-Raumklang                                            |
+  |  - Spur 2: Dialog-Sprachspur (Lokale Synthese via edge-tts oder Studio-Mikrofonaufnahme)      |
+  |  - Spur 3: Atmosphärischer Raumklang / Drohnenbett                                            |
+  |  - Spur 4: Melodischer Soundtrack & Geräuscheffekte (Foley)                                   |
+  |  => Dynamisches Side-Chain Audio-Ducking (senkt Musik unter Dialogen automatisch ab)          |
+  |  => Verlustfreie H.264 / AAC Konkatenation zum Master-Video (projects/<name>/render/master.mp4)|
+  |  => Optionale Übergabe via EDL / XML an ai-media-editor für Schnitt & Farbkorrektur           |
+  +-----------------------------------------------------------------------------------------------+
+
+ [SICHT 4: SICHERHEITSPERIMETER, ISOLIERUNG & RUNASINVOKER ZERO-EGRESS]
+  +-----------------------------------------------------------------------------------------------+
+  | Lokaler Arbeitsstations-Prozessperimeter (INV-LOCAL-01 / INV-UNPRIV-02)                       |
+  |  [Rechtefreiheit] Standard-Benutzerkontext; null UAC- oder Root-Rechtebedarf (RunAsInvoker)   |
+  |  [Air-Gap IPC]    Alle Sockets streng an 127.0.0.1 gebunden; keine LAN-/WAN-Listener          |
+  |  [Zero-Egress]    Keine Telemetrie, Analyse-Tracker oder Cloud-Rückmeldungen                  |
+  |  [Subprozess]     FFmpeg/FFprobe & edge-tts isoliert ohne Shell-Interpolation (shell=False)   |
+  |  [Sync-Schutz]    Multi-Host-Kollisionsschutz (.gitignore LOCK*.txt, *conflicted copy*, etc.) |
+  |  [SLA-Garantie]   Formelle 48h-Reaktions- & 5-Tage-Triage-Zusage bei Schwachstellen (INV-SLA-10)|
+  +-----------------------------------------------------------------------------------------------+
+```
+
 ---
 
-<a id="3-director--editor-duo"></a><a id="3-das-regie---cutter-duo"></a><a id="director--editor-duo"></a><a id="das-regie---cutter-duo"></a>
+<a id="sec-03"></a><a id="3-director--editor-duo"></a><a id="3-das-regie---cutter-duo"></a><a id="director--editor-duo"></a><a id="das-regie---cutter-duo"></a>
 ## 3. Das Regie- & Cutter-Duo
 
 `clip-storyboard-director` ist gezielt als der **Regisseur** in einem spezialisierten Zwei-Agenten-Medienproduktionsmodell konzipiert:
@@ -133,7 +206,7 @@ flowchart TD
 
 ---
 
-<a id="4-4d-persistence--bounded-continuity"></a><a id="4-4d-persistenz--buendige-kontinuitaet"></a><a id="4d-persistence--bounded-continuity"></a><a id="4d-persistenz--bündige-kontinuität"></a>
+<a id="sec-04"></a><a id="4-4d-persistence--bounded-continuity"></a><a id="4-4d-persistenz--buendige-kontinuitaet"></a><a id="4d-persistence--bounded-continuity"></a><a id="4d-persistenz--bündige-kontinuität"></a>
 ## 4. 4D-Persistenz & Bündige Kontinuität
 
 Im Filmbereich umfasst Kontinuität drei Raumdimensionen plus die Zeitachse ($3D + T = 4D$). `clip-storyboard-director` sichert diese Parameter deklarativ über den `persistence_buffer` in `project.yaml`:
@@ -147,7 +220,7 @@ Jeder vom Regisseur erzeugte Prompt erbt automatisch diese Persistenzmerkmale, w
 
 ---
 
-<a id="5-clue-frame-continuity-chain"></a><a id="5-clue-frame-kontinuitaetskette"></a><a id="clue-frame-continuity-chain"></a><a id="clue-frame-kontinuitätskette"></a>
+<a id="sec-05"></a><a id="5-clue-frame-continuity-chain"></a><a id="5-clue-frame-kontinuitaetskette"></a><a id="clue-frame-continuity-chain"></a><a id="clue-frame-kontinuitätskette"></a>
 ## 5. Clue-Frame Kontinuitätskette
 
 Die kritischste Bruchstelle bei sequentiellen KI-Videos ist der Schnittübergang. `clip-storyboard-director` etabliert die **Clue-Frame-Kontinuitätskette**:
@@ -159,7 +232,7 @@ Die kritischste Bruchstelle bei sequentiellen KI-Videos ist der Schnittübergang
 
 ---
 
-<a id="6-dual-pane-director-cockpit"></a><a id="6-dual-pane-regie-cockpit"></a><a id="dual-pane-director-cockpit"></a><a id="dual-pane-regie-cockpit"></a>
+<a id="sec-06"></a><a id="6-dual-pane-director-cockpit"></a><a id="6-dual-pane-regie-cockpit"></a><a id="dual-pane-director-cockpit"></a><a id="dual-pane-regie-cockpit"></a>
 ## 6. Dual-Pane Regie-Cockpit
 
 Der Regisseur bietet ein webbasiertes Timeline-Cockpit, das über `start_cockpit.py` im Microsoft Edge App-Modus gestartet wird (`--app=http://localhost:8765/cockpit.html`):
@@ -170,7 +243,7 @@ Der Regisseur bietet ein webbasiertes Timeline-Cockpit, das über `start_cockpit
 
 ---
 
-<a id="7-multi-track-audio-staging--ducking"></a><a id="7-mehrspur-audio-staging--dynamisches-ducking"></a><a id="multi-track-audio-staging--ducking"></a><a id="mehrspur-audio-staging--dynamisches-ducking"></a>
+<a id="sec-07"></a><a id="7-multi-track-audio-staging--ducking"></a><a id="7-mehrspur-audio-staging--dynamisches-ducking"></a><a id="multi-track-audio-staging--ducking"></a><a id="mehrspur-audio-staging--dynamisches-ducking"></a>
 ## 7. Mehrspur-Audio-Staging & Dynamisches Ducking
 
 Filmische Erzählungen leben vom mehrschichtigen Klang. `clip-storyboard-director` strukturiert das Audio in drei Ebenen:
@@ -181,7 +254,7 @@ Filmische Erzählungen leben vom mehrschichtigen Klang. `clip-storyboard-directo
 
 ---
 
-<a id="8-key-governance--runtime-invariants"></a><a id="8-governance---laufzeit-invarianten"></a><a id="key-governance--runtime-invariants"></a><a id="governance---laufzeit-invarianten"></a>
+<a id="sec-08"></a><a id="8-key-governance--runtime-invariants"></a><a id="8-governance---laufzeit-invarianten"></a><a id="key-governance--runtime-invariants"></a><a id="governance---laufzeit-invarianten"></a>
 ## 8. Governance- & Laufzeit-Invarianten
 
 Die folgenden 10 Kern-Invarianten garantieren die Zuverlässigkeit und Sicherheit von `clip-storyboard-director`:
@@ -201,7 +274,7 @@ Die folgenden 10 Kern-Invarianten garantieren die Zuverlässigkeit und Sicherhei
 
 ---
 
-<a id="9-end-to-end-media-production-lifecycle"></a><a id="9-end-to-end-medien---produktions-lebenszyklus"></a><a id="end-to-end-media-production-lifecycle"></a><a id="end-to-end-medien---produktions-lebenszyklus"></a>
+<a id="sec-09"></a><a id="9-end-to-end-media-production-lifecycle"></a><a id="9-end-to-end-medien---produktions-lebenszyklus"></a><a id="end-to-end-media-production-lifecycle"></a><a id="end-to-end-medien---produktions-lebenszyklus"></a>
 ## 9. End-to-End Medien- & Produktions-Lebenszyklus
 
 ```mermaid
@@ -236,7 +309,7 @@ sequenceDiagram
 
 ---
 
-<a id="10-target-personas--discoverability"></a><a id="10-zielgruppen--auffindbarkeit"></a><a id="target-personas--discoverability"></a><a id="zielgruppen--auffindbarkeit"></a>
+<a id="sec-10"></a><a id="10-target-personas--discoverability"></a><a id="10-zielgruppen--auffindbarkeit"></a><a id="target-personas--discoverability"></a><a id="zielgruppen--auffindbarkeit"></a>
 ## 10. Zielgruppen & Auffindbarkeit
 
 `clip-storyboard-director` wurde für vier zentrale Nutzergruppen im Ökosystem generativer Medien entwickelt:
@@ -255,7 +328,7 @@ sequenceDiagram
 
 ---
 
-<a id="11-comparative-matrix-vs-alternatives"></a><a id="11-vergleichsmatrix-vs-alternativen"></a><a id="comparative-matrix-vs-alternatives"></a><a id="vergleichsmatrix-vs-alternativen"></a>
+<a id="sec-11"></a><a id="11-comparative-matrix-vs-alternatives"></a><a id="11-vergleichsmatrix-vs-alternativen"></a><a id="comparative-matrix-vs-alternatives"></a><a id="vergleichsmatrix-vs-alternativen"></a>
 ## 11. Vergleichsmatrix gegenüber Alternativen
 
 Die nachfolgende Matrix vergleicht `clip-storyboard-director` über 10 Architektur- und Governance-Dimensionen mit vier gängigen Branchenalternativen:
@@ -275,7 +348,7 @@ Die nachfolgende Matrix vergleicht `clip-storyboard-director` über 10 Architekt
 
 ---
 
-<a id="12-third-party-licenses-level-1-sbom--runasinvoker"></a><a id="12-drittanbieter-lizenzen-level-1-sbom--runasinvoker"></a><a id="third-party-licenses--transparency"></a><a id="drittanbieter-lizenzen--transparenz"></a>
+<a id="sec-12"></a><a id="12-third-party-licenses-level-1-sbom--runasinvoker"></a><a id="12-drittanbieter-lizenzen-level-1-sbom--runasinvoker"></a><a id="third-party-licenses--transparency"></a><a id="drittanbieter-lizenzen--transparenz"></a>
 ## 12. Drittanbieter-Lizenzen, Level 1 SBOM & RunAsInvoker
 
 `clip-storyboard-director` folgt strengen Open-Source-Governance-Standards, permissiven Lizenzen und Zero-Egress-Laufzeitgarantien:
@@ -296,7 +369,7 @@ Die nachfolgende Matrix vergleicht `clip-storyboard-director` über 10 Architekt
 
 ---
 
-<a id="13-sibling-tools--ecosystem-matrix"></a><a id="13-geschwisterwerkzeuge--partner-matrix"></a><a id="sibling-tools--ecosystem-matrix"></a><a id="geschwisterwerkzeuge--partner-matrix"></a>
+<a id="sec-13"></a><a id="13-sibling-tools--ecosystem-matrix"></a><a id="13-geschwisterwerkzeuge--partner-matrix"></a><a id="sibling-tools--ecosystem-matrix"></a><a id="geschwisterwerkzeuge--partner-matrix"></a>
 ## 13. Geschwisterwerkzeuge & Partner-Matrix
 
 `clip-storyboard-director` ist Teil des **ellmos-ai**-Ökosystems und der Dachorganisation **open-bricks**:
@@ -323,7 +396,7 @@ Die nachfolgende Matrix vergleicht `clip-storyboard-director` über 10 Architekt
 
 ---
 
-<a id="14-installation--cli-usage"></a><a id="14-installation--cli-befehlsreferenz"></a><a id="installation--cli-usage"></a><a id="installation--cli-befehlsreferenz"></a>
+<a id="sec-14"></a><a id="14-installation--cli-usage"></a><a id="14-installation--cli-befehlsreferenz"></a><a id="installation--cli-usage"></a><a id="installation--cli-befehlsreferenz"></a>
 ## 14. Installation & CLI-Befehlsreferenz
 
 ### Voraussetzungen
@@ -385,7 +458,7 @@ clip-director auto --project projects/my_film
 
 ---
 
-<a id="15-reference-production-sternenseufzer"></a><a id="15-referenzproduktion-sternenseufzer"></a><a id="reference-production-sternenseufzer"></a><a id="referenzproduktion-sternenseufzer"></a>
+<a id="sec-15"></a><a id="15-reference-production-sternenseufzer"></a><a id="15-referenzproduktion-sternenseufzer"></a><a id="reference-production-sternenseufzer"></a><a id="referenzproduktion-sternenseufzer"></a>
 ## 15. Referenzproduktion „Sternenseufzer“
 
 Das Repository enthält unter `projects/sternenseufzer/` eine vollständige Referenzproduktion:
@@ -403,7 +476,7 @@ clip-director assemble --project projects/sternenseufzer
 
 ---
 
-<a id="16-security-policy--privacy"></a><a id="16-sicherheit--datenschutz"></a><a id="security--privacy"></a><a id="sicherheit--datenschutz"></a>
+<a id="sec-16"></a><a id="16-security-policy--privacy"></a><a id="16-sicherheit--datenschutz"></a><a id="security--privacy"></a><a id="sicherheit--datenschutz"></a>
 ## 16. Sicherheit & Datenschutz
 
 - **Null-Telemetrie**: Keine Tracking-Pixel, keine Nutzungsstatistiken und keine externen Serveranfragen (`INV-LOCAL-01`).
@@ -413,7 +486,7 @@ clip-director assemble --project projects/sternenseufzer
 
 ---
 
-<a id="17-development-verification--quality-gates"></a><a id="17-entwicklung-verifikation--qualitaets-gates"></a><a id="development--verification"></a><a id="entwicklung--verifikation"></a>
+<a id="sec-17"></a><a id="17-development-verification--quality-gates"></a><a id="17-entwicklung-verifikation--qualitaets-gates"></a><a id="development--verification"></a><a id="entwicklung--verifikation"></a>
 ## 17. Entwicklung, Verifikation & Qualitäts-Gates
 
 ### Code-Prüfung & Bytecode-Kompilierung
@@ -431,7 +504,7 @@ pytest -v
 
 ---
 
-<a id="18-statutory-notice-liability-limitation--license--521-bgb"></a><a id="18-gesetzlicher-hinweis-haftungsbeschraenkung--lizenz--521-bgb"></a><a id="license--statutory-liability-limitation"></a><a id="lizenz--gesetzliche-haftungsbeschraenkung"></a><a id="license"></a>
+<a id="sec-18"></a><a id="18-statutory-notice-liability-limitation--license--521-bgb"></a><a id="18-gesetzlicher-hinweis-haftungsbeschraenkung--lizenz--521-bgb"></a><a id="license--statutory-liability-limitation"></a><a id="lizenz--gesetzliche-haftungsbeschraenkung"></a><a id="license"></a>
 ## 18. Gesetzlicher Hinweis, Haftungsbeschränkung & Lizenz (§ 521 BGB)
 
 ### Gesetzlicher Hinweis & Haftungsbeschränkung (§ 521 BGB)

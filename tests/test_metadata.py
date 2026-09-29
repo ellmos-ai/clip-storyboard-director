@@ -22,6 +22,7 @@ def test_required_root_documents_exist():
         "LICENSE",
         "NOTICE",
         "THIRD_PARTY_LICENSES.md",
+        "THIRD_PARTY_LICENSES.txt",
         "CHANGELOG.md",
         "MARKETING-LOG.txt",
         "llms.txt",
@@ -77,10 +78,10 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--09--24-informational",
+        "https://img.shields.io/badge/last%20checked-2026--09--29-informational",
         "license-MIT",
         "Attribution-NOTICE-blue.svg",
-        "Level%201%20SBOM-Audited-brightgreen.svg",
+        "Level%201%20SBOM-Audited",
         "RunAsInvoker-Certified-success.svg",
     ]
 
@@ -316,9 +317,13 @@ def test_pep621_extended_project_urls():
     """Verify pyproject.toml defines extended PEP 621 URLs for discoverability."""
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert '"Third-Party Licenses"' in pyproject
+    assert '"Third-Party Licenses (Text)"' in pyproject
+    assert '"Level 1 SBOM"' in pyproject
+    assert '"Plain-Text License"' in pyproject
     assert '"Marketing-Log"' in pyproject
     assert '"LLM-Ready"' in pyproject
     assert "THIRD_PARTY_LICENSES.md" in pyproject
+    assert "THIRD_PARTY_LICENSES.txt" in pyproject
     assert "MARKETING-LOG.txt" in pyproject
     assert "llms.txt" in pyproject
 
@@ -326,7 +331,8 @@ def test_pep621_extended_project_urls():
 def test_third_party_licenses_file_contract():
     """Verify THIRD_PARTY_LICENSES.md inventory, audit date, Level 1 SBOM and invariants."""
     licenses_doc = (ROOT / "THIRD_PARTY_LICENSES.md").read_text(encoding="utf-8")
-    assert "Audit Date:** 2026-09-24" in licenses_doc
+    assert "Audit Date:** 2026-09-29" in licenses_doc
+    assert "THIRD_PARTY_LICENSES.txt" in licenses_doc
     assert "GPL-3.0" in licenses_doc
     assert "LGPL" in licenses_doc
     assert "Level 1 SBOM" in licenses_doc
@@ -349,6 +355,7 @@ def test_marketing_log_contract():
     assert "2026-09-13 — Pfad A" in marketing_log
     assert "2026-09-20 — Pfad B" in marketing_log
     assert "2026-09-24 — Pfad A" in marketing_log
+    assert "2026-09-29 — Pfad B" in marketing_log
     assert "INV-LOCAL-01" in marketing_log
     assert "INV-SLA-10" in marketing_log
 
@@ -369,10 +376,11 @@ def test_pep639_license_files_contract():
     """Verify PEP 639 license-files declaration and referenced file existence."""
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert 'license = "MIT"' in pyproject
-    assert 'license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md"]' in pyproject
+    assert 'license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md", "THIRD_PARTY_LICENSES.txt"]' in pyproject
     assert (ROOT / "LICENSE").is_file()
     assert (ROOT / "NOTICE").is_file()
     assert (ROOT / "THIRD_PARTY_LICENSES.md").is_file()
+    assert (ROOT / "THIRD_PARTY_LICENSES.txt").is_file()
 
 
 def test_ruff_configuration_contract():
@@ -394,9 +402,10 @@ def test_todo_version_and_date_parity():
     """Verify TODO.md version header and update date match active release."""
     todo_text = (ROOT / "TODO.md").read_text(encoding="utf-8")
     assert "**Version:** 0.1.6" in todo_text
-    assert "**Updated:** 2026-09-24" in todo_text
+    assert "**Updated:** 2026-09-29" in todo_text
     assert "TASK-CSD-06" in todo_text
     assert "TASK-CSD-07" in todo_text
+    assert "TASK-CSD-08" in todo_text
 
 
 
@@ -517,3 +526,93 @@ def test_changelog_unreleased_pfad_a_section():
     assert "Stale Issues & PRs Lifecycle Automation" in changelog
     assert "Extended Multi-Host Sync & Lock Defense" in changelog
     assert "PEP 621 Standard URLs" in changelog
+
+
+def test_bilateral_sec_navigation_anchors():
+    """Verify README.md and README_de.md maintain bilateral sec-01..18 navigation anchors."""
+    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
+    for i in range(1, 19):
+        anchor = f'<a id="sec-{i:02d}"></a>'
+        assert anchor in readme_en, f"Missing anchor {anchor} in README.md"
+        assert anchor in readme_de, f"Missing anchor {anchor} in README_de.md"
+
+
+def test_ascii_four_view_topology_projection():
+    """Verify README.md and README_de.md include the 4 architectural projection views."""
+    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
+
+    # English README views
+    assert "VIEW 1: USER INTERACTION" in readme_en
+    assert "VIEW 2: DIRECTORIAL CONTROL" in readme_en
+    assert "VIEW 3: 4D PERSISTENCE BUFFER" in readme_en
+    assert "VIEW 4: SECURITY BOUNDARY" in readme_en
+
+    # German README views
+    assert "SICHT 1: BENUTZER-INTERAKTION" in readme_de
+    assert "SICHT 2: REGIEFÜHRUNG" in readme_de
+    assert "SICHT 3: 4D-PERSISTENZPUFFER" in readme_de
+    assert "SICHT 4: SICHERHEITSPERIMETER" in readme_de
+
+
+def test_level1_sbom_plaintext_companion_contract():
+    """Verify THIRD_PARTY_LICENSES.txt exists and meets all compliance invariants."""
+    sbom_txt = ROOT / "THIRD_PARTY_LICENSES.txt"
+    assert sbom_txt.is_file(), "Missing root THIRD_PARTY_LICENSES.txt"
+    content = sbom_txt.read_text(encoding="utf-8")
+
+    # Invariants INV-LOCAL-01 through INV-SLA-10
+    expected_invariants = [
+        "INV-LOCAL-01",
+        "INV-UNPRIV-02",
+        "INV-LOOPBACK-03",
+        "INV-SANDBOX-04",
+        "INV-CONTINUITY-05",
+        "INV-CLUEFRAME-06",
+        "INV-STANDALONE-07",
+        "INV-MULTIOS-08",
+        "INV-SYNC-09",
+        "INV-SLA-10",
+    ]
+    for inv in expected_invariants:
+        assert inv in content, f"Missing invariant {inv} in THIRD_PARTY_LICENSES.txt"
+
+    # Governance indicators
+    assert "RunAsInvoker" in content
+    assert "ZERO-COPYLEFT" in content or "Zero-Copyleft" in content
+    assert "MIT License" in content
+
+    # Runtime and tool dependencies
+    for dep in ["PyYAML", "websocket-client", "requests", "edge-tts", "FFmpeg"]:
+        assert dep in content, f"Missing dependency mention of {dep} in THIRD_PARTY_LICENSES.txt"
+
+
+def test_pep621_twenty_topics_saturation():
+    """Verify pyproject.toml keywords list matches all 20 saturated GitHub topics."""
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    expected_topics = [
+        "4d-persistence",
+        "agent-workflow",
+        "ai-video",
+        "audio-ducking",
+        "cdp-automation",
+        "clue-frame",
+        "director",
+        "edge-cdp",
+        "ellmos-ai",
+        "generative-ui",
+        "llm-ready",
+        "local-first",
+        "multitrack-audio",
+        "open-bricks",
+        "python",
+        "scene-continuity",
+        "storyboard",
+        "video-pipeline",
+        "video-production",
+        "zero-egress",
+    ]
+    assert len(expected_topics) == 20
+    for topic in expected_topics:
+        assert f'"{topic}"' in pyproject, f"Missing topic '{topic}' in pyproject.toml keywords"

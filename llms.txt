@@ -2,7 +2,7 @@
 
 > Local-first AI storyboard director, scene continuity orchestrator, and video pipeline controller with browser CDP automation and interactive timeline cockpit.
 
-- Last-checked: 2026-09-24
+- Last-checked: 2026-09-29
 - Version: 0.1.6
 - Module status: `active`; visibility projection: `public`; release gate: `USER`.
 - Architecture: Local-First / Dual-Pane Timeline Cockpit / Edge CDP Automator / FFmpeg Assembly
@@ -110,5 +110,5 @@ print(f"Master output: {master_path}")
 
 ## Attribution & Legal
 - **Attribution NOTICE**: Declared in [NOTICE](NOTICE) for Lukas Geiger, ellmos-ai, and open-bricks.
-- **Level 1 SBOM**: Audited and cataloged in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+- **Level 1 SBOM**: Audited and cataloged in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) and plain-text companion [THIRD_PARTY_LICENSES.txt](THIRD_PARTY_LICENSES.txt).
 - **Statutory Notice (§ 521 BGB)**: Courtesy provision under German Civil Code (§ 521 BGB) with statutory liability limited to intent and gross negligence.

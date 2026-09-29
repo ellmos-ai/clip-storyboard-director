@@ -12,15 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Ehrliche Statusanzeigen**: Download-Überwachung und CDP-Status werden vom Server gelesen statt statisch „Aktiv“ bzw. „Autopilot aktiv“ anzuzeigen; `/api/cowork/focus` liefert `has_hero`, damit das Cockpit „alle Shots fertig“ erkennt.
 
 ### Added
+- **18-Point Bilateral Quick Navigation Anchors (`sec-01`..`sec-18`)**: Provisioned standardized bilateral HTML anchors `<a id="sec-01"></a>` through `<a id="sec-18"></a>` across both `README.md` and `README_de.md` for rock-solid cross-language references and deep link stability.
+- **ASCII Four-View Architectural Projection**: Introduced four-view ASCII topology diagrams into Section 2 of both READMEs covering user/agent interaction, directorial control with Edge CDP browser automation (:9222), 4D persistence buffer & clue-frame staging, and unprivileged user space perimeter.
+- **Level 1 SBOM Plain-Text Companion (`THIRD_PARTY_LICENSES.txt`)**: Authored comprehensive plain-text Level 1 SBOM companion file in the repository root detailing runtime dependency boundaries, zero-copyleft guarantee, `RunAsInvoker` non-elevation certification, and full SPDX license texts.
+- **PEP 621 Topics & Metadata Saturation**: Saturated `keywords` in `pyproject.toml` with 20 GitHub repository topics, added `"Level 1 SBOM"`, `"Third-Party Licenses (Text)"`, and `"Plain-Text License"` to `[project.urls]`, and included `THIRD_PARTY_LICENSES.txt` in `license-files`.
 - **Stale Issues & PRs Lifecycle Automation**: Added `.github/workflows/stale.yml` using `actions/stale@v9` with least-privilege permissions (`issues: write`, `pull-requests: write`), `timeout-minutes: 10`, concurrency group cancellation, and automated 30-day stale / 7-day close lifecycle.
-- **Extended Multi-Host Sync & Lock Defense (.gitignore)**: Hardened `.gitignore` against cross-device conflict copies (`*conflicted copy*`, `* (Kopie)*`, `* (Copy)*`, `*-WORKSTATION*`, `*-WORKSTATION-LG*`, `*-ASUS*`, `*-ASUS-GEI*`, `*-LAPTOP*`, `*-Mac Studio*`, `*-MacBook*`), canonical lock-system files (`LOCK.user.*`, `LOCK.until.*`, `LOCK.condition.*`, `.automation-lock`), patch rejects (`*.rej`), merge remnants (`*.orig`), and tooling caches (`.tox/`, `.turbo/`, `.nyc_output/`, `.hypothesis/`).
+- **Extended Multi-Host Sync & Lock Defense (.gitignore)**: Hardened `.gitignore` against cross-device conflict copies (`*conflicted copy*`, `* (Kopie)*`, `* (Copy)*`, `*-WORKSTATION*`, `*-WORKSTATION-LG*`, `*-ASUS*`, `*-ASUS-GEI*`, `*-LAPTOP*`, `*-Mac Studio*`, `*-MacBook*`), canonical lock-system files (`LOCK.user.*`, `LOCK.until.*`, `LOCK.condition.*`, `.automation-lock`), patch rejects (`*.rej`), merge remnants (`*.orig`), and tooling caches (`.tox/`, `.turbo/`, `.nyc_output/`, `.hypothesis/`, `.pytest_temp/`).
 - **PEP 621 Standard URLs**: Registered canonical `"Notice"` and `"Bug Tracker"` URLs under `[project.urls]` in `pyproject.toml`.
-- **Pytest Discovery Guardrails**: Configured `minversion = "7.0"` and explicit `norecursedirs` (`.git`, `.pytest_cache`, `__pycache__`, `build`, `dist`, `.venv`) in `pyproject.toml`.
+- **Pytest Discovery Guardrails**: Configured `minversion = "7.0"` and explicit `norecursedirs` (`.git`, `.pytest_cache`, `__pycache__`, `build`, `dist`, `.venv`, `.pytest_temp`, `.tox`, `wheelhouse`) in `pyproject.toml`.
 
 ### Changed
-- **Attribution & SBOM Re-Audit**: Re-audited `THIRD_PARTY_LICENSES.md` (audit date 2026-09-24) and synchronized repository-root `NOTICE` with explicit cross-reference to third-party inventory.
-- **Documentation & KI Context Parity**: Synchronized `README.md`, `README_de.md`, `llms.txt`, and `TODO.md` with active check timestamp 2026-09-24.
-- **Contract Test Suite Expansion**: Expanded `tests/test_metadata.py` with automated contract tests verifying the stale lifecycle workflow, extended gitignore lock defense, Notice/Bug Tracker PEP 621 URLs, and third-party audit recency. Version remains `0.1.6` (Pfad A technical hygiene turnus, strict version-freeze per T-20260920-167562623).
+- **Attribution & SBOM Re-Audit**: Re-audited `THIRD_PARTY_LICENSES.md` (audit date 2026-09-29) and synchronized repository-root `NOTICE` with explicit cross-references to both `THIRD_PARTY_LICENSES.md` and `THIRD_PARTY_LICENSES.txt`.
+- **Documentation & KI Context Parity**: Synchronized `README.md`, `README_de.md`, `llms.txt`, and `TODO.md` with active check timestamp 2026-09-29 and updated Shields.io badges.
+- **Contract Test Suite Expansion**: Expanded `tests/test_metadata.py` with automated contract tests verifying bilateral quick navigation anchors `sec-01`..`sec-18`, ASCII Four-View Architectural Projection, Level 1 SBOM text companion, PEP 621 keywords saturation, and extended project URLs. Version remains `0.1.6` (Pfad B discoverability and marketing turnus, strict version-freeze per T-20260920-167562623).
 
 ## [0.1.6] - 2026-09-20
 
