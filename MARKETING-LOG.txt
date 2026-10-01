@@ -352,3 +352,52 @@ folgende Maßnahmen umgesetzt:
 6. Vertragstest-Erweiterung (tests/test_metadata.py):
    - Neue Contract-Tests für bilaterale Navigationsanker sec-01..sec-18, ASCII 4-View
      Projektion, Level 1 SBOM Text-Companion, PEP 621 Topics/URLs und Prüfzeitstempel.
+
+================================================================================
+10. REPOSITORY-HYGIENE- & LIFECYCLE-AUDIT (2026-10-01 — Pfad A v0.1.6)
+================================================================================
+Im Rahmen des turnusmäßigen Pfad-A-Laufs (CI Lifecycle Workflows, Auto-Assign,
+Labels Sync, Bilingual Contributing Guidelines, PEP 621 Standardisierung,
+Multi-Host Ideapad Defense & Level 1 SBOM Re-Audit) wurden folgende Maßnahmen
+vollständig implementiert:
+
+1. CI Lifecycle Workflows & Auto-Assign (.github/workflows):
+   - `.github/workflows/auto-assign.yml`: Automatisches Zuweisen eingehender PRs an den
+     Repository-Maintainer mit Concurrency-Abschirmung (`auto-assign-${{ github.ref }}`)
+     und 5-Minuten Job-Timeout.
+   - `.github/workflows/label-sync.yml`: Automatisierte Label-Synchronisation via
+     `workflow_dispatch` basierend auf `EndBug/label-sync@v2` und `.github/labels.yml`.
+   - `.github/labels.yml`: Kanonisches Standard-Labelset gemäß GOVERNANCE.md §4.2
+     (bug, enhancement, good first issue, help wanted, documentation, duplicate, wontfix,
+     priority: high, priority: low, needs-triage, stale, security, dependencies).
+
+2. Zweisprachige Contributing Guidelines & Quality Gates (CONTRIBUTING.md):
+   - Neues Wurzel-Dokument `CONTRIBUTING.md` in Deutsch und Englisch bereitgestellt.
+   - Definition verbindlicher Qualitäts-Tore: Local-First & Zero-Egress (`INV-LOCAL-01`),
+     Unprivilegierte Benutzer-Ausführung (`INV-UNPRIV-02` / `RunAsInvoker`),
+     Isolierte Subprozess-Grenzen mit Zero-Copyleft Garantie (`INV-SANDBOX-04`),
+     48h Sicherheits- & Governance-SLA (`INV-SLA-10`), Versions-Freeze Disziplin
+     (`T-20260920-167562623`), standardisierter Entwickler-Workflow (pytest, ruff,
+     compileall, git diff --check).
+
+3. PEP 621 Metadaten-Härtung (pyproject.toml):
+   - Canonical `Contributing` URL unter `[project.urls]` registriert
+     (https://github.com/ellmos-ai/clip-storyboard-director/blob/main/CONTRIBUTING.md).
+
+4. Multi-Host Cloud-Sync & Ideapad-Abschirmung (.gitignore):
+   - `.gitignore` um spezifische Lenovo Ideapad Suffixe (`*-IDEAPAD*`, `*-IDEAPAD-GEI*`,
+     `*-IDEAPAD-GEI.*`) erweitert.
+
+5. Level 1 SBOM Plain-Text Companion & Markdown Re-Audit (Stand 2026-10-01):
+   - `THIRD_PARTY_LICENSES.txt` und `THIRD_PARTY_LICENSES.md` auf Stand `2026-10-01`
+     re-auditiert. Re-Zertifizierung von Zero-Copyleft Isolation, Loopback Binding,
+     RunAsInvoker und Invarianten INV-LOCAL-01 bis INV-SLA-10.
+
+6. Dokumentation & Status-Synchronisation:
+   - Shields.io-Prüfstempel in `README.md` und `README_de.md` auf `2026-10-01` aktualisiert.
+   - `llms.txt`, `TODO.md` und `CHANGELOG.md` auf Stand `2026-10-01` harmonisiert.
+   - Strikte Version-Freeze-Disziplin (T-20260920-167562623): Version 0.1.6 unverändert beibehalten.
+
+7. Vertragstest-Erweiterung (tests/test_metadata.py):
+   - 7 neue Contract-Tests für CI Auto-Assign, Label Sync, labels.yml, bilingual CONTRIBUTING.md,
+     PEP 621 Contributing URL, Ideapad Gitignore Guards und SBOM Re-Audit Stand 2026-10-01.

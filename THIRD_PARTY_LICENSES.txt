@@ -4,7 +4,7 @@ THIRD-PARTY SOFTWARE LICENSES & LEVEL 1 SBOM AUDIT TRAIL
 
 Project:               ellmos-ai/clip-storyboard-director
 Version:               0.1.6 (frozen per T-20260920-167562623)
-Stand:                 2026-09-29
+Stand:                 2026-10-01
 Repository License:    MIT License (see LICENSE)
 Attribution Notice:    see NOTICE
 Markdown Companion:    see THIRD_PARTY_LICENSES.md

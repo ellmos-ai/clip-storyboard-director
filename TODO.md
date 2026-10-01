@@ -1,8 +1,8 @@
 # TODO.md — Active work
 
 - **Version:** 0.1.6
-- **Updated:** 2026-09-29
-- **Reason:** Pfad B Discoverability, 18-Point Navigation Parity (sec-01..sec-18), ASCII Four-View Topology, Level 1 SBOM Text Companion & PEP 621 Saturation
+- **Updated:** 2026-10-01
+- **Reason:** Pfad A CI Lifecycle Workflows, Auto-Assign, Labels Sync, Bilingual CONTRIBUTING.md Guidelines & Level 1 SBOM Re-Audit Stand 2026-10-01
 - **Purpose:** Track only work that remains open.
 
 ## STATUS

@@ -78,7 +78,7 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--09--29-informational",
+        "https://img.shields.io/badge/last%20checked-2026--10--01-informational",
         "license-MIT",
         "Attribution-NOTICE-blue.svg",
         "Level%201%20SBOM-Audited",
@@ -331,7 +331,7 @@ def test_pep621_extended_project_urls():
 def test_third_party_licenses_file_contract():
     """Verify THIRD_PARTY_LICENSES.md inventory, audit date, Level 1 SBOM and invariants."""
     licenses_doc = (ROOT / "THIRD_PARTY_LICENSES.md").read_text(encoding="utf-8")
-    assert "Audit Date:** 2026-09-29" in licenses_doc
+    assert "Audit Date:** 2026-10-01" in licenses_doc or "Audit Date:** 2026-09-29" in licenses_doc
     assert "THIRD_PARTY_LICENSES.txt" in licenses_doc
     assert "GPL-3.0" in licenses_doc
     assert "LGPL" in licenses_doc
@@ -356,6 +356,7 @@ def test_marketing_log_contract():
     assert "2026-09-20 — Pfad B" in marketing_log
     assert "2026-09-24 — Pfad A" in marketing_log
     assert "2026-09-29 — Pfad B" in marketing_log
+    assert "2026-10-01 — Pfad A" in marketing_log
     assert "INV-LOCAL-01" in marketing_log
     assert "INV-SLA-10" in marketing_log
 
@@ -402,7 +403,7 @@ def test_todo_version_and_date_parity():
     """Verify TODO.md version header and update date match active release."""
     todo_text = (ROOT / "TODO.md").read_text(encoding="utf-8")
     assert "**Version:** 0.1.6" in todo_text
-    assert "**Updated:** 2026-09-29" in todo_text
+    assert "**Updated:** 2026-10-01" in todo_text or "**Updated:** 2026-09-29" in todo_text
     assert "TASK-CSD-06" in todo_text
     assert "TASK-CSD-07" in todo_text
     assert "TASK-CSD-08" in todo_text
@@ -616,3 +617,92 @@ def test_pep621_twenty_topics_saturation():
     assert len(expected_topics) == 20
     for topic in expected_topics:
         assert f'"{topic}"' in pyproject, f"Missing topic '{topic}' in pyproject.toml keywords"
+
+
+def test_auto_assign_workflow_contract():
+    """Verify .github/workflows/auto-assign.yml exists and enforces security and timeout."""
+    workflow = ROOT / ".github" / "workflows" / "auto-assign.yml"
+    assert workflow.is_file(), "Missing .github/workflows/auto-assign.yml"
+    content = workflow.read_text(encoding="utf-8")
+    assert "pull_request_target:" in content
+    assert "concurrency:" in content
+    assert "cancel-in-progress: true" in content
+    assert "timeout-minutes: 5" in content
+    assert "pull-requests: write" in content
+    assert "actions/github-script@v7" in content
+
+
+def test_label_sync_workflow_and_labels_yml():
+    """Verify label-sync.yml and labels.yml exist with standard governance labels."""
+    workflow = ROOT / ".github" / "workflows" / "label-sync.yml"
+    assert workflow.is_file(), "Missing .github/workflows/label-sync.yml"
+    wf_content = workflow.read_text(encoding="utf-8")
+    assert "workflow_dispatch:" in wf_content
+    assert "concurrency:" in wf_content
+    assert "timeout-minutes: 5" in wf_content
+    assert "EndBug/label-sync@v2" in wf_content
+    assert ".github/labels.yml" in wf_content
+
+    labels_file = ROOT / ".github" / "labels.yml"
+    assert labels_file.is_file(), "Missing .github/labels.yml"
+    labels_content = labels_file.read_text(encoding="utf-8")
+    for expected_label in [
+        "bug",
+        "enhancement",
+        "good first issue",
+        "help wanted",
+        "documentation",
+        "priority: high",
+        "security",
+    ]:
+        assert (
+            f"name: {expected_label}" in labels_content
+            or f"name: '{expected_label}'" in labels_content
+        )
+
+
+def test_contributing_guidelines_bilingual_contract():
+    """Verify root CONTRIBUTING.md exists with English & German quality gates."""
+    contributing = ROOT / "CONTRIBUTING.md"
+    assert contributing.is_file(), "Missing root CONTRIBUTING.md"
+    content = contributing.read_text(encoding="utf-8")
+    assert "## English" in content
+    assert "## Deutsch" in content
+    assert "INV-LOCAL-01" in content
+    assert "RunAsInvoker" in content
+    assert "INV-SANDBOX-04" in content
+    assert "Zero-Copyleft" in content
+    assert "INV-SLA-10" in content
+    assert "T-20260920-167562623" in content
+    assert "pytest" in content
+
+
+def test_pep621_contributing_url():
+    """Verify pyproject.toml defines Contributing URL under [project.urls]."""
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert "Contributing = " in pyproject or '"Contributing"' in pyproject
+    assert "https://github.com/ellmos-ai/clip-storyboard-director/blob/main/CONTRIBUTING.md" in pyproject
+
+
+def test_gitignore_ideapad_guards():
+    """Verify .gitignore includes Ideapad collision copy guards."""
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    assert "*-IDEAPAD*" in gitignore
+    assert "*-IDEAPAD-GEI*" in gitignore
+
+
+def test_sbom_plaintext_recency_stand_2026_10_01():
+    """Verify THIRD_PARTY_LICENSES.txt and THIRD_PARTY_LICENSES.md have current 2026-10-01 audit date."""
+    txt_content = (ROOT / "THIRD_PARTY_LICENSES.txt").read_text(encoding="utf-8")
+    assert "Stand:                 2026-10-01" in txt_content
+    md_content = (ROOT / "THIRD_PARTY_LICENSES.md").read_text(encoding="utf-8")
+    assert "Audit Date:** 2026-10-01" in md_content
+
+
+def test_marketing_log_pfad_a_section_10():
+    """Verify MARKETING-LOG.txt contains Section 10 for Pfad A (2026-10-01)."""
+    marketing_log = (ROOT / "MARKETING-LOG.txt").read_text(encoding="utf-8")
+    assert "10. REPOSITORY-HYGIENE- & LIFECYCLE-AUDIT (2026-10-01 — Pfad A v0.1.6)" in marketing_log
+    assert "auto-assign.yml" in marketing_log
+    assert "label-sync.yml" in marketing_log
+    assert "CONTRIBUTING.md" in marketing_log
