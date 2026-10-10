@@ -10,6 +10,9 @@ from pathlib import Path
 
 import json
 
+sys.path.append(str(Path(__file__).resolve().parent))
+from prompt_builder import active_prompt, directive  # noqa: E402
+
 try:
     import yaml
 except ImportError:
@@ -116,20 +119,16 @@ def handoff_step(project_dir, step_nr, desktop_path=None, force=False):
             print(f"[HINWEIS] Kein Clue-Frame für Step {step_nr - 1} hinterlegt.")
 
     # 2. Prompt-Text & Audio-Direktiven formulieren
-    active_v = target_shot.get("active_prompt_version", "v1")
-    prompt_obj = next((p for p in target_shot.get("prompts", []) if p.get("version") == active_v), None)
-    prompt_text = prompt_obj.get("text", "") if prompt_obj else ""
+    active_v, prompt_text = active_prompt(target_shot)
 
     p_buf = data.get("persistence_buffer", {})
     props_str = ", ".join([p.get("name") if isinstance(p, dict) else str(p) for p in p_buf.get("props", [])]) or "-"
     chars_str = ", ".join([c.get("name") if isinstance(c, dict) else str(c) for c in p_buf.get("characters", [])]) or "-"
     locs_str = ", ".join([loc.get("name") if isinstance(loc, dict) else str(loc) for loc in p_buf.get("locations", [])]) or "-"
 
-    voice = target_shot.get("voice", {})
-    directives = voice.get("directives", {})
-    dir_de = directives.get("german") or (f'Spoken dialogue in German (clear voice): "{voice.get("source_text") or voice.get("text")}"' if voice.get("enabled") else "None")
-    dir_en = directives.get("english") or (f'Spoken dialogue in English (clear voice): "{voice.get("translated_text_en")}"' if voice.get("translated_text_en") else "None")
-    dir_silent = directives.get("silent") or "Silent video with ambient environmental sound only, strictly no human voice"
+    dir_de = directive(target_shot, "de") or "None"
+    dir_en = directive(target_shot, "en") or "None"
+    dir_silent = directive(target_shot, "silent")
 
     content = f"""======================================================================
 NEXT SHOT HANDOFF: STEP {step_nr} von {len(shots)}

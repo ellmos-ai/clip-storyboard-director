@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **GUI und kopierter Prompt nicht synchron**: Anzeige, Kopieren-Knöpfe (Cockpit und Storyboard), CDP-Injektion und Desktop-Handoff bauen ihren Text jetzt ausschließlich über `prompt_builder.py` (eine Quelle der Wahrheit); die vier abweichenden Kopien der Logik (u. a. `voice.text` allein wurde beim Kopieren ignoriert, fehlende aktive Version ergab je Stelle anderen Text) sind entfernt. Das Cockpit holt vor dem Kopieren frisch vom Server statt einen bis zu 3 s alten Stand zu kopieren, die CDP-Injektion sendet die angezeigte Variante (vorher stets den DE-Dialog), und `/api/cowork/focus` rendert ein veraltetes Storyboard neu; das Cockpit lädt das Storyboard bei Projektänderung nach.
+
+### Added
+- Cockpit: Vorschau zeigt exakt den Text, der kopiert wird (Modus sichtbar), plus Bestätigung „Zuletzt kopiert: Modus · Shot · Uhrzeit · Zeichenzahl“. `/api/cowork/focus` liefert `prompt_variants`, `prompt_version`, `revision`.
+
 ### Changed
 - **Ruhigeres Cockpit (Storyboard + Bridge)**: Eine Akzentfarbe statt sechs, keine Glows, Verläufe und Hover-Sprünge, deutlich weniger Emojis; `prefers-reduced-motion` wird respektiert, Textkontraste erfüllen WCAG AA. Die Timeline steht oben und bleibt beim Scrollen sichtbar; Persistenzpuffer und Konsistenz-Kartei folgen direkt darunter, standardmäßig aufgeklappt, mit Zählern im Kopf und einklappbar (Zustand wird gemerkt); Kamera/Licht/Ton je Shot ist ebenfalls aufgeklappt. Keine Funktion entfernt (Inventar in PR #3). Der aktuelle Shot ist in Timeline und Karte markiert; die Bridge-Spalte zeigt ihn zuerst, den Iframe-Hinweis nur noch auf Klick.
 - **Ehrliche Statusanzeigen**: Download-Überwachung und CDP-Status werden vom Server gelesen statt statisch „Aktiv“ bzw. „Autopilot aktiv“ anzuzeigen; `/api/cowork/focus` liefert `has_hero`, damit das Cockpit „alle Shots fertig“ erkennt.

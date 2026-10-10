@@ -53,3 +53,10 @@
 
 ---
 <!-- REMEMBER: ENDUSERTEXTE BEKOMMEN ECHTE UMLAUTE Ü Ö Ä ß -->
+
+## Offen nach Prompt-Sync-Fix (2026-10-10)
+- **Generator-spezifische Prompt-Bereinigung** (aus `docs/GUI_IMPROVEMENTS_FEEDBACK_2026-10-04.md` Punkt 2): Trennung interne Spezifikation (`copyShotDetails`, enthält Markdown-Header und deutsche Menü-Tags) vs. purer Generator-Prompt; Zielgenerator-Dropdown (Veo/Runway/Luma/Sora) als weiterer Parameter von `prompt_builder.build_prompt`. Nächster Schritt: Modus-Parameter `target` ergänzen, Voranstellung bei aktivem Anschlussbild.
+- **Anschlussbild 1-Klick** (Feedback Punkt 1): Bildkopie in Zwischenablage existiert im Storyboard (`writeToClipboard` mit PNG), im Cockpit fehlt der Knopf; Desktop-Ablage per Knopf fehlt.
+- **Workflow-Modus Neuer Chat vs. Verlängerung** (Feedback Punkt 3): braucht Differenz-Prompts, Design offen.
+- **Doppelte Vorlagen**: `templates/cockpit_template.html` und `templates/dashboard_template.html` sind von keinem Code geladen und veraltet (Quelle ist `src/clip_director/`). Entfernen nach Rücksprache.
+- Hinweis „ungespeicherte Änderungen“: im Editor gibt es kein Bearbeiten von Prompts im Browser (project.yaml ist die Quelle); sinnvoll erst mit einem Prompt-Editor-Endpunkt.
