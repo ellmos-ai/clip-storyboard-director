@@ -611,27 +611,9 @@ ${{item.name}}, ${{item.description || ''}}, photorealistic, ultra-detailed cons
       const shot = PROJECT_DATA.shots[stepNr];
       if (!shot) return;
 
-      const activeV = shot.active_prompt_version || 'v1';
-      const promptObj = (shot.prompts || []).find(p => p.version === activeV) || (shot.prompts || [])[0] || {{}};
-      let textPayload = promptObj.text || '';
-
-      const voice = shot.voice || {{}};
-      const directives = voice.directives || {{}};
-
-      let label = 'Reiner Prompt';
-      if (mode === 'de') {{
-        const dir = directives.german || (voice.source_text ? `Spoken dialogue in German (clear voice): "${{voice.source_text}}"` : '');
-        if (dir) textPayload += `\n\n${{dir}}`;
-        label = 'Prompt + 🇩🇪 DE';
-      }} else if (mode === 'en') {{
-        const dir = directives.english || (voice.translated_text_en ? `Spoken dialogue in English (clear voice): "${{voice.translated_text_en}}"` : '');
-        if (dir) textPayload += `\n\n${{dir}}`;
-        label = 'Prompt + 🇬🇧 EN';
-      }} else if (mode === 'silent') {{
-        const dir = directives.silent || 'Silent video with ambient environmental sound only, strictly no human voice';
-        textPayload += `\n\n${{dir}}`;
-        label = 'Prompt + 🔇 Stumm';
-      }}
+      // Der Text kommt fertig vom Server (prompt_builder) - keine Zusammenbau-Logik hier.
+      const textPayload = (shot.prompt_variants || {{}})[mode] || '';
+      const label = {{ plain: 'Reiner Prompt', de: 'Prompt + 🇩🇪 DE', en: 'Prompt + 🇬🇧 EN', silent: 'Prompt + 🔇 Stumm' }}[mode] || mode;
 
       let pngBlob = null;
       if (shot.clue_frame) {{
@@ -648,9 +630,8 @@ ${{item.name}}, ${{item.description || ''}}, photorealistic, ultra-detailed cons
       if (!shot) return;
 
       const proj = PROJECT_DATA.project || {{}};
-      const activeV = shot.active_prompt_version || 'v1';
-      const promptObj = (shot.prompts || []).find(p => p.version === activeV) || (shot.prompts || [])[0] || {{}};
-      const promptText = promptObj.text || '';
+      const activeV = shot.prompt_version || 'v1';
+      const promptText = (shot.prompt_variants || {{}}).plain || '';
 
       const p = shot.persistence || {{}};
       const chars = (p.characters || []).join(', ') || 'Keine';
@@ -676,9 +657,9 @@ ${{promptText}}
 ============================================================
 AUDIO & SPRACH-OPTIONEN (FÜR MULTIMODALE MODELLE WIE GEMINI/VEO/SORA):
 ============================================================
-• Option A [Deutsch]: ${{(voice.directives && voice.directives.german) || ('Spoken dialogue in German (clear voice): "' + (voice.source_text || voice.text || '') + '"')}}
-• Option B [English Translation]: ${{(voice.directives && voice.directives.english) || (voice.translated_text_en ? ('Spoken dialogue in English (clear voice): "' + voice.translated_text_en + '"') : 'None')}}
-• Option C [Stumm/Ambient]: ${{(voice.directives && voice.directives.silent) || 'Silent video with ambient environmental sound only, strictly no human voice'}}
+• Option A [Deutsch]: ${{(shot.directives || {{}}).de || 'None'}}
+• Option B [English Translation]: ${{(shot.directives || {{}}).en || 'None'}}
+• Option C [Stumm/Ambient]: ${{(shot.directives || {{}}).silent}}
 • Schnitt-Status Spur 1 (In-Video): ${{audio.track1_invideo === 'keep' ? 'Keep (Audio im Schnitt beibehalten)' : 'Mute (Im Schnitt stummschalten)'}}
 
 ============================================================
@@ -954,9 +935,7 @@ PERSISTENZ-PUFFER (Elemente im Bild):
           }}
         }}
         const shot = shots[activeStepNr] || {{}};
-        const activeV = shot.active_prompt_version || 'v1';
-        const pObj = (shot.prompts || []).find(p => p.version === activeV);
-        const promptText = pObj ? pObj.text : '';
+        const promptText = (shot.prompt_variants || {{}}).plain || '';
 
         return {{
           protocolVersion: 'cowork.v1',

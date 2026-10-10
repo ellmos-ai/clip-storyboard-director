@@ -38,6 +38,7 @@ try:
     from ingest import process_inbox
     from render_dashboard import render_project
     from render_cockpit import render_cockpit
+    from prompt_builder import all_variants, build_prompt, current_shot, active_prompt
     from link_resolver import fetch_link_to_file
     from downloads_watcher import DownloadsWatcher
     from edge_bridge import check_edge_status, inject_prompt_to_gemini, open_or_focus_tab
@@ -341,27 +342,8 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
                 return
 
             step_nr = target_shot.get("step_nr")
-            active_v = target_shot.get("active_prompt_version", "v1")
-            p_obj = next((p for p in target_shot.get("prompts", []) if p.get("version") == active_v), None)
-            prompt_text = p_obj.get("text", "") if p_obj else ""
-
-            # Sprache / Direktive auswählen
-            lang_param = params.get("lang", ["de"])[0]
-            voice = target_shot.get("voice", {})
-            directives = voice.get("directives", {})
-
-            if lang_param == "de":
-                audio_dir = directives.get("german") or (f'Spoken dialogue in German (clear voice): "{voice.get("source_text") or voice.get("text")}"' if voice.get("enabled") else "")
-            elif lang_param == "en":
-                audio_dir = directives.get("english") or (f'Spoken dialogue in English (clear voice): "{voice.get("translated_text_en")}"' if voice.get("translated_text_en") else "")
-            elif lang_param == "silent":
-                audio_dir = directives.get("silent") or "Silent video with ambient environmental sound only, strictly no human voice"
-            else:
-                audio_dir = ""
-
-            full_prompt = prompt_text
-            if audio_dir:
-                full_prompt += f"\n\n{audio_dir}"
+            lang_param = params.get("lang", ["plain"])[0]
+            full_prompt = build_prompt(target_shot, lang_param if lang_param in ("de", "en", "silent") else "plain")
 
             res = inject_prompt_to_gemini(full_prompt, auto_submit=False)
             res["step"] = step_nr
@@ -377,14 +359,21 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
                 self.send_json_response({"status": "error", "message": "project.yaml nicht gefunden"}, status_code=404)
                 return
 
+            # project.yaml ist die Wahrheit: ist das Storyboard aelter, neu rendern,
+            # damit Karten (und deren Kopieren-Knoepfe) nicht von Cockpit/Server abweichen.
+            board = self.project_dir / "storyboard.html"
+            if not board.exists() or board.stat().st_mtime < yaml_file.stat().st_mtime:
+                try:
+                    render_project(self.project_dir)
+                except SystemExit:
+                    pass
+
             with open(yaml_file, "r", encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
 
             shots = data.get("shots", [])
-            target_shot = next((s for s in shots if not s.get("selected_take")), shots[0] if shots else {})
+            target_shot = current_shot(shots)
             step_nr = target_shot.get("step_nr", 1)
-            active_v = target_shot.get("active_prompt_version", "v1")
-            p_obj = next((p for p in target_shot.get("prompts", []) if p.get("version") == active_v), {})
 
             packet = {
                 "protocolVersion": "cowork.v1",
@@ -393,7 +382,10 @@ class StoryboardHandler(SimpleHTTPRequestHandler):
                 "slug": target_shot.get("slug", ""),
                 "has_hero": bool(target_shot.get("selected_take")),
                 "timeframe": f"{target_shot.get('start_sec', 0)}s-{target_shot.get('end_sec', 10)}s",
-                "active_prompt": p_obj.get("text", ""),
+                "active_prompt": active_prompt(target_shot)[1],
+                "prompt_version": active_prompt(target_shot)[0],
+                "prompt_variants": all_variants(target_shot),
+                "revision": str(yaml_file.stat().st_mtime_ns),
                 "clue_frame": target_shot.get("clue_frame"),
                 "voice": target_shot.get("voice", {}),
                 "capabilities": ["suggest_prompt", "import_video", "set_audio_mode"],

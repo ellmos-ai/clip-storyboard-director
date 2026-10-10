@@ -284,17 +284,18 @@
           </div>
 
           <div class="prompt-container">
-            <div class="prompt-label">Visueller Prompt (Englisch)</div>
+            <div class="prompt-label">Wird kopiert: <span id="bridge-mode-label">Nur Prompt</span></div>
             <div class="prompt-text" id="bridge-prompt-text">Lade aktuellen Shot …</div>
+            <div class="prompt-label" id="bridge-copy-status" role="status" aria-live="polite">Noch nichts kopiert.</div>
           </div>
 
           <div>
             <span class="section-label">Prompt kopieren</span>
             <div class="button-bar">
-              <button class="btn-copy primary" onclick="copyBridgePrompt('plain')">Nur Prompt</button>
-              <button class="btn-copy" onclick="copyBridgePrompt('de')">+ DE-Dialog</button>
-              <button class="btn-copy" onclick="copyBridgePrompt('en')">+ EN-Dialog</button>
-              <button class="btn-copy" onclick="copyBridgePrompt('silent')">+ stumm</button>
+              <button class="btn-copy primary" id="copy-btn-plain" onclick="copyBridgePrompt('plain')">Nur Prompt</button>
+              <button class="btn-copy" id="copy-btn-de" onclick="copyBridgePrompt('de')">+ DE-Dialog</button>
+              <button class="btn-copy" id="copy-btn-en" onclick="copyBridgePrompt('en')">+ EN-Dialog</button>
+              <button class="btn-copy" id="copy-btn-silent" onclick="copyBridgePrompt('silent')">+ stumm</button>
             </div>
           </div>
 
@@ -351,6 +352,7 @@
     let currentProviderUrl = 'https://gemini.google.com';
     let isIframeMode = false;
     let currentFocusData = null;
+    let lastRevision = null;
 
     function showToast(msg, isSuccess = true) {
       const t = document.getElementById('toast');
@@ -455,12 +457,17 @@
         const res = await fetch('/api/cowork/focus');
         if (!res.ok) return;
         const data = await res.json();
+        // Projekt hat sich geaendert (Offer, Take, manuelle Bearbeitung): Storyboard neu laden.
+        if (lastRevision !== null && data.revision !== lastRevision) {
+          document.getElementById('storyboard-frame').contentWindow.location.reload();
+        }
+        lastRevision = data.revision;
         currentFocusData = data;
 
         document.getElementById('bridge-step-badge').innerText = String(data.step_nr || 1).padStart(2, '0') + ' · ' + (data.slug || '');
         document.getElementById('bridge-step-time').innerText = data.timeframe || '';
         document.getElementById('focus-title').innerText = data.has_hero ? 'Alle Shots haben einen Hero-Take' : 'Aktueller Shot';
-        document.getElementById('bridge-prompt-text').innerText = data.active_prompt || 'Kein Prompt';
+        renderBridgePrompt();
 
         const clueContainer = document.getElementById('bridge-clue-container');
         const clueImg = document.getElementById('bridge-clue-img');
@@ -501,40 +508,45 @@
     setInterval(checkWatcherStatus, 5000);
     checkWatcherStatus();
 
-    // Copy Prompt with Language Directives
-    function copyBridgePrompt(mode = 'plain') {
+    // Prompt-Anzeige und Kopieren lesen dieselbe, vom Server gebaute Variante
+    // (prompt_builder.build_prompt) - es gibt keine zweite Zusammenbau-Logik im Browser.
+    const MODE_LABELS = { plain: 'Nur Prompt', de: 'Prompt + DE-Dialog', en: 'Prompt + EN-Dialog', silent: 'Prompt + stumm' };
+    let copyMode = 'plain';
+
+    function variantText(data, mode) {
+      const v = (data && data.prompt_variants) || {};
+      return v[mode] != null ? v[mode] : ((data && data.active_prompt) || '');
+    }
+
+    function renderBridgePrompt() {
+      document.getElementById('bridge-prompt-text').innerText = variantText(currentFocusData, copyMode) || 'Kein Prompt';
+      document.getElementById('bridge-mode-label').innerText = MODE_LABELS[copyMode];
+    }
+
+    async function copyBridgePrompt(mode = 'plain') {
+      copyMode = mode;
+      // Vor dem Kopieren frisch vom Server holen: nie einen bis zu 3 s alten Stand kopieren.
+      await fetchFocusData();
       if (!currentFocusData) return;
-      let text = currentFocusData.active_prompt || '';
-      const voice = currentFocusData.voice || {};
-      const dirs = voice.directives || {};
-
-      let label = 'Reiner Prompt';
-      if (mode === 'de') {
-        const dir = dirs.german || (voice.source_text ? `Spoken dialogue in German (clear voice): "${voice.source_text}"` : '');
-        if (dir) text += '\n\n' + dir;
-        label = 'Prompt + 🇩🇪 DE-Dialog';
-      } else if (mode === 'en') {
-        const dir = dirs.english || (voice.translated_text_en ? `Spoken dialogue in English (clear voice): "${voice.translated_text_en}"` : '');
-        if (dir) text += '\n\n' + dir;
-        label = 'Prompt + 🇬🇧 EN-Dialog';
-      } else if (mode === 'silent') {
-        const dir = dirs.silent || 'Silent video with ambient environmental sound only, strictly no human voice';
-        text += '\n\n' + dir;
-        label = 'Prompt + 🔇 Stumm';
-      }
-
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('📋 ' + label + ' in Zwischenablage kopiert!', true);
-      }).catch(err => {
+      renderBridgePrompt();
+      const text = variantText(currentFocusData, mode);
+      try {
+        await navigator.clipboard.writeText(text);
+        const stamp = new Date().toLocaleTimeString('de-DE');
+        const shot = String(currentFocusData.step_nr || 1).padStart(2, '0');
+        document.getElementById('bridge-copy-status').innerText =
+          'Zuletzt kopiert: ' + MODE_LABELS[mode] + ' · Shot ' + shot + ' ' + (currentFocusData.prompt_version || '') + ' · ' + stamp + ' · ' + text.length + ' Zeichen';
+        showToast('📋 ' + MODE_LABELS[mode] + ' in Zwischenablage kopiert!', true);
+      } catch (err) {
         showToast('Fehler beim Kopieren: ' + err, false);
-      });
+      }
     }
 
     // Prompt-Injektion auslösen
     async function injectActivePrompt() {
       showToast('⏳ Sende Prompt via Edge Bridge...');
       try {
-        const res = await fetch('/api/edge/inject-prompt', { method: 'POST' });
+        const res = await fetch('/api/edge/inject-prompt?lang=' + copyMode, { method: 'POST' });
         const data = await res.json();
         if (data.status === 'ok') {
           showToast('🚀 ' + data.message, true);

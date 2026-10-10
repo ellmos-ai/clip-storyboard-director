@@ -9,6 +9,9 @@ import json
 import sys
 from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parent))
+from prompt_builder import active_prompt, shot_prompt_data  # noqa: E402
+
 try:
     import yaml
 except ImportError:
@@ -110,9 +113,7 @@ def render_project(project_dir):
             preview_inner = '<span>Ausstehend — Video generieren</span>'
             badge_text = "Noch kein Take"
 
-        active_v = s.get("active_prompt_version", "v1")
-        p_obj = next((p for p in s.get("prompts", []) if p.get("version") == active_v), None)
-        prompt_text = p_obj.get("text", "") if p_obj else ""
+        active_v, prompt_text = active_prompt(s)
 
         audio = s.get("audio", {})
         track1_invideo = audio.get("track1_invideo", "mute")
@@ -271,7 +272,7 @@ def render_project(project_dir):
         "project": proj,
         "persistence_buffer": p_buf,
         "consistency_bible": bible_entries,
-        "shots": {s.get("step_nr"): s for s in shots},
+        "shots": {s.get("step_nr"): {**s, **shot_prompt_data(s)} for s in shots},
         "bible": bible_dict
     }
     project_data_json = _script_json(project_client_data)
