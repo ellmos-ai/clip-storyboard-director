@@ -34,7 +34,7 @@
   <a href="https://github.com/open-bricks"><img src="https://img.shields.io/badge/umbrella-open--bricks-blueviolet.svg" alt="Umbrella"></a>
   <a href="https://github.com/ellmos-ai/clip-storyboard-director/releases"><img src="https://img.shields.io/badge/version-0.1.6-blue.svg" alt="Version 0.1.6"></a>
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-Discovery%20Context-informational" alt="llms.txt"></a>
-  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--10--01-informational" alt="Last Checked"></a>
+  <a href="MARKETING-LOG.txt"><img src="https://img.shields.io/badge/last%20checked-2026--10--30-informational" alt="Last Checked"></a>
 </p>
 
 ---
@@ -241,6 +241,43 @@ The director features an integrated web-based timeline cockpit rendered via `sta
 - **Right Pane (Generation Studio)**: Embedded or parallel browser workspace connected via CDP for one-click prompt injection into Gemini, Kling, or Runway.
 - **Real-Time Synchronized State**: Timeline modifications made in the browser cockpit instantly synchronize to `project.yaml` via local REST endpoints (`/api/projects/update_shot`).
 
+### Cockpit Split-View Layout & Ergonomics
+
+```text
++----------------------------------------------------------------------------------------------------+
+| DUAL-PANE COCKPIT (Microsoft Edge App Mode - 127.0.0.1:8765/cockpit.html)                          |
++--------------------------------------------------+-------------------------------------------------+
+| LEFT PANE: Storyboard Timeline & Directorial Deck| RIGHT PANE: Generative AI Studio & CDP Bridge   |
++--------------------------------------------------+-------------------------------------------------+
+| [Timeline Header] Shots 1..N | Total 01:20       | [CDP Bridge :9222] Status: Connected (Target AI)|
+| ------------------------------------------------ | ----------------------------------------------- |
+| [Current Shot Card: Shot 02 - Observatory Set]   | [AI Generator Tab: Google Veo / Runway / Kling] |
+|  Duration: 10s | Camera: Dolly In, Slow Pace     |  Prompt Input Field:                            |
+|  Clue-Frame: [ shot01_lastframe.png ]            |   "Interior ancient mountaintop observatory...  |
+|  Voiceover:  [ de-DE-ConradNeural | Staged ]     |    Dr. Aris stands beside the bronze astrolabe..."|
+|                                                  |                                                 |
+| [Single-Source Prompt Engine (prompt_builder.py)]|  [Image Prompt Reference]:                      |
+|  Mode: [x] Continuity [ ] Dialogue [ ] Clue-Prime|   [ shot01_lastframe.png ]                      |
+|  Canonical Text:                                 |                                                 |
+|  "Interior ancient mountaintop observatory..."   |  [Action Buttons]:                              |
+|  Buttons: [Inject via CDP] [Copy Prompt] [Handoff|   [Generate Video]                              |
+| ------------------------------------------------ | ----------------------------------------------- |
+| [Hero Takes Matrix] Take 01 [x] Take 02 [ ]      | [Downloads Watcher] Status: Listening           |
+| [Audio Deck] Track 1: Ambience | Track 2: Speech |  Auto-ingest -> projects/film/video/shot02_v01  |
++--------------------------------------------------+-------------------------------------------------+
+```
+
+### Single-Source Prompt Engine (`prompt_builder.py`)
+
+A critical bottleneck in generative video directing is prompt drift between the UI display, clipboard buffers, automated browser injection, and local file handoffs. `clip-storyboard-director` introduces a dedicated **Single-Source Prompt Engine** (`src/clip_director/prompt_builder.py`):
+
+1. **Zero Divergence Guarantee**: All textual variants—interactive UI preview cards, one-click copy buttons, automated Chrome DevTools Protocol (CDP) socket payloads, and desktop handoff files (`~/Desktop/clip-director-next-prompt.txt`)—are compiled by a unified prompt builder function (`build_prompt`).
+2. **Context-Aware Variant Modes**:
+   - `continuity`: Standard visual directive infused with 4D persistence buffer tokens (consistent character wardrobe, location architecture, color palette).
+   - `clue_prime`: Continuity directive explicitly anchored to the previous shot's optical tail-frame (`frames/shot<N>_lastframe.png`).
+   - `dialogue`: Dedicated spoken script extraction for speech synthesis and voiceover actors.
+3. **Live Server-Side Refresh**: The cockpit dynamically fetches freshly compiled prompt variants via `/api/cowork/focus`, completely eliminating stale client-side caches and ensuring that prompt adjustments in `project.yaml` propagate instantly across all execution paths.
+
 ---
 
 <a id="sec-07"></a><a id="7-multi-track-audio-staging--ducking"></a><a id="7-mehrspur-audio-staging--dynamisches-ducking"></a><a id="multi-track-audio-staging--ducking"></a><a id="mehrspur-audio-staging--dynamisches-ducking"></a>
@@ -282,27 +319,32 @@ sequenceDiagram
     autonumber
     actor Director as Human / LLM Director
     participant Engine as clip-director Engine
+    participant Builder as PromptBuilder (prompt_builder.py)
     participant Server as Board Server (:8765)
     participant Edge as Edge Browser (CDP :9222)
     participant AI as AI Generator (Gemini/Runway)
     participant Watcher as Downloads Watcher
     participant FFmpeg as FFmpeg Assembler
 
-    Director->>Engine: clip-director init --name film --duration 60
+    Director->>Engine: "clip-director init --name film --duration 60"
     Engine->>Server: Start local board server & watcher
     Director->>Server: Open Dual-Pane Cockpit
     Server->>Edge: Launch Edge in App Mode with CDP
+    Server->>Builder: "Build prompt variants (Shot 1, active_mode)"
+    Builder-->>Server: Canonical prompt text
     Director->>Edge: Inject Shot 1 Prompt via CDP
     Edge->>AI: Generate Video Clip (Shot 1)
     AI-->>Watcher: Download completed clip to ~/Downloads
     Watcher->>Engine: Auto-ingest video to projects/film/video/
     Engine->>FFmpeg: Extract last frame as Shot 1 Clue-Frame
     Engine->>Server: Update timeline UI & clue-frame preview
+    Server->>Builder: "Build clue-primed prompt (Shot 2 + Clue-Frame)"
+    Builder-->>Server: Synchronized Shot 2 prompt
     Director->>Edge: Inject Shot 2 Prompt + Clue-Frame Reference
     Edge->>AI: Generate Consistent Video Clip (Shot 2)
     AI-->>Watcher: Download completed clip
     Watcher->>Engine: Ingest Shot 2 & extract next clue-frame
-    Director->>Engine: clip-director assemble --project film
+    Director->>Engine: "clip-director assemble --project film"
     Engine->>FFmpeg: Concatenate takes + mix voiceover & audio
     FFmpeg-->>Director: film_master.mp4 ready for playback or editing
 ```

@@ -2,7 +2,7 @@
 
 > Local-first AI storyboard director, scene continuity orchestrator, and video pipeline controller with browser CDP automation and interactive timeline cockpit.
 
-- Last-checked: 2026-10-01
+- Last-checked: 2026-10-30
 - Version: 0.1.6
 - Module status: `active`; visibility projection: `public`; release gate: `USER`.
 - Architecture: Local-First / Dual-Pane Timeline Cockpit / Edge CDP Automator / FFmpeg Assembly
@@ -22,9 +22,10 @@
 2. **Clue-Frame Continuity Chain**:
    - The final extracted frame of shot $N$ (`frames/shot0N_v01_lastframe.png`) automatically primes the visual input prompt for shot $N+1$.
 
-3. **Dual-Pane Cockpit (Edge Edition)**:
-   - **Left Pane:** Interactive visual storyboard timeline (`storyboard.html`) featuring an integrated media player, take manager, and audio staging controls.
+3. **Dual-Pane Cockpit & Single-Source Prompt Engine (`prompt_builder.py`)**:
+   - **Left Pane:** Interactive visual storyboard timeline (`storyboard.html`) featuring an integrated media player, take manager, single-source prompt engine (`prompt_builder.py` with `continuity`, `clue_prime`, `dialogue` modes), and audio staging controls.
    - **Right Pane:** Generator bridge connecting to generative AI video platforms with automated prompt injection and downloads watching.
+   - **Zero Divergence:** Synchronizes UI cards, one-click copy, CDP injection, and desktop handoffs (`clip-director-next-prompt.txt`) from a single canonical generator.
 
 4. **Multi-Track Audio Staging & Ducking**:
    - 4 discrete audio layers: Track 1 (In-Video / Veo ambiance), Track 2 (Atmospheric bed / drone), Track 3 (Melodic / MIDI), Track 4 (Foley / SFX).

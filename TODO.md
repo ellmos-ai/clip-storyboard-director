@@ -1,8 +1,8 @@
 # TODO.md — Active work
 
 - **Version:** 0.1.6
-- **Updated:** 2026-10-01
-- **Reason:** Pfad A CI Lifecycle Workflows, Auto-Assign, Labels Sync, Bilingual CONTRIBUTING.md Guidelines & Level 1 SBOM Re-Audit Stand 2026-10-01
+- **Updated:** 2026-10-30
+- **Reason:** Pfad B Cockpit UI Ergonomics, Single-Source Prompt Engine Parity, Sequence Diagram Hardening & Metadata Parity Stand 2026-10-30
 - **Purpose:** Track only work that remains open.
 
 ## STATUS
@@ -40,6 +40,9 @@
 
 - [x] **TASK-CSD-07: Pfad A Technische Hygiene, Stale Lifecycle Workflow & Multi-Host Lock Defense (2026-09-24)** (`effort=low`, `scope=hygiene`, priority `high`).
   - **Result:** .github/workflows/stale.yml (actions/stale@v9 mit timeout-minutes: 10 und Concurrency) angelegt, .gitignore um Multi-Host Machine Suffixes (*-WORKSTATION*, *-ASUS*, *-LAPTOP*, *-Mac Studio*, * (Kopie)*, * (Copy)*) und kanonische Locks (LOCK.user.*, LOCK.until.*, LOCK.condition.*, .automation-lock) gehärtet, PEP 621 Standard-URLs (Notice, Bug Tracker) und pytest minversion/norecursedirs in pyproject.toml ergänzt, NOTICE und THIRD_PARTY_LICENSES.md re-auditiert, und Vertragstestsuite erweitert.
+
+- [x] **TASK-CSD-09: Pfad B Cockpit UI Architecture, Single-Source Prompt Engine & Discoverability (2026-10-30)** (ffort=medium, scope=marketing, priority high).
+  - **Result:** Split-Screen Cockpit-Layout-Architektur in Abschnitt 6 von README.md und README_de.md integriert, Single-Source Prompt Engine (prompt_builder.py) vollständig dokumentiert, Sequenzdiagramm in Abschnitt 9 um PromptBuilder-Kompilierung erweitert, llms.txt synchronisiert und Vertragstestsuite erweitert.
 
 - [x] **TASK-CSD-08: Pfad B Discoverability, 18-Point Navigation Parity, ASCII Four-View Topology & Level 1 SBOM Text Companion (2026-09-29)** (`effort=medium`, `scope=marketing`, priority `high`).
   - **Result:** Bilaterale 18-Punkte-Navigationsanker sec-01..sec-18 in README.md und README_de.md, vierstufige ASCII-Architekturprojektion in Abschnitt 2, Level 1 SBOM Text-Companion THIRD_PARTY_LICENSES.txt, PEP 621 Sättigung auf 20 Topics in pyproject.toml, Standard-Projekt-URLs und Vertragstest-Erweiterung.

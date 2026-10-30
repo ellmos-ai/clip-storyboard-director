@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Dual-Pane Cockpit UI Architecture & Split-Screen Ergonomics**: Added dedicated ASCII layout architecture in Section 6 of README.md and README_de.md detailing the visual split-screen workspace (Left Pane: Storyboard Timeline & Directorial Deck; Right Pane: Generative AI Studio & CDP Bridge :9222).
+- **Single-Source Prompt Engine (prompt_builder.py) Documentation**: Comprehensive architectural documentation and contract tests for the unified prompt engine, guaranteeing zero divergence across UI previews, one-click copy, CDP automated injection, and desktop handoffs.
+- **Enhanced Media Production Lifecycle Sequence Diagram**: Updated Section 9 sequence diagram in both READMEs to explicitly model PromptBuilder compilation and variant staging, adhering to strict Mermaid quoting guardrails.
+
+
 ### Fixed
 - **GUI und kopierter Prompt nicht synchron**: Anzeige, Kopieren-Knöpfe (Cockpit und Storyboard), CDP-Injektion und Desktop-Handoff bauen ihren Text jetzt ausschließlich über `prompt_builder.py` (eine Quelle der Wahrheit); die vier abweichenden Kopien der Logik (u. a. `voice.text` allein wurde beim Kopieren ignoriert, fehlende aktive Version ergab je Stelle anderen Text) sind entfernt. Das Cockpit holt vor dem Kopieren frisch vom Server statt einen bis zu 3 s alten Stand zu kopieren, die CDP-Injektion sendet die angezeigte Variante (vorher stets den DE-Dialog), und `/api/cowork/focus` rendert ein veraltetes Storyboard neu; das Cockpit lädt das Storyboard bei Projektänderung nach.
 

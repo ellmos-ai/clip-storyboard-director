@@ -78,7 +78,7 @@ def test_readme_badges_parity():
         "https://img.shields.io/badge/llms.txt-Discovery%20Context-informational",
         "https://img.shields.io/badge/security%20SLA-48h%20response",
         "https://img.shields.io/badge/code%20style-ruff-000000.svg",
-        "https://img.shields.io/badge/last%20checked-2026--10--01-informational",
+        "https://img.shields.io/badge/last%20checked-2026--10--30-informational",
         "license-MIT",
         "Attribution-NOTICE-blue.svg",
         "Level%201%20SBOM-Audited",
@@ -357,6 +357,7 @@ def test_marketing_log_contract():
     assert "2026-09-24 — Pfad A" in marketing_log
     assert "2026-09-29 — Pfad B" in marketing_log
     assert "2026-10-01 — Pfad A" in marketing_log
+    assert "2026-10-30 — Pfad B" in marketing_log
     assert "INV-LOCAL-01" in marketing_log
     assert "INV-SLA-10" in marketing_log
 
@@ -403,7 +404,8 @@ def test_todo_version_and_date_parity():
     """Verify TODO.md version header and update date match active release."""
     todo_text = (ROOT / "TODO.md").read_text(encoding="utf-8")
     assert "**Version:** 0.1.6" in todo_text
-    assert "**Updated:** 2026-10-01" in todo_text or "**Updated:** 2026-09-29" in todo_text
+    assert "**Updated:** 2026-10-30" in todo_text or "**Updated:** 2026-10-01" in todo_text or "**Updated:** 2026-09-29" in todo_text
+    assert "TASK-CSD-09" in todo_text
     assert "TASK-CSD-06" in todo_text
     assert "TASK-CSD-07" in todo_text
     assert "TASK-CSD-08" in todo_text
@@ -706,3 +708,23 @@ def test_marketing_log_pfad_a_section_10():
     assert "auto-assign.yml" in marketing_log
     assert "label-sync.yml" in marketing_log
     assert "CONTRIBUTING.md" in marketing_log
+
+
+def test_single_source_prompt_builder_architecture():
+    """Verify both READMEs document prompt_builder.py and the single-source prompt engine."""
+    readme_en = (ROOT / "README.md").read_text(encoding="utf-8")
+    readme_de = (ROOT / "README_de.md").read_text(encoding="utf-8")
+    assert "prompt_builder.py" in readme_en
+    assert "prompt_builder.py" in readme_de
+    assert "Single-Source Prompt Engine" in readme_en
+    assert "Single-Source Prompt-Engine" in readme_de
+    assert "Cockpit Split-View Layout" in readme_en
+    assert "Cockpit-Split-View-Layout" in readme_de
+
+
+def test_marketing_log_pfad_b_section_11():
+    """Verify MARKETING-LOG.txt contains Section 11 for Pfad B (2026-10-30)."""
+    marketing_log = (ROOT / "MARKETING-LOG.txt").read_text(encoding="utf-8")
+    assert "11. MARKETING-, COCKPIT-UI- & PROMPT-ENGINE-AUDIT (2026-10-30 — Pfad B v0.1.6)" in marketing_log
+    assert "Dual-Pane Cockpit UI Visual Layout" in marketing_log
+    assert "Single-Source Prompt-Engine (prompt_builder.py)" in marketing_log

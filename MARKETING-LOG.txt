@@ -401,3 +401,44 @@ vollständig implementiert:
 7. Vertragstest-Erweiterung (tests/test_metadata.py):
    - 7 neue Contract-Tests für CI Auto-Assign, Label Sync, labels.yml, bilingual CONTRIBUTING.md,
      PEP 621 Contributing URL, Ideapad Gitignore Guards und SBOM Re-Audit Stand 2026-10-01.
+
+================================================================================
+11. MARKETING-, COCKPIT-UI- & PROMPT-ENGINE-AUDIT (2026-10-30 — Pfad B v0.1.6)
+================================================================================
+Im Rahmen des planmäßigen Pfad-B-Laufs (Marketing, Visual Design, Discoverability,
+Cockpit UI Ergonomics & Single-Source Prompt Engine Parity) wurden folgende
+Maßnahmen umgesetzt:
+
+1. Dual-Pane Cockpit UI Visual Layout & Ergonomie:
+   - Abschnitt 6 in README.md und README_de.md um ein hochauflösendes ASCII-Layout-
+     Diagramm erweitert.
+   - Präzise Visualisierung der Split-Screen-Architektur (Edge App-Modus auf Port 8765):
+     * Linke Spalte: Storyboard-Timeline, Szenenkarten, 4D-Persistenzmatrix, Audio-Pult
+       und die Single-Source Prompt Engine.
+     * Rechte Spalte: KI-Generierungs-Studio mit CDP-Brücke (:9222) für Google Veo,
+       Runway und Kling, Prompt-Eingabefeld, Clue-Frame-Referenz und Ingest-Watcher.
+
+2. Single-Source Prompt-Engine (prompt_builder.py):
+   - Dokumentation der zentralen Prompt-Engine in README.md, README_de.md und llms.txt.
+   - Null-Divergenz-Garantie: Benutzeroberfläche, Ein-Klick-Kopieren, CDP-Injektion und
+     Desktop-Handoff (clip-director-next-prompt.txt) greifen auf dieselbe kanonische
+     Generierungsfunktion zu.
+   - Drei kontextsensitive Betriebsmodi (continuity, clue_prime, dialogue) und
+     Live-Server-Refresh über /api/cowork/focus.
+
+3. Erweiterte Sequenzdiagramm-Modellierung (Abschnitt 9):
+   - SequenceDiagram in beiden READMEs um den Baustein PromptBuilder erweitert.
+   - Darstellung der synchronisierten Prompt-Generierung vor der Injektion via CDP.
+   - Vollständige Einhaltung aller Mermaid-Guardrails (Quotierung aller Nachrichten mit
+     Sonderzeichen und Klammern) für 100% fehlerfreies GitHub-Rendering.
+
+4. Dokumentations- & Status-Synchronisation:
+   - Shields.io-Prüfstempel in README.md und README_de.md auf 2026-10-30 harmonisiert.
+   - llms.txt, TODO.md und CHANGELOG.md auf Stand 2026-10-30 synchronisiert.
+   - Strikte Version-Freeze-Disziplin (T-20260920-167562623): Version 0.1.6 unverändert beibehalten.
+
+5. Vertragstest-Erweiterung (tests/test_metadata.py):
+   - Neuer Contract-Test test_single_source_prompt_builder_architecture zur
+     Absicherung der Dokumentationsparität von prompt_builder.py.
+   - Aktualisierung von test_readme_badges_parity, test_marketing_log_contract und
+     test_todo_version_and_date_parity auf den aktuellen Prüfzeitstempel 2026-10-30.
