@@ -49,5 +49,20 @@
     "path": ".",
     "repository": "https://github.com/ellmos-ai/clip-storyboard-director.git"
   },
-  "adapters": []
+  "adapters": [],
+  "roles": [
+    {
+      "id": "storyboard-director",
+      "label": "STORYBOARD-DIRECTOR",
+      "prompt": "CLAUDE.md",
+      "request": "Start as STORYBOARD-DIRECTOR. Design scene storyboards, visual beats, and shot lists.",
+      "modes": [],
+      "providers": [
+        "claude",
+        "codex",
+        "agy",
+        "kimi"
+      ]
+    }
+  ]
 }
