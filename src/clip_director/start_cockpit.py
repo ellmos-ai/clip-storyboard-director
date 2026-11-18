@@ -54,8 +54,11 @@ def ensure_server_running(project_path, port=DEFAULT_SERVER_PORT):
 
 
 def create_desktop_shortcut(url="http://localhost:8765/cockpit", edge_port=DEFAULT_EDGE_PORT):
-    onedrive_desktop = Path.home() / "OneDrive" / "Desktop"
-    desktop = onedrive_desktop if onedrive_desktop.exists() else Path.home() / "Desktop"
+    try:
+        from clip_director.desktop_handoff import get_default_desktop
+    except ImportError:
+        from desktop_handoff import get_default_desktop
+    desktop = get_default_desktop()
     lnk_path = desktop / "STORYBOARD COCKPIT (Edge).lnk"
     user_data = Path.home() / ".gemini" / "antigravity" / "brain" / "edge_cockpit_profile"
 
