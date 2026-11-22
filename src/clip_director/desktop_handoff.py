@@ -6,6 +6,7 @@ desktop_handoff.py — Platziert Clue-Frame und Prompt für den nächsten Schrit
 import argparse
 import shutil
 import sys
+import uuid
 from pathlib import Path
 
 import json
@@ -57,13 +58,46 @@ def is_desktop_handoff_enabled(project_dir=None):
     return False
 
 
-def get_default_desktop():
-    # OneDrive Desktop hat Vorrang (aktiver Windows Explorer Desktop bei Cloud-Sync)
+_FOLDERID_DESKTOP_BYTES = uuid.UUID("{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}").bytes_le
+
+
+def _known_desktop_folder() -> Path:
+    """Resolve the active OS Desktop directory (supports OneDrive Known Folder Move).
+
+    Falls back to an existing ``Path.home() / "OneDrive" / "Desktop"`` or
+    ``Path.home() / "Desktop"`` on non-Windows platforms or if
+    ``SHGetKnownFolderPath`` is unavailable.
+    """
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            from ctypes import wintypes
+
+            shell32 = ctypes.windll.shell32
+            ole32 = ctypes.windll.ole32
+            p_path = wintypes.LPWSTR()
+            hr = shell32.SHGetKnownFolderPath(
+                ctypes.create_string_buffer(_FOLDERID_DESKTOP_BYTES, 16),
+                0,
+                None,
+                ctypes.byref(p_path),
+            )
+            if hr == 0 and p_path.value:
+                resolved = Path(p_path.value)
+                ole32.CoTaskMemFree(p_path)
+                return resolved
+            if p_path:
+                ole32.CoTaskMemFree(p_path)
+        except Exception:
+            pass
     onedrive_desktop = Path.home() / "OneDrive" / "Desktop"
     if onedrive_desktop.exists():
         return onedrive_desktop
-    desktop = Path.home() / "Desktop"
-    return desktop
+    return Path.home() / "Desktop"
+
+
+def get_default_desktop():
+    return _known_desktop_folder()
 
 
 def clean_desktop(desktop_path=None):

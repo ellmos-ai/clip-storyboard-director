@@ -40,3 +40,68 @@ def test_cmd_cockpit_calls_launch_edge_cockpit_with_resolved_args(monkeypatch):
 
     cli.cmd_cockpit(Args())
     assert calls == [("projects/sternenseufzer", 8765)]
+
+
+def test_known_desktop_folder_uses_shgetknownfolderpath_on_windows(tmp_path, monkeypatch):
+    import ctypes
+    from types import SimpleNamespace
+
+    from clip_director import desktop_handoff
+
+    known_dir = tmp_path / "CustomOneDrive" / "Desktop"
+    fallback_home = tmp_path / "UnusedHome"
+    freed = []
+
+    class FakeShell32:
+        def SHGetKnownFolderPath(self, rfid, flags, token, out_ptr):
+            assert len(rfid.raw) == 16
+            out_ptr._obj.value = str(known_dir)
+            return 0
+
+    class FakeOle32:
+        def CoTaskMemFree(self, p):
+            freed.append(p)
+
+    monkeypatch.setattr(desktop_handoff.sys, "platform", "win32")
+    monkeypatch.setattr(desktop_handoff.Path, "home", classmethod(lambda cls: fallback_home))
+    monkeypatch.setattr(
+        ctypes,
+        "windll",
+        SimpleNamespace(shell32=FakeShell32(), ole32=FakeOle32()),
+        raising=False,
+    )
+
+    assert desktop_handoff.get_default_desktop() == known_dir
+    assert len(freed) == 1
+
+
+def test_known_desktop_folder_falls_back_safely_when_api_unavailable(tmp_path, monkeypatch):
+    from clip_director import desktop_handoff
+
+    monkeypatch.setattr(desktop_handoff.sys, "platform", "linux")
+    monkeypatch.setattr(desktop_handoff.Path, "home", classmethod(lambda cls: tmp_path))
+
+    assert desktop_handoff.get_default_desktop() == tmp_path / "Desktop"
+
+    onedrive_desktop = tmp_path / "OneDrive" / "Desktop"
+    onedrive_desktop.mkdir(parents=True)
+    assert desktop_handoff.get_default_desktop() == onedrive_desktop
+
+
+def test_create_desktop_shortcut_uses_known_desktop_folder(tmp_path, monkeypatch):
+    from clip_director import desktop_handoff, start_cockpit
+
+    known_desktop = tmp_path / "KnownDesktop"
+    known_desktop.mkdir()
+    monkeypatch.setattr(desktop_handoff, "get_default_desktop", lambda: known_desktop)
+
+    captured = []
+    monkeypatch.setattr(
+        start_cockpit.subprocess,
+        "run",
+        lambda cmd, **kw: captured.append(cmd),
+    )
+
+    start_cockpit.create_desktop_shortcut()
+    assert len(captured) == 1
+    assert str(known_desktop / "STORYBOARD COCKPIT (Edge).lnk") in captured[0][-1]
